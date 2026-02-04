@@ -53,6 +53,8 @@ public class AppDbContext : DbContext
             new Category { Id = 3, Name = "Dekoration", Slug = "dekoration" }
         );
 
+        var seedCreatedAt = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc);
+
         modelBuilder.Entity<Product>().HasData(
             new Product
             {
@@ -63,19 +65,19 @@ public class AppDbContext : DbContext
                 ImageUrl = null,
                 CategoryId = 1,
                 StockQuantity = 12,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = seedCreatedAt
             },
-            new Product
-            {
-                Id = 2,
-                Name = "Vas, bubblor",
-                Description = "Celeste Vas från By On.",
-                Price = 449m,
-                ImageUrl = null,
-                CategoryId = 2,
-                StockQuantity = 30,
-                CreatedAt = DateTime.UtcNow
-            }
-        );
+                    new Product
+                    {
+                        Id = 2,
+                        Name = "Vas, bubblor",
+                        Description = "Celeste Vas från By On.",
+                        Price = 449m,
+                        ImageUrl = null,
+                        CategoryId = 2,
+                        StockQuantity = 30,
+                        CreatedAt = seedCreatedAt
+                    }
+                );
     }
 }
