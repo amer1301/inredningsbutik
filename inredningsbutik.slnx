@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Inredningsbutik.Api/Inredningsbutik.Api.csproj" />
+    <Project Path="src/Inredningsbutik.Core/Inredningsbutik.Core.csproj" />
+    <Project Path="src/Inredningsbutik.Infrastructure/Inredningsbutik.Infrastructure.csproj" />
+    <Project Path="src/Inredningsbutik.Web/Inredningsbutik.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Inredningsbutik.Tests/Inredningsbutik.Tests.csproj" />
+  </Folder>
+</Solution>
