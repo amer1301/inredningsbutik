@@ -1,0 +1,16 @@
+@model Inredningsbutik.Core.Entities.Product
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<h1>@Model.Name</h1>
+
+<p class="text-muted">Kategori: @Model.Category?.Name</p>
+
+<p>@Model.Description</p>
+
+<p><strong>Pris:</strong> @Model.Price.ToString("0.00") kr</p>
+<p><strong>I lager:</strong> @Model.StockQuantity</p>
+
+<a class="btn btn-secondary" asp-controller="Catalog" asp-action="Index">Tillbaka</a>

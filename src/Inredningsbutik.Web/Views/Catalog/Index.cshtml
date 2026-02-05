@@ -1,0 +1,61 @@
+@model List<Inredningsbutik.Core.Entities.Product>
+
+@{
+    ViewData["Title"] = "Produkter";
+    var categories = ViewBag.Categories as List<Inredningsbutik.Core.Entities.Category> ?? new();
+    int? selectedCategoryId = ViewBag.SelectedCategoryId as int?;
+    string q = ViewBag.Query as string ?? "";
+}
+
+<h1>Produkter</h1>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-6">
+        <input class="form-control" name="q" value="@q" placeholder="Sök produkt..." />
+    </div>
+    <div class="col-md-4">
+        <select class="form-select" name="categoryId">
+            <option value="">Alla kategorier</option>
+            @foreach (var c in categories)
+            {
+                <option value="@c.Id" selected="@(selectedCategoryId == c.Id)">
+                    @c.Name
+                </option>
+            }
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-primary w-100" type="submit">Sök</button>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Namn</th>
+            <th>Kategori</th>
+            <th class="text-end">Pris</th>
+            <th class="text-end">Lager</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var p in Model)
+    {
+        <tr>
+            <td>@p.Name</td>
+            <td>@p.Category?.Name</td>
+            <td class="text-end">@p.Price.ToString("0.00")</td>
+            <td class="text-end">@p.StockQuantity</td>
+            <td class="text-end">
+                <a class="btn btn-sm btn-outline-primary"
+                   asp-controller="Catalog"
+                   asp-action="Details"
+                   asp-route-id="@p.Id">
+                    Visa
+                </a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
