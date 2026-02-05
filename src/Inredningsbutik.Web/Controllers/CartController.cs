@@ -18,13 +18,15 @@ public class CartController : Controller
         return View(cart);
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Add(int productId, int quantity = 1, string? returnUrl = null)
-    {
-        await _cart.AddAsync(productId, quantity);
-        return Redirect(returnUrl ?? Url.Action("Index", "Cart")!);
-    }
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Add(int productId, int quantity = 1, string? returnUrl = null)
+{
+    await _cart.AddAsync(productId, quantity);
+
+    TempData["CartToast"] = "Produkten lades i varukorgen!";
+    return Redirect(returnUrl ?? Url.Action("Index", "Cart")!);
+}
 
     [HttpPost]
     [ValidateAntiForgeryToken]

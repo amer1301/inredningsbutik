@@ -30,8 +30,9 @@
     <a class="nav-link text-dark" asp-controller="Catalog" asp-action="Index">Produkter</a>
 </li>
 <li class="nav-item">
-    <a class="nav-link text-dark" asp-controller="Cart" asp-action="Index">Varukorg</a>
+    @await Component.InvokeAsync("CartSummary")
 </li>
+
 
     </ul>
     <partial name="_LoginPartial" />
@@ -54,5 +55,29 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    @if (TempData["CartToast"] is string toastMessage)
+{
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="cartToast" class="toast align-items-center text-bg-success border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">
+                    @toastMessage
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var toastEl = document.getElementById('cartToast');
+            var toast = new bootstrap.Toast(toastEl, { delay: 2000 });
+            toast.show();
+        });
+    </script>
+}
+
 </body>
 </html>

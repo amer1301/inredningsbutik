@@ -1,0 +1,9 @@
+@model Inredningsbutik.Web.Models.Cart
+
+<a class="nav-link text-dark" asp-controller="Cart" asp-action="Index">
+    Varukorg
+    @if (Model.TotalItems > 0)
+    {
+        <span class="badge text-bg-primary ms-1">@Model.TotalItems</span>
+    }
+</a>
