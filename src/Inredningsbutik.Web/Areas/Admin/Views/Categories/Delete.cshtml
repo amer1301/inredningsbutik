@@ -1,0 +1,28 @@
+@model Inredningsbutik.Core.Entities.Category
+
+@{
+    ViewData["Title"] = "Ta bort kategori";
+}
+
+<h1>Ta bort kategori</h1>
+
+<div class="alert alert-warning">
+    Är du säker på att du vill ta bort kategorin <strong>@Model.Name</strong>?
+</div>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="text-danger">
+        @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <div>@err.ErrorMessage</div>
+        }
+    </div>
+}
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <button class="btn btn-danger" type="submit">Ja, ta bort</button>
+    <a class="btn btn-secondary" asp-action="Index">Avbryt</a>
+</form>
