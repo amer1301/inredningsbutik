@@ -14,3 +14,20 @@
 <p><strong>I lager:</strong> @Model.StockQuantity</p>
 
 <a class="btn btn-secondary" asp-controller="Catalog" asp-action="Index">Tillbaka</a>
+
+@if (Model.StockQuantity > 0)
+{
+    <form asp-controller="Cart" asp-action="Add" method="post" class="mt-3">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="productId" value="@Model.Id" />
+        <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+        <div class="d-flex gap-2" style="max-width: 260px;">
+            <input class="form-control" type="number" name="quantity" value="1" min="1" max="@Model.StockQuantity" />
+            <button class="btn btn-primary" type="submit">Lägg i varukorg</button>
+        </div>
+    </form>
+}
+else
+{
+    <p class="text-danger mt-3">Slut i lager</p>
+}

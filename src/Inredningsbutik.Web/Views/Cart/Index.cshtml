@@ -1,0 +1,56 @@
+@model Inredningsbutik.Web.Models.Cart
+
+@{
+    ViewData["Title"] = "Varukorg";
+}
+
+<h1>Varukorg</h1>
+
+@if (!Model.Items.Any())
+{
+    <p>Din varukorg är tom.</p>
+    <a class="btn btn-primary" asp-controller="Catalog" asp-action="Index">Till produkter</a>
+    return;
+}
+
+<table class="table align-middle">
+    <thead>
+        <tr>
+            <th>Produkt</th>
+            <th class="text-end">Pris</th>
+            <th style="width: 180px;">Antal</th>
+            <th class="text-end">Radtotal</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Items)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td class="text-end">@item.UnitPrice.ToString("0.00")</td>
+            <td>
+                <form asp-action="Update" method="post" class="d-flex gap-2">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="productId" value="@item.ProductId" />
+                    <input class="form-control" type="number" name="quantity" value="@item.Quantity" min="0" />
+                    <button class="btn btn-outline-secondary" type="submit">Uppdatera</button>
+                </form>
+            </td>
+            <td class="text-end">@((item.UnitPrice * item.Quantity).ToString("0.00"))</td>
+            <td class="text-end">
+                <form asp-action="Remove" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="productId" value="@item.ProductId" />
+                    <button class="btn btn-sm btn-outline-danger" type="submit">Ta bort</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<div class="d-flex justify-content-between">
+    <strong>Total: @Model.Total.ToString("0.00") kr</strong>
+    <a class="btn btn-success" asp-controller="Checkout" asp-action="Index">Till kassan</a>
+</div>

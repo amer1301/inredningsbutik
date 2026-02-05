@@ -2,11 +2,14 @@ using Inredningsbutik.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Inredningsbutik.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
+using Inredningsbutik.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSession();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -23,6 +26,7 @@ builder.Services
 
 
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<CartService>();
 
 var app = builder.Build();
 
@@ -35,10 +39,11 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseSession();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseStaticFiles();
 app.MapStaticAssets();
 
 app.MapControllerRoute(

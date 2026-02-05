@@ -1,0 +1,39 @@
+@model Inredningsbutik.Web.Models.Cart
+
+@{
+    ViewData["Title"] = "Kassa";
+}
+
+<h1>Kassa</h1>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Produkt</th>
+            <th class="text-end">Pris</th>
+            <th class="text-end">Antal</th>
+            <th class="text-end">Summa</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var i in Model.Items)
+    {
+        <tr>
+            <td>@i.Name</td>
+            <td class="text-end">@i.UnitPrice.ToString("0.00")</td>
+            <td class="text-end">@i.Quantity</td>
+            <td class="text-end">@((i.UnitPrice * i.Quantity).ToString("0.00"))</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<p><strong>Total: @Model.Total.ToString("0.00") kr</strong></p>
+
+<form asp-action="PlaceOrder" method="post">
+    @Html.AntiForgeryToken()
+    <button class="btn btn-success" type="submit">Lägg beställning</button>
+    <a class="btn btn-secondary" asp-controller="Cart" asp-action="Index">Tillbaka</a>
+</form>

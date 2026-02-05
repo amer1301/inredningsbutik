@@ -1,0 +1,37 @@
+@model Inredningsbutik.Core.Entities.Order
+
+@{
+    ViewData["Title"] = "Orderbekräftelse";
+}
+
+<h1>Orderbekräftelse</h1>
+
+<p>Ordernummer: <strong>@Model.Id</strong></p>
+<p>Status: <strong>@Model.Status</strong></p>
+<p>Datum: @Model.CreatedAt.ToLocalTime()</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Produkt</th>
+            <th class="text-end">Pris</th>
+            <th class="text-end">Antal</th>
+            <th class="text-end">Summa</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var i in Model.Items)
+    {
+        <tr>
+            <td>@i.Product?.Name</td>
+            <td class="text-end">@i.UnitPrice.ToString("0.00")</td>
+            <td class="text-end">@i.Quantity</td>
+            <td class="text-end">@((i.UnitPrice * i.Quantity).ToString("0.00"))</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<p><strong>Total: @Model.TotalAmount.ToString("0.00") kr</strong></p>
+
+<a class="btn btn-primary" asp-controller="Catalog" asp-action="Index">Fortsätt handla</a>
