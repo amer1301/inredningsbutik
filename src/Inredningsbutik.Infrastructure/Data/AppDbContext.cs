@@ -48,38 +48,5 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
             .WithOne(oi => oi.Product!)
             .HasForeignKey(oi => oi.ProductId);
 
-        // Seed för att bygga publika sidor snabbt
-        modelBuilder.Entity<Category>().HasData(
-            new Category { Id = 1, Name = "Belysning", Slug = "belysning" },
-            new Category { Id = 2, Name = "Textil", Slug = "textil" },
-            new Category { Id = 3, Name = "Dekoration", Slug = "dekoration" }
-        );
-
-        var seedCreatedAt = new DateTime(2025, 1, 1, 12, 0, 0, DateTimeKind.Utc);
-
-        modelBuilder.Entity<Product>().HasData(
-            new Product
-            {
-                Id = 1,
-                Name = "Kruka, lejon",
-                Description = "Svart lejonkruka från A Lot Decorations.",
-                Price = 529m,
-                ImageUrl = null,
-                CategoryId = 1,
-                StockQuantity = 12,
-                CreatedAt = seedCreatedAt
-            },
-                    new Product
-                    {
-                        Id = 2,
-                        Name = "Vas, bubblor",
-                        Description = "Celeste Vas från By On.",
-                        Price = 449m,
-                        ImageUrl = null,
-                        CategoryId = 2,
-                        StockQuantity = 30,
-                        CreatedAt = seedCreatedAt
-                    }
-                );
     }
 }
