@@ -68,7 +68,7 @@ public class CheckoutController : Controller
             Status = "Ny",
             CreatedAt = DateTime.UtcNow,
             TotalAmount = 0m,
-            Items = new List<OrderItem>()
+            OrderItems = new List<OrderItem>()
         };
 
         foreach (var item in cart.Items)
@@ -78,7 +78,7 @@ public class CheckoutController : Controller
             // Minska lager
             p.StockQuantity -= item.Quantity;
 
-            order.Items.Add(new OrderItem
+            order.OrderItems.Add(new OrderItem
             {
                 ProductId = p.Id,
                 Quantity = item.Quantity,
@@ -86,7 +86,7 @@ public class CheckoutController : Controller
             });
         }
 
-        order.TotalAmount = order.Items.Sum(i => i.UnitPrice * i.Quantity);
+        order.TotalAmount = order.OrderItems.Sum(i => i.UnitPrice * i.Quantity);
 
         _db.Orders.Add(order);
         await _db.SaveChangesAsync();
@@ -103,7 +103,7 @@ public class CheckoutController : Controller
         if (user is null) return Challenge();
 
         var order = await _db.Orders
-            .Include(o => o.Items)
+            .Include(o => o.OrderItems)
             .ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(o => o.Id == id && o.UserId == user.Id);
 
