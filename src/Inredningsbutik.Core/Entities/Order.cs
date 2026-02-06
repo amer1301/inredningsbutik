@@ -11,5 +11,5 @@ public class Order
     public string Status { get; set; } = "Ny";
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public List<OrderItem> Items { get; set; } = new();
+    public List<OrderItem> OrderItems { get; set; } = new();
 }

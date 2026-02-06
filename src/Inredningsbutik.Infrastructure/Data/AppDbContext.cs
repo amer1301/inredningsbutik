@@ -38,10 +38,10 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
             .HasForeignKey(p => p.CategoryId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Order>()
-            .HasMany(o => o.Items)
-            .WithOne(oi => oi.Order!)
-            .HasForeignKey(oi => oi.OrderId);
+modelBuilder.Entity<Order>()
+    .HasMany(o => o.OrderItems)
+    .WithOne(oi => oi.Order!)
+    .HasForeignKey(oi => oi.OrderId);
 
         modelBuilder.Entity<Product>()
             .HasMany(p => p.OrderItems)
