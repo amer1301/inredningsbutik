@@ -16,4 +16,7 @@ public class Product
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public List<OrderItem> OrderItems { get; set; } = new();
+
+    public string? HoverImageUrl { get; set; }
+
 }

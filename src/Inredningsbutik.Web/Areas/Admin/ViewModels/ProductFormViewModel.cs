@@ -15,5 +15,7 @@ public class ProductFormViewModel
     public int CategoryId { get; set; }
     public int StockQuantity { get; set; }
 
+    public string? HoverImageUrl { get; set; }
+
     public List<SelectListItem> Categories { get; set; } = new();
 }

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Inredningsbutik.Web</title>
     <script type="importmap"></script>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Inredningsbutik.Web.styles.css" asp-append-version="true" />
@@ -14,32 +15,32 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Inredningsbutik.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                        aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-    <ul class="navbar-nav flex-grow-1">
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </li>
-        <li class="nav-item">
-    <a class="nav-link text-dark" asp-controller="Catalog" asp-action="Index">Produkter</a>
-</li>
-<li class="nav-item">
-    @await Component.InvokeAsync("CartSummary")
-</li>
 
+                <div id="mainNavbar" class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <!-- Vänster: inga meny-länkar (alla produkter visas på startsidan) -->
+                    <ul class="navbar-nav me-auto">
+                        <!-- tom medvetet -->
+                    </ul>
 
-    </ul>
-    <partial name="_LoginPartial" />
-</div>
+                    <!-- Höger: Varukorg + Login/Register -->
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item me-2">
+                            @await Component.InvokeAsync("CartSummary")
+                        </li>
+                        <li class="nav-item">
+                            <partial name="_LoginPartial" />
+                        </li>
+                    </ul>
+                </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -48,36 +49,36 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2026 - Inredningsbutik.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2026 - Inredningsbutik.Web
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
     @if (TempData["CartToast"] is string toastMessage)
-{
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="cartToast" class="toast align-items-center text-bg-success border-0" role="alert">
-            <div class="d-flex">
-                <div class="toast-body">
-                    @toastMessage
+    {
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="cartToast" class="toast align-items-center text-bg-success border-0" role="alert">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        @toastMessage
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                            data-bs-dismiss="toast"></button>
                 </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                        data-bs-dismiss="toast"></button>
             </div>
         </div>
-    </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var toastEl = document.getElementById('cartToast');
-            var toast = new bootstrap.Toast(toastEl, { delay: 2000 });
-            toast.show();
-        });
-    </script>
-}
-
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var toastEl = document.getElementById('cartToast');
+                var toast = new bootstrap.Toast(toastEl, { delay: 2000 });
+                toast.show();
+            });
+        </script>
+    }
 </body>
 </html>

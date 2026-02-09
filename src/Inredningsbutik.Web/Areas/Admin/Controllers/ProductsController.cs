@@ -54,6 +54,7 @@ public class ProductsController : Controller
             Description = vm.Description,
             Price = vm.Price,
             ImageUrl = vm.ImageUrl,
+            HoverImageUrl = vm.HoverImageUrl,
             CategoryId = vm.CategoryId,
             StockQuantity = vm.StockQuantity
         };
@@ -76,6 +77,7 @@ public class ProductsController : Controller
             Description = product.Description,
             Price = product.Price,
             ImageUrl = product.ImageUrl,
+            HoverImageUrl = product.HoverImageUrl,
             CategoryId = product.CategoryId,
             StockQuantity = product.StockQuantity,
             Categories = await GetCategorySelectListAsync()
@@ -103,6 +105,7 @@ public class ProductsController : Controller
         product.Description = vm.Description;
         product.Price = vm.Price;
         product.ImageUrl = vm.ImageUrl;
+        product.HoverImageUrl = vm.HoverImageUrl;
         product.CategoryId = vm.CategoryId;
         product.StockQuantity = vm.StockQuantity;
 

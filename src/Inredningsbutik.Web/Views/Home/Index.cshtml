@@ -1,8 +1,82 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model Inredningsbutik.Web.ViewModels.HomeIndexVm
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="page-wrap">
+
+    <!-- HERO -->
+    <div class="hero mb-4 fade-up">
+        <img src="/images/hero/hero1.jpg" alt="Inredning - inspiration" />
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div>
+                <h1>Skandinavisk inredning</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- FILTER -->
+    <form class="filter-bar mb-4 fade-up" method="get" asp-controller="Home" asp-action="Index">
+        <div class="row g-2 align-items-center">
+            <div class="col-12 col-lg-6">
+                <input class="form-control form-control-lg"
+                       type="text"
+                       name="q"
+                       value="@Model.Q"
+                       placeholder="Sök produkt..." />
+            </div>
+
+            <div class="col-12 col-lg-4">
+                <select class="form-select form-select-lg" name="categoryId">
+                    <option value="">Alla kategorier</option>
+                    @foreach (var c in Model.Categories)
+                    {
+                        <option value="@c.Id" selected="@(Model.CategoryId == c.Id)">
+                            @c.Name
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-12 col-lg-2 d-grid">
+                <button class="btn btn-outline-dark btn-lg" type="submit">Sök</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- PRODUKTER -->
+    <div class="d-flex justify-content-between align-items-end mb-2 fade-up" id="produkter">
+        <div>
+            <h2 class="mb-0">Produkter</h2>
+            <div class="text-muted">Visar @Model.Products.Count st</div>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Q) || Model.CategoryId.HasValue)
+        {
+            <a class="btn btn-link" asp-controller="Home" asp-action="Index">Rensa filter</a>
+        }
+    </div>
+
+    <div class="row g-3">
+        @foreach (var p in Model.Products)
+        {
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-3 fade-up">
+                <div class="product-card">
+                    <a asp-controller="Catalog" asp-action="Details" asp-route-id="@p.Id" style="text-decoration:none; color:inherit;">
+                        <div class="product-media">
+                            <img class="base" src="@(string.IsNullOrWhiteSpace(p.ImageUrl) ? "/images/placeholder.jpg" : p.ImageUrl)" alt="@p.Name" />
+                            <img class="hover" src="@(string.IsNullOrWhiteSpace(p.HoverImageUrl) ? (string.IsNullOrWhiteSpace(p.ImageUrl) ? "/images/placeholder.jpg" : p.ImageUrl) : p.HoverImageUrl)" alt="@p.Name inspirationsbild" />
+                        </div>
+
+                        <div class="product-body">
+                            <div class="product-title">@p.Name</div>
+                            <div class="product-meta">
+                                <span>@p.Category?.Name</span>
+                                <span><strong>@p.Price.ToString("0.00") kr</strong></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+
 </div>

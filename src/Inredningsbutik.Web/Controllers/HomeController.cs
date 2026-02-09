@@ -1,24 +1,50 @@
-using System.Diagnostics;
+using Inredningsbutik.Infrastructure.Data;
+using Inredningsbutik.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Inredningsbutik.Web.Models;
-
-namespace Inredningsbutik.Web.Controllers;
+using Microsoft.EntityFrameworkCore;
 
 public class HomeController : Controller
 {
-    public IActionResult Index()
+    private readonly AppDbContext _db;
+
+    public HomeController(AppDbContext db)
     {
-        return View();
+        _db = db;
     }
 
-    public IActionResult Privacy()
+    public async Task<IActionResult> Index(string? q, int? categoryId)
     {
-        return View();
-    }
+        var categories = await _db.Categories
+            .OrderBy(c => c.Name)
+            .ToListAsync();
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        var query = _db.Products
+            .Include(p => p.Category)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(q))
+        {
+            var term = q.Trim();
+            query = query.Where(p =>
+                p.Name.Contains(term) ||
+                p.Description.Contains(term));
+        }
+
+        if (categoryId.HasValue)
+            query = query.Where(p => p.CategoryId == categoryId.Value);
+
+        var products = await query
+            .OrderByDescending(p => p.CreatedAt)
+            .ToListAsync();
+
+        var vm = new HomeIndexVm
+        {
+            Q = q,
+            CategoryId = categoryId,
+            Categories = categories,
+            Products = products
+        };
+
+        return View(vm);
     }
 }
