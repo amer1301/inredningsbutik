@@ -2,47 +2,41 @@
 
 <div class="page-wrap">
 
-    <!-- HERO -->
-    <div class="hero mb-4 fade-up">
-        <img src="/images/hero/hero1.jpg" alt="Inredning - inspiration" />
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <div>
-                <h1>Skandinavisk inredning</h1>
+<!-- HERO (editorial) -->
+<section class="hero-editorial mb-4 fade-up">
+    <div class="hero-editorial__inner">
+        <!-- Vänster: text -->
+        <div class="hero-editorial__copy">
+            <h1 class="hero-editorial__title">Skandinavisk inredning</h1>
+            <p class="hero-editorial__lead">
+                Upptäck noga utvalda detaljer för ett lugnt, stilrent hem. Handplockat för en tidlös känsla.
+            </p>
+
+            <a class="btn btn-outline-dark hero-editorial__cta" href="#produkter">
+                Handla här
+            </a>
+        </div>
+
+        <!-- Höger: bilder -->
+        <div class="hero-editorial__media" aria-hidden="true">
+            <div class="hero-editorial__img hero-editorial__img--left">
+                <img src="/images/hero/hero3.jpg" alt="" />
             </div>
+
+            <div class="hero-editorial__img hero-editorial__img--right">
+                <img src="/images/hero/hero1.jpg" alt="" />
+            </div>
+
+            <a class="hero-editorial__link" href="#din-sektion-sen">
+                Visa hela utbudet <span aria-hidden="true">→</span>
+            </a>
         </div>
     </div>
-
-    <!-- FILTER -->
-    <form class="filter-bar mb-4 fade-up" method="get" asp-controller="Home" asp-action="Index">
-        <div class="row g-2 align-items-center">
-            <div class="col-12 col-lg-6">
-                <input class="form-control form-control-lg"
-                       type="text"
-                       name="q"
-                       value="@Model.Q"
-                       placeholder="Sök produkt..." />
-            </div>
-
-            <div class="col-12 col-lg-4">
-                <select class="form-select form-select-lg" name="categoryId">
-                    <option value="">Alla kategorier</option>
-                    @foreach (var c in Model.Categories)
-                    {
-                        <option value="@c.Id" selected="@(Model.CategoryId == c.Id)">
-                            @c.Name
-                        </option>
-                    }
-                </select>
-            </div>
-
-            <div class="col-12 col-lg-2 d-grid">
-                <button class="btn btn-outline-dark btn-lg" type="submit">Sök</button>
-            </div>
-        </div>
-    </form>
+</section>
 
     <!-- PRODUKTER -->
+<div id="productResults">
+
     <div class="d-flex justify-content-between align-items-end mb-2 fade-up" id="produkter">
         <div>
             <h2 class="mb-0">Produkter</h2>

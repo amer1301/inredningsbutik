@@ -4,81 +4,126 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Inredningsbutik.Web</title>
+
     <script type="importmap"></script>
+
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Inredningsbutik.Web.styles.css" asp-append-version="true" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Inredningsbutik.Web</a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
-                        aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+<body class="layout-root">
+<header>
 
-                <div id="mainNavbar" class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <!-- Vänster: inga meny-länkar (alla produkter visas på startsidan) -->
-                    <ul class="navbar-nav me-auto">
-                        <!-- tom medvetet -->
-                    </ul>
+<!-- TOPBAR: SÖK VÄNSTER + KUNDTJÄNST + LOGIN HÖGER -->
+<div class="topbar">
+    <div class="container-fluid topbar__inner">
 
-                    <!-- Höger: Varukorg + Login/Register -->
-                    <ul class="navbar-nav ms-auto align-items-center">
-                        <li class="nav-item me-2">
-                            @await Component.InvokeAsync("CartSummary")
-                        </li>
-                        <li class="nav-item">
-                            <partial name="_LoginPartial" />
-                        </li>
-                    </ul>
-                </div>
+        <!-- Vänster: Sök -->
+        <form class="topbar-search"
+              method="get"
+              asp-controller="Home"
+              asp-action="Index"
+              role="search"
+              aria-label="Sök produkter">
+
+            <span class="topbar-search__icon" aria-hidden="true">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+       stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="7"></circle>
+    <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+  </svg>
+</span>
+
+
+            <input class="topbar-search__input"
+                   type="search"
+                   name="q"
+                   value="@(ViewContext.HttpContext.Request.Query["q"])"
+                   placeholder="Sök produkt, varumärke, kategori" />
+        </form>
+
+        <!-- Höger: Kundtjänst + Login/Register -->
+        <div class="topbar__right">
+            <a class="topbar__support" href="#kundtjanst">Kundtjänst</a>
+            <partial name="_LoginPartial" />
+        </div>
+
+    </div>
+</div>
+
+
+    <!-- NAVBAR: LOGO VÄNSTER + VARUKORG HÖGER -->
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PERSDOTTER</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                    aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div id="mainNavbar" class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <!-- Vänster: inga meny-länkar -->
+                <ul class="navbar-nav me-auto">
+                    <!-- tom medvetet -->
+                </ul>
+
+                <!-- Höger: Varukorg -->
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        @await Component.InvokeAsync("CartSummary")
+                    </li>
+                </ul>
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
 
+</header>
+
+<div class="container">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
+
+<footer>
     <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        &copy; 2026 - Inredningsbutik.Web
+    </div>
+</footer>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+
+@if (TempData["CartToast"] is string toastMessage)
+{
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="cartToast" class="toast align-items-center text-bg-success border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">
+                    @toastMessage
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast"></button>
+            </div>
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Inredningsbutik.Web
-        </div>
-    </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var toastEl = document.getElementById('cartToast');
+            var toast = new bootstrap.Toast(toastEl, { delay: 2000 });
+            toast.show();
+        });
+    </script>
+}
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-
-    @if (TempData["CartToast"] is string toastMessage)
-    {
-        <div class="toast-container position-fixed bottom-0 end-0 p-3">
-            <div id="cartToast" class="toast align-items-center text-bg-success border-0" role="alert">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        @toastMessage
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                            data-bs-dismiss="toast"></button>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                var toastEl = document.getElementById('cartToast');
-                var toast = new bootstrap.Toast(toastEl, { delay: 2000 });
-                toast.show();
-            });
-        </script>
-    }
 </body>
 </html>
