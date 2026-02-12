@@ -2,75 +2,130 @@
 
 <div class="page-wrap">
 
-<!-- HERO (editorial) -->
+<!-- HERO -->
 <section class="hero-editorial mb-4 fade-up">
-    <div class="hero-editorial__inner">
-        <!-- Vänster: text -->
-        <div class="hero-editorial__copy">
-            <h1 class="hero-editorial__title">Skandinavisk inredning</h1>
-            <p class="hero-editorial__lead">
-                Upptäck noga utvalda detaljer för ett lugnt, stilrent hem. Handplockat för en tidlös känsla.
-            </p>
+  <div class="hero-editorial__media hero-editorial__media--video" aria-hidden="true">
+    <video id="heroVideo" class="hero-editorial__video" autoplay muted playsinline preload="auto">
+      <source src="/videos/hero.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-editorial__videoOverlay"></div>
 
-            <a class="btn btn-outline-dark hero-editorial__cta" href="#produkter">
-                Handla här
-            </a>
-        </div>
+  </div>
 
-        <!-- Höger: bilder -->
-        <div class="hero-editorial__media" aria-hidden="true">
-            <div class="hero-editorial__img hero-editorial__img--left">
-                <img src="/images/hero/hero3.jpg" alt="" />
-            </div>
+  <div class="hero-editorial__inner">
+    <div class="hero-editorial__copy">
+      <h1 class="hero-editorial__title">Skandinavisk inredning</h1>
+      <p class="hero-editorial__lead">
+        Upptäck noga utvalda detaljer för ett lugnt, stilrent hem. Handplockat för en tidlös känsla.
+      </p>
 
-            <div class="hero-editorial__img hero-editorial__img--right">
-                <img src="/images/hero/hero1.jpg" alt="" />
-            </div>
-
-            <a class="hero-editorial__link" href="#din-sektion-sen">
-                Visa hela utbudet <span aria-hidden="true">→</span>
-            </a>
-        </div>
+<a class="btn hero-editorial__cta" href="#produkter">
+  <span class="cta-text">Handla här</span>
+</a>
     </div>
+  </div>
 </section>
 
-    <!-- PRODUKTER -->
-<div id="productResults">
+<!-- USP / Fördelar -->
+<section class="usp-strip" aria-label="Fördelar">
+  <div class="container-fluid usp-strip__inner">
+    
+    <div class="usp-item">
+      <img class="usp-item__icon" src="/images/icons/sortimentikon.png" alt="" aria-hidden="true" />
+      <div class="usp-item__text">
+        <div class="usp-item__title">Handplockat sortiment</div>
+        <div class="usp-item__desc">Noggrant utvalda favoriter för ett tidlöst hem.</div>
+      </div>
+    </div>
 
+    <div class="usp-item">
+      <img class="usp-item__icon" src="/images/icons/leveransikon.png" alt="" aria-hidden="true" />
+      <div class="usp-item__text">
+        <div class="usp-item__title">Fri frakt</div>
+        <div class="usp-item__desc">Snabb leverans – alltid utan extra kostnad.</div>
+      </div>
+    </div>
+
+    <div class="usp-item">
+      <img class="usp-item__icon" src="/images/icons/returikon.png" alt="" aria-hidden="true" />
+      <div class="usp-item__text">
+        <div class="usp-item__title">30 dagars retur</div>
+        <div class="usp-item__desc">Handla tryggt med smidig och enkel retur.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="catalog-layout">
+
+  <!-- VÄNSTER: KATEGORIER -->
+  <aside class="catalog-filters" aria-label="Kategorifilter">
+    <div class="catalog-filters__title">Kategorier</div>
+
+    <ul class="catalog-filters__list">
+      <li>
+        <a class="catalog-filters__link @(Model.CategoryId == null ? "is-active" : "")"
+           asp-controller="Home" asp-action="Index"
+           asp-route-q="@Model.Q">
+          Alla
+        </a>
+      </li>
+
+      @foreach (var c in Model.Categories)
+      {
+        <li>
+          <a class="catalog-filters__link @(Model.CategoryId == c.Id ? "is-active" : "")"
+             asp-controller="Home" asp-action="Index"
+             asp-route-categoryId="@c.Id"
+             asp-route-q="@Model.Q">
+            @c.Name
+          </a>
+        </li>
+      }
+    </ul>
+
+    @if (Model.CategoryId.HasValue || !string.IsNullOrWhiteSpace(Model.Q))
+    {
+      <a class="catalog-filters__clear"
+         asp-controller="Home" asp-action="Index">
+        Rensa filter
+      </a>
+    }
+  </aside>
+
+  <!-- HÖGER: PRODUKTER -->
+  <section class="catalog-content">
     <div class="d-flex justify-content-between align-items-end mb-2 fade-up" id="produkter">
-        <div>
-            <h2 class="mb-0">Produkter</h2>
-            <div class="text-muted">Visar @Model.Products.Count st</div>
-        </div>
-
-        @if (!string.IsNullOrWhiteSpace(Model.Q) || Model.CategoryId.HasValue)
-        {
-            <a class="btn btn-link" asp-controller="Home" asp-action="Index">Rensa filter</a>
-        }
+      <div>
+        <h2 class="mb-0">Produkter</h2>
+        <div class="text-muted">Visar @Model.Products.Count st</div>
+      </div>
     </div>
 
     <div class="row g-3">
-        @foreach (var p in Model.Products)
-        {
-            <div class="col-12 col-sm-6 col-lg-4 col-xl-3 fade-up">
-                <div class="product-card">
-                    <a asp-controller="Catalog" asp-action="Details" asp-route-id="@p.Id" style="text-decoration:none; color:inherit;">
-                        <div class="product-media">
-                            <img class="base" src="@(string.IsNullOrWhiteSpace(p.ImageUrl) ? "/images/placeholder.jpg" : p.ImageUrl)" alt="@p.Name" />
-                            <img class="hover" src="@(string.IsNullOrWhiteSpace(p.HoverImageUrl) ? (string.IsNullOrWhiteSpace(p.ImageUrl) ? "/images/placeholder.jpg" : p.ImageUrl) : p.HoverImageUrl)" alt="@p.Name inspirationsbild" />
-                        </div>
+      @foreach (var p in Model.Products)
+      {
+        <div class="col-12 col-sm-6 col-lg-4 col-xl-3 fade-up">
+          <div class="product-card">
+            <a asp-controller="Catalog" asp-action="Details" asp-route-id="@p.Id" style="text-decoration:none; color:inherit;">
+              <div class="product-media">
+                <img class="base" src="@(string.IsNullOrWhiteSpace(p.ImageUrl) ? "/images/placeholder.jpg" : p.ImageUrl)" alt="@p.Name" />
+                <img class="hover" src="@(string.IsNullOrWhiteSpace(p.HoverImageUrl) ? (string.IsNullOrWhiteSpace(p.ImageUrl) ? "/images/placeholder.jpg" : p.ImageUrl) : p.HoverImageUrl)" alt="@p.Name inspirationsbild" />
+              </div>
 
-                        <div class="product-body">
-                            <div class="product-title">@p.Name</div>
-                            <div class="product-meta">
-                                <span>@p.Category?.Name</span>
-                                <span><strong>@p.Price.ToString("0.00") kr</strong></span>
-                            </div>
-                        </div>
-                    </a>
+              <div class="product-body">
+                <div class="product-title">@p.Name</div>
+                <div class="product-meta">
+                  <span>@p.Category?.Name</span>
+                  <span><strong>@p.Price.ToString("0.00") kr</strong></span>
                 </div>
-            </div>
-        }
+              </div>
+            </a>
+          </div>
+        </div>
+      }
     </div>
+  </section>
 
 </div>

@@ -22,7 +22,6 @@
 <div class="topbar">
     <div class="container-fluid topbar__inner">
 
-        <!-- Vänster: Sök -->
         <form class="topbar-search"
               method="get"
               asp-controller="Home"
@@ -47,7 +46,6 @@
                    placeholder="Sök produkt, varumärke, kategori" />
         </form>
 
-        <!-- Höger: Kundtjänst + Login/Register -->
         <div class="topbar__right">
             <a class="topbar__support" href="#kundtjanst">Kundtjänst</a>
             <partial name="_LoginPartial" />
@@ -56,8 +54,6 @@
     </div>
 </div>
 
-
-    <!-- NAVBAR: LOGO VÄNSTER + VARUKORG HÖGER -->
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom">
         <div class="container-fluid">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PERSDOTTER</a>
@@ -68,12 +64,8 @@
             </button>
 
             <div id="mainNavbar" class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <!-- Vänster: inga meny-länkar -->
                 <ul class="navbar-nav me-auto">
-                    <!-- tom medvetet -->
                 </ul>
-
-                <!-- Höger: Varukorg -->
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
                         @await Component.InvokeAsync("CartSummary")

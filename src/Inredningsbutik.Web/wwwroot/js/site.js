@@ -90,3 +90,28 @@
     run();
   });
 })();
+
+const video = document.getElementById("heroVideo");
+
+if (video) {
+  let reversing = false;
+
+  video.addEventListener("ended", () => {
+    reversing = true;
+    reverse();
+  });
+
+  function reverse() {
+    if (!reversing) return;
+
+    video.currentTime -= 0.03;
+
+    if (video.currentTime <= 0) {
+      reversing = false;
+      video.play();
+      return;
+    }
+
+    requestAnimationFrame(reverse);
+  }
+}
