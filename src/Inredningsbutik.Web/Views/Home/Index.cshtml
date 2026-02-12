@@ -61,29 +61,35 @@
 
   <!-- VÄNSTER: KATEGORIER -->
   <aside class="catalog-filters" aria-label="Kategorifilter">
-    <div class="catalog-filters__title">Kategorier</div>
 
-    <ul class="catalog-filters__list">
-      <li>
-        <a class="catalog-filters__link @(Model.CategoryId == null ? "is-active" : "")"
-           asp-controller="Home" asp-action="Index"
-           asp-route-q="@Model.Q">
-          Alla
-        </a>
-      </li>
+<div class="catalog-filters__groups">
+  @foreach (var g in Model.CategoryGroups)
+  {
+    <div class="catalog-filters__group">
+      <div class="catalog-filters__groupTitle">@g.Title</div>
 
-      @foreach (var c in Model.Categories)
-      {
-        <li>
-          <a class="catalog-filters__link @(Model.CategoryId == c.Id ? "is-active" : "")"
-             asp-controller="Home" asp-action="Index"
-             asp-route-categoryId="@c.Id"
-             asp-route-q="@Model.Q">
-            @c.Name
-          </a>
-        </li>
-      }
-    </ul>
+      <ul class="catalog-filters__list">
+        @foreach (var item in g.Items)
+        {
+          var isActive = item.Id == null
+            ? Model.CategoryId == null
+            : Model.CategoryId == item.Id;
+
+          <li>
+            <a class="catalog-filters__link @(isActive ? "is-active" : "")"
+               asp-controller="Home" asp-action="Index"
+               asp-route-categoryId="@item.Id"
+               asp-route-q="@Model.Q">
+              <span class="catalog-filters__linkText">@item.Name</span>
+              <span class="catalog-filters__count">@item.ProductCount</span>
+            </a>
+          </li>
+        }
+      </ul>
+    </div>
+  }
+</div>
+
 
     @if (Model.CategoryId.HasValue || !string.IsNullOrWhiteSpace(Model.Q))
     {
@@ -98,8 +104,13 @@
   <section class="catalog-content">
     <div class="d-flex justify-content-between align-items-end mb-2 fade-up" id="produkter">
       <div>
-        <h2 class="mb-0">Produkter</h2>
-        <div class="text-muted">Visar @Model.Products.Count st</div>
+@{
+  var selectedName = Model.CategoryId.HasValue
+    ? Model.Categories.FirstOrDefault(c => c.Id == Model.CategoryId)?.Name
+    : "Alla produkter";
+}
+<h2 class="catalog-content__title mb-0">@selectedName (@Model.Products.Count)</h2>
+
       </div>
     </div>
 

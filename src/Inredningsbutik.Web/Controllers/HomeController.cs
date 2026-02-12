@@ -14,10 +14,12 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index(string? q, int? categoryId)
     {
+        // 1) Kategorier (för ev. lookup i vyn + annan användning)
         var categories = await _db.Categories
             .OrderBy(c => c.Name)
             .ToListAsync();
 
+        // 2) Basquery för PRODUKT-LISTAN (påverkas av q + vald kategori)
         var query = _db.Products
             .Include(p => p.Category)
             .AsQueryable();
@@ -37,12 +39,113 @@ public class HomeController : Controller
             .OrderByDescending(p => p.CreatedAt)
             .ToListAsync();
 
+        // ============================================================
+        // 3) IMPLEMENTERING 2A: Counts per kategori (påverkas av q, ej av vald kategori)
+        // ============================================================
+        var countsQuery = _db.Products.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(q))
+        {
+            var term = q.Trim();
+            countsQuery = countsQuery.Where(p =>
+                p.Name.Contains(term) ||
+                p.Description.Contains(term));
+        }
+
+        var categoryCounts = await countsQuery
+            .GroupBy(p => p.CategoryId)
+            .Select(g => new { CategoryId = g.Key, Count = g.Count() })
+            .ToListAsync();
+
+        var countsByCategoryId = categoryCounts.ToDictionary(x => x.CategoryId, x => x.Count);
+        var allProductsCount = await countsQuery.CountAsync();
+
+        // ============================================================
+        // 4) Grupplogik för sidebar + "Visa alla" (med counts)
+        // ============================================================
+
+        // Spec för grupper (matchar på kategorinamnet)
+        var groupSpec = new List<(string Title, string[] Names)>
+        {
+            ("Hem & inredning", new[] { "Belysning", "Dekorationer", "Krukor", "Vaser" }),
+            ("Ljus & tillbehör", new[] { "Ljus", "Ljushållare", "Ljusstakar" }),
+            ("Barn", new[] { "Barn" }),
+        };
+
+        var assigned = new HashSet<int>();
+
+        var grouped = new List<CategoryGroupVm>
+        {
+            new CategoryGroupVm
+            {
+                Title = "Kategorier",
+                Items =
+                [
+                    new CategoryItemVm
+                    {
+                        Id = null,                // null => "Visa alla"
+                        Name = "Visa alla",
+                        ProductCount = allProductsCount
+                    }
+                ]
+            }
+        };
+
+        foreach (var (title, names) in groupSpec)
+        {
+            var items = categories
+                .Where(c => names.Contains(c.Name))
+                .Select(c =>
+                {
+                    assigned.Add(c.Id);
+                    return new CategoryItemVm
+                    {
+                        Id = c.Id,
+                        Name = c.Name,
+                        ProductCount = countsByCategoryId.TryGetValue(c.Id, out var cnt) ? cnt : 0
+                    };
+                })
+                .ToList();
+
+            if (items.Count > 0)
+            {
+                grouped.Add(new CategoryGroupVm
+                {
+                    Title = title,
+                    Items = items
+                });
+            }
+        }
+
+        // Kategorier som inte matchar någon grupp hamnar under "Övrigt"
+        var unassigned = categories
+            .Where(c => !assigned.Contains(c.Id))
+            .Select(c => new CategoryItemVm
+            {
+                Id = c.Id,
+                Name = c.Name,
+                ProductCount = countsByCategoryId.TryGetValue(c.Id, out var cnt) ? cnt : 0
+            })
+            .ToList();
+
+        if (unassigned.Count > 0)
+        {
+            grouped.Add(new CategoryGroupVm
+            {
+                Title = "Övrigt",
+                Items = unassigned
+            });
+        }
+
         var vm = new HomeIndexVm
         {
             Q = q,
             CategoryId = categoryId,
             Categories = categories,
-            Products = products
+            Products = products,
+
+            CategoryGroups = grouped,
+            AllProductsCount = allProductsCount
         };
 
         return View(vm);
