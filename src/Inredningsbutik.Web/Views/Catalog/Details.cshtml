@@ -2,32 +2,183 @@
 
 @{
     ViewData["Title"] = Model.Name;
+
+    // Returnera användaren till sidan den kom ifrån (med filter)
+    var returnUrl = Context.Request.Query["returnUrl"].ToString();
+
+    // fallback om returnUrl saknas
+    if (string.IsNullOrWhiteSpace(returnUrl))
+        returnUrl = Url.Action("Index", "Home") ?? "/";
+
+    // Produktbild först
+    var images = new List<string>();
+
+    if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+        images.Add(Model.ImageUrl!);
+
+    // HoverImageUrl = första inspirationsbilden (om den finns och inte är samma som produktbilden)
+    if (!string.IsNullOrWhiteSpace(Model.HoverImageUrl) && Model.HoverImageUrl != Model.ImageUrl)
+        images.Add(Model.HoverImageUrl!);
+
+    // Extra inspirationsbilder från ny kolumn (separerade med ;)
+    if (!string.IsNullOrWhiteSpace(Model.InspirationImageUrls))
+    {
+        var extras = Model.InspirationImageUrls!
+            .Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+        foreach (var url in extras)
+        {
+            // undvik dubletter
+            if (!images.Contains(url))
+                images.Add(url);
+        }
+    }
+
+    // fallback om saknas
+    if (images.Count == 0)
+        images.Add("https://via.placeholder.com/1200x1200?text=No+image");
 }
 
-<h1>@Model.Name</h1>
 
-<p class="text-muted">Kategori: @Model.Category?.Name</p>
+<section class="pdp">
+    <div class="pdp__gallery">
+        <div class="pdp__stage">
+            <button type="button" class="pdp__nav pdp__nav--prev" aria-label="Föregående bild">‹</button>
 
-<p>@Model.Description</p>
+            <img id="pdpMainImage" src="@images[0]" alt="@Model.Name" />
 
-<p><strong>Pris:</strong> @Model.Price.ToString("0.00") kr</p>
-<p><strong>I lager:</strong> @Model.StockQuantity</p>
-
-<a class="btn btn-secondary" asp-controller="Catalog" asp-action="Index">Tillbaka</a>
-
-@if (Model.StockQuantity > 0)
-{
-    <form asp-controller="Cart" asp-action="Add" method="post" class="mt-3">
-        @Html.AntiForgeryToken()
-        <input type="hidden" name="productId" value="@Model.Id" />
-        <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-        <div class="d-flex gap-2" style="max-width: 260px;">
-            <input class="form-control" type="number" name="quantity" value="1" min="1" max="@Model.StockQuantity" />
-            <button class="btn btn-primary" type="submit">Lägg i varukorg</button>
+            <button type="button" class="pdp__nav pdp__nav--next" aria-label="Nästa bild">›</button>
         </div>
-    </form>
-}
-else
-{
-    <p class="text-danger mt-3">Slut i lager</p>
+
+        @if (images.Count > 1)
+        {
+            <div class="pdp__thumbs" aria-label="Produktbilder">
+                @for (var i = 0; i < images.Count; i++)
+                {
+                    <button type="button"
+                            class="pdp__thumb @(i == 0 ? "is-active" : "")"
+                            data-src="@images[i]"
+                            aria-label="Visa bild @(i + 1)">
+                        <img src="@images[i]" alt="" />
+                    </button>
+                }
+            </div>
+        }
+    </div>
+
+    <aside class="pdp__info">
+        <div class="pdp__brand">@Model.Category?.Name</div>
+        <h1 class="pdp__title">@Model.Name</h1>
+
+        <div class="pdp__priceRow">
+            <div class="pdp__price">@Model.Price.ToString("0") kr</div>
+            <div class="pdp__stock">
+                @if (Model.StockQuantity > 0)
+                {
+                    <span class="pdp__stockDot"></span>
+                    <span>I webblager</span>
+                }
+                else
+                {
+                    <span class="pdp__stockOut">Slut i lager</span>
+                }
+            </div>
+        </div>
+
+        <p class="pdp__desc">@Model.Description</p>
+
+        @if (Model.StockQuantity > 0)
+        {
+            <form asp-controller="Cart" asp-action="Add" method="post" class="pdp__buy">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="productId" value="@Model.Id" />
+                <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+
+                <div class="pdp__buyRow">
+                    <div class="pdp__qty" aria-label="Välj antal">
+                        <button class="pdp__qtyBtn" type="button" data-qty="dec" aria-label="Minska antal">−</button>
+                        <input id="pdpQtyInput"
+                               class="pdp__qtyInput"
+                               type="number"
+                               name="quantity"
+                               value="1"
+                               min="1"
+                               max="@Model.StockQuantity" />
+                        <button class="pdp__qtyBtn" type="button" data-qty="inc" aria-label="Öka antal">+</button>
+                    </div>
+
+                    <button class="pdp__add" type="submit">Lägg i varukorgen</button>
+                </div>
+
+                <ul class="pdp__usp" aria-label="Köpvillkor">
+                    <li><span class="pdp__check">✓</span> Fri frakt över 499 kr*</li>
+                    <li><span class="pdp__check">✓</span> Snabba och flexibla leveranser</li>
+                    <li><span class="pdp__check">✓</span> Öppet köp i 30 dagar</li>
+                </ul>
+            </form>
+        }
+        else
+        {
+            <div class="pdp__buy pdp__buy--disabled">
+                <p class="pdp__stockOut">Slut i lager</p>
+            </div>
+        }
+
+        <a class="pdp__back" href="@returnUrl">← Tillbaka</a>
+    </aside>
+</section>
+
+@section Scripts{
+<script>
+  const main = document.getElementById('pdpMainImage');
+  const thumbs = Array.from(document.querySelectorAll('.pdp__thumb'));
+  const prevBtn = document.querySelector('.pdp__nav--prev');
+  const nextBtn = document.querySelector('.pdp__nav--next');
+
+  let index = 0;
+
+  function setActive(i){
+    if (!thumbs.length) return;
+
+    index = (i + thumbs.length) % thumbs.length;
+
+    const src = thumbs[index].getAttribute('data-src');
+    if (src) main.src = src;
+
+    thumbs.forEach(b => b.classList.remove('is-active'));
+    thumbs[index].classList.add('is-active');
+  }
+
+  // Klick på thumbnails
+  thumbs.forEach((btn, i) => {
+    btn.addEventListener('click', () => setActive(i));
+  });
+
+  // Pilar
+  if (prevBtn) prevBtn.addEventListener('click', () => setActive(index - 1));
+  if (nextBtn) nextBtn.addEventListener('click', () => setActive(index + 1));
+
+  // Tangentbord: vänster/höger
+  document.addEventListener('keydown', (e) => {
+    if (e.key === "ArrowLeft") setActive(index - 1);
+    if (e.key === "ArrowRight") setActive(index + 1);
+  });
+
+  // Qty stepper
+  const qtyInput = document.getElementById('pdpQtyInput');
+  document.querySelectorAll('[data-qty]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const max = Number(qtyInput?.max || 999999);
+      const min = Number(qtyInput?.min || 1);
+      let val = Number(qtyInput?.value || 1);
+
+      if (btn.getAttribute('data-qty') === 'inc') val += 1;
+      if (btn.getAttribute('data-qty') === 'dec') val -= 1;
+
+      val = Math.max(min, Math.min(max, val));
+      if (qtyInput) qtyInput.value = String(val);
+    });
+  });
+</script>
 }

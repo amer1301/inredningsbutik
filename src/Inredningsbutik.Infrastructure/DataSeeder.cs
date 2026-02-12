@@ -65,7 +65,7 @@ public static class DataSeeder
                 Description = "Svart minigorilla från Sagaform AB",
                 Price = 149,
                 StockQuantity = 20,
-                Category = krukor,
+                CategoryId = krukor.Id,
                 ImageUrl = "/images/products/kruka-apa-produkt.png",
                 HoverImageUrl = "/images/hover/kruka-apa-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -76,7 +76,7 @@ public static class DataSeeder
                 Description = "Vacker kruka i form av ett hjorthuvud i en matt svart nyans, från Wikholm Form.",
                 Price = 349,
                 StockQuantity = 20,
-                Category = krukor,
+                CategoryId = krukor.Id,
                 ImageUrl = "/images/products/kruka-hjort-produkt.png",
                 HoverImageUrl = "/images/hover/kruka-hjort-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -87,7 +87,7 @@ public static class DataSeeder
                 Description = "Svart kruka i form utav ett lejon, från A Lot Decoration.",
                 Price = 529,
                 StockQuantity = 20,
-                Category = krukor,
+                CategoryId = krukor.Id,
                 ImageUrl = "/images/products/kruka-lejon-produkt.png",
                 HoverImageUrl = "/images/hover/kruka-lejon-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -98,9 +98,10 @@ public static class DataSeeder
                 Description = "Vas för inomhus bruk i modern design, från Skånska Möbelhuset.",
                 Price = 249,
                 StockQuantity = 20,
-                Category = vaser,
+                CategoryId = vaser.Id,
                 ImageUrl = "/images/products/bubbelvas-produkt.png",
                 HoverImageUrl = "/images/hover/bubbelvas-inspiration.jpg",
+                InspirationImageUrls = "/images/inspiration/bubbelvas2.jpg",
                 CreatedAt = DateTime.UtcNow
             },
             new()
@@ -109,7 +110,7 @@ public static class DataSeeder
                 Description = "Paris karaff från Department med ett vackert, karakteristiskt mönster.",
                 Price = 899,
                 StockQuantity = 20,
-                Category = servering,
+                CategoryId = servering.Id,
                 ImageUrl = "/images/products/karaff-produkt.png",
                 HoverImageUrl = "/images/hover/karaff-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -120,7 +121,7 @@ public static class DataSeeder
                 Description = "Elegant saltkar med sked från Georg Jensen.",
                 Price = 399,
                 StockQuantity = 20,
-                Category = servering,
+                CategoryId = servering.Id,
                 ImageUrl = "/images/products/georgjensen-produkt.png",
                 HoverImageUrl = "/images/hover/georgjensen-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -131,7 +132,7 @@ public static class DataSeeder
                 Description = "Anemone ljuslykta Ø 9cm från Målers Glasbruk.",
                 Price = 199,
                 StockQuantity = 20,
-                Category = ljushallare,
+                CategoryId = ljushallare.Id,
                 ImageUrl = "/images/products/litenskål-produkt.png",
                 HoverImageUrl = "/images/hover/litenskål-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -142,9 +143,10 @@ public static class DataSeeder
                 Description = "Iittala Kastehelmi Skål 1,4 L från Iittala.",
                 Price = 249,
                 StockQuantity = 20,
-                Category = servering,
+                CategoryId = servering.Id,
                 ImageUrl = "/images/products/skål-iittala-produkt.png",
                 HoverImageUrl = "/images/hover/skål-iittala-inspiration.jpg",
+                InspirationImageUrls = "/images/inspiration/inspiration-kök.jpg",
                 CreatedAt = DateTime.UtcNow
             },
             new()
@@ -153,7 +155,7 @@ public static class DataSeeder
                 Description = "Katt-timern från Bengt Ek Design.",
                 Price = 129,
                 StockQuantity = 20,
-                Category = servering,
+                CategoryId = servering.Id,
                 ImageUrl = "/images/products/äggklocka-produkt.png",
                 HoverImageUrl = "/images/hover/äggklocka-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -164,9 +166,10 @@ public static class DataSeeder
                 Description = "4 glasunderlägg i metall med pärlemorsbeläggning från Zara Home.",
                 Price = 295,
                 StockQuantity = 20,
-                Category = servering,
+                CategoryId = servering.Id,
                 ImageUrl = "/images/products/glasunderlägg-produkt.png",
                 HoverImageUrl = "/images/hover/glasunderlägg-inspiration.jpg",
+                InspirationImageUrls = "/images/inspiration/glasunderlägg2.jpg",
                 CreatedAt = DateTime.UtcNow
             },
             new()
@@ -175,7 +178,7 @@ public static class DataSeeder
                 Description = "Vacker ljuslykta i glas med lite skiftningar i färgen, från serien Sirius.",
                 Price = 159,
                 StockQuantity = 20,
-                Category = ljushallare,
+                CategoryId = ljushallare.Id,
                 ImageUrl = "/images/products/ljuslykta-brun-produkt.png",
                 HoverImageUrl = "/images/hover/ljuslykta-brun-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -186,7 +189,7 @@ public static class DataSeeder
                 Description = "City Light 1 ljuslykta från Louise Roe.",
                 Price = 499,
                 StockQuantity = 20,
-                Category = ljushallare,
+                CategoryId = ljushallare.Id,
                 ImageUrl = "/images/products/ljuslykta-liten-produkt.png",
                 HoverImageUrl = "/images/hover/ljuslykta-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -197,7 +200,7 @@ public static class DataSeeder
                 Description = "City Light 2 ljuslykta från Louise Roe.",
                 Price = 549,
                 StockQuantity = 20,
-                Category = ljushallare,
+                CategoryId = ljushallare.Id,
                 ImageUrl = "/images/products/ljuslykta-mellan-produkt.png",
                 HoverImageUrl = "/images/hover/ljuslykta-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -208,7 +211,7 @@ public static class DataSeeder
                 Description = "City Light 3 ljuslykta från Louise Roe.",
                 Price = 629,
                 StockQuantity = 20,
-                Category = ljushallare,
+                CategoryId = ljushallare.Id,
                 ImageUrl = "/images/products/ljuslykta-hög-produkt.png",
                 HoverImageUrl = "/images/hover/ljuslykta-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -219,7 +222,7 @@ public static class DataSeeder
                 Description = "Ljus i form av en elefant, från Zara Home.",
                 Price = 229,
                 StockQuantity = 20,
-                Category = ljus,
+                CategoryId = ljus.Id,
                 ImageUrl = "/images/products/ljus-elefant-produkt.png",
                 HoverImageUrl = "/images/hover/ljus-elefant-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -230,7 +233,7 @@ public static class DataSeeder
                 Description = "Ljus i form av en liten sittande elefant, från Zara Home.",
                 Price = 129,
                 StockQuantity = 20,
-                Category = ljus,
+                CategoryId = ljus.Id,
                 ImageUrl = "/images/products/sittandeelefant-produkt.png",
                 HoverImageUrl = "/images/hover/sittandeelefant-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -241,7 +244,7 @@ public static class DataSeeder
                 Description = "Ljus i form av en kvinnokropp.",
                 Price = 129,
                 StockQuantity = 20,
-                Category = ljus,
+                CategoryId = ljus.Id,
                 ImageUrl = "/images/products/ljus-kvinna-produkt.png",
                 HoverImageUrl = "/images/hover/ljus-kvinna-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -252,7 +255,7 @@ public static class DataSeeder
                 Description = "Ljus i form av en kub.",
                 Price = 119,
                 StockQuantity = 20,
-                Category = ljus,
+                CategoryId = ljus.Id,
                 ImageUrl = "/images/products/ljus-kub-produkt.png",
                 HoverImageUrl = "/images/hover/ljus-kub-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -263,9 +266,10 @@ public static class DataSeeder
                 Description = "Bruket väggljusstake, från Storefactory.",
                 Price = 599,
                 StockQuantity = 20,
-                Category = ljusstakar,
+                CategoryId = ljusstakar.Id,
                 ImageUrl = "/images/products/väggljusstake-produkt.png",
                 HoverImageUrl = "/images/hover/väggljusstake-inspiration1.jpg",
+                InspirationImageUrls = "/images/inspiration/väggljusstake2.jpg",
                 CreatedAt = DateTime.UtcNow
             },
             new()
@@ -274,9 +278,10 @@ public static class DataSeeder
                 Description = "Georg Jensen Cobra Ljusstake, rostfri.",
                 Price = 1150,
                 StockQuantity = 20,
-                Category = ljusstakar,
+                CategoryId = ljusstakar.Id,
                 ImageUrl = "/images/products/ljusstake-georgjensen-produkt.png",
                 HoverImageUrl = "/images/hover/ljusstake-georgjensen-inspiration.jpg",
+                InspirationImageUrls = "/images/inspiration/georgjensen2.jpg",
                 CreatedAt = DateTime.UtcNow
             },
             new()
@@ -285,7 +290,7 @@ public static class DataSeeder
                 Description = "Ljusstake från Orrefors i serien Carat.",
                 Price = 899,
                 StockQuantity = 20,
-                Category = ljusstakar,
+                CategoryId = ljusstakar.Id,
                 ImageUrl = "/images/products/kristalljusstake-produkt.png",
                 HoverImageUrl = "/images/hover/kristalljusstake-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -296,7 +301,7 @@ public static class DataSeeder
                 Description = "2-pack ljusstake i form av rådjur, från Zeline.",
                 Price = 249,
                 StockQuantity = 20,
-                Category = ljusstakar,
+                CategoryId = ljusstakar.Id,
                 ImageUrl = "/images/products/ljusstake-hjort-produkt.png",
                 HoverImageUrl = "/images/hover/ljusstake-hjort-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -307,7 +312,7 @@ public static class DataSeeder
                 Description = "Knot Table inredningsdetalj från Cooee Design.",
                 Price = 259,
                 StockQuantity = 20,
-                Category = dekoration,
+                CategoryId = dekoration.Id,
                 ImageUrl = "/images/products/knut-produkt.png",
                 HoverImageUrl = "/images/hover/knut-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -318,7 +323,7 @@ public static class DataSeeder
                 Description = "Svart dekorativ låda för förvaring eller som presentförpackning.",
                 Price = 59,
                 StockQuantity = 20,
-                Category = dekoration,
+                CategoryId = dekoration.Id,
                 ImageUrl = "/images/products/låda-produkt.png",
                 HoverImageUrl = "/images/hover/låda-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -329,9 +334,10 @@ public static class DataSeeder
                 Description = "Dekorativ glaspumpa från Cooee Design.",
                 Price = 229,
                 StockQuantity = 20,
-                Category = dekoration,
+                CategoryId = dekoration.Id,
                 ImageUrl = "/images/products/pumpa1-produkt.png",
                 HoverImageUrl = "/images/hover/pumpa1-inspiration.jpg",
+                InspirationImageUrls = "/images/inspiration/pumpa2.jpg",
                 CreatedAt = DateTime.UtcNow
             },
             new()
@@ -340,9 +346,10 @@ public static class DataSeeder
                 Description = "Dekorativ glaspumpa från Cooee Design.",
                 Price = 199,
                 StockQuantity = 20,
-                Category = dekoration,
+                CategoryId = dekoration.Id,
                 ImageUrl = "/images/products/pumpa2-produkt.png",
                 HoverImageUrl = "/images/hover/pumpa2-inspiration.jpg",
+                InspirationImageUrls = "/images/inspiration/pumpa2.jpg",
                 CreatedAt = DateTime.UtcNow
             },
             new()
@@ -351,7 +358,7 @@ public static class DataSeeder
                 Description = "Väggdekoration PARROT av polyresin, från Jotex.",
                 Price = 349,
                 StockQuantity = 20,
-                Category = barn,
+                CategoryId = barn.Id,
                 ImageUrl = "/images/products/väggdekor-fågel-produkt.png",
                 HoverImageUrl = "/images/hover/väggdekor-fågel-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -362,7 +369,7 @@ public static class DataSeeder
                 Description = "Paraply i creme med allover-tryck av orange havtorn med gröna blad från That´s Mine.",
                 Price = 239,
                 StockQuantity = 20,
-                Category = barn,
+                CategoryId = barn.Id,
                 ImageUrl = "/images/products/paraply-produkt.png",
                 HoverImageUrl = "/images/hover/paraply-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -373,9 +380,10 @@ public static class DataSeeder
                 Description = "Liten ryggsäck, tillverkad i återvunnen polyester från That´s Mine.",
                 Price = 399,
                 StockQuantity = 20,
-                Category = barn,
+                CategoryId = barn.Id,
                 ImageUrl = "/images/products/ryggsäck-produkt.png",
                 HoverImageUrl = "/images/hover/ryggsäck-inspiration1.jpg",
+                InspirationImageUrls = "/images/inspiration/ryggsäck2.jpg",
                 CreatedAt = DateTime.UtcNow
             },
             new()
@@ -384,7 +392,7 @@ public static class DataSeeder
                 Description = "Vägglampa i form av en papegoja från A lot decoration.",
                 Price = 1099,
                 StockQuantity = 20,
-                Category = belysning,
+                CategoryId = belysning.Id,
                 ImageUrl = "/images/products/fågellampa-produkt.png",
                 HoverImageUrl = "/images/hover/fågellampa-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -395,7 +403,7 @@ public static class DataSeeder
                 Description = "Bordslampa i form av en korp, designad av Marcantonio Raimondi Malerba för designföretaget Seletti.",
                 Price = 1499,
                 StockQuantity = 20,
-                Category = belysning,
+                CategoryId = belysning.Id,
                 ImageUrl = "/images/products/bordslampa-korp-produkt.png",
                 HoverImageUrl = "/images/hover/bordslampa-korp-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -406,7 +414,7 @@ public static class DataSeeder
                 Description = "Bordslampa Omega, från By Rydéns.",
                 Price = 999,
                 StockQuantity = 20,
-                Category = belysning,
+                CategoryId = belysning.Id,
                 ImageUrl = "/images/products/bordslampa-produkt.png",
                 HoverImageUrl = "/images/hover/bordslampa-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
@@ -430,8 +438,9 @@ public static class DataSeeder
                 existing.StockQuantity = p.StockQuantity;
                 existing.ImageUrl = p.ImageUrl;
                 existing.HoverImageUrl = p.HoverImageUrl;
+                existing.InspirationImageUrls = p.InspirationImageUrls;
 
-                existing.CategoryId = p.Category.Id;
+                existing.CategoryId = p.CategoryId;
             }
         }
 

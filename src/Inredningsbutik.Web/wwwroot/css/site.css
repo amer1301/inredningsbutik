@@ -591,6 +591,288 @@ header{
   text-decoration: underline;
 }
 
+/* =========================
+   PDP (Product details page)
+   ========================= */
+
+.pdp{
+  max-width: 1200px;
+  margin: 18px auto 0;
+  padding: 0 16px;
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+/* Gallery = 2 rows (stage + thumbs) så thumbs alltid hamnar under bilden */
+.pdp__gallery{
+  display: grid;
+  grid-template-rows: auto auto;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.pdp__stage{
+  position: relative;
+  background: #fff;
+  height: min(78vh, 740px);
+  min-height: 520px;
+  display: grid;
+  place-items: center;
+}
+
+.pdp__stage img{
+  width: 30em;
+  height: auto;
+  object-fit: contain;
+  padding: 24px;
+}
+
+.pdp__thumbs{
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  border-top: 1px solid rgba(0,0,0,.06);
+min-height: 104px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;         /* Firefox */
+}
+.pdp__thumbs::-webkit-scrollbar{ /* Chrome/Edge */
+  display: none;
+}
+
+.pdp__thumb{
+  border: 1px solid rgba(0,0,0,.10);
+  background: #fff;
+  border-radius: 14px;
+  width: 96px;
+  height: 72px;
+  padding: 6px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.pdp__thumb img{
+  width: auto;
+  height: 3.5em;
+  object-fit: contain;
+}
+
+.pdp__thumb.is-active{
+  border-color: rgba(69,30,13,.55);
+  box-shadow: 0 0 0 3px rgba(69,30,13,.10);
+}
+
+/* Info panel */
+.pdp__info{
+  position: sticky;
+  top: 110px;
+}
+
+.pdp__brand{
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,.55);
+  margin-bottom: 8px;
+}
+
+.pdp__title{
+  font-size: 40px;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin: 0 0 12px;
+}
+
+.pdp__priceRow{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.pdp__price{
+  font-size: 22px;
+  font-weight: 650;
+  color: #451e0d;
+}
+
+.pdp__stock{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(0,0,0,.65);
+  font-size: 14px;
+}
+
+.pdp__stockDot{
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #2f8f55;
+}
+
+.pdp__stockOut{
+  color: rgba(150, 20, 20, .9);
+  font-weight: 600;
+}
+
+.pdp__desc{
+  color: rgba(0,0,0,.72);
+  line-height: 1.6;
+  margin: 0 0 18px;
+}
+
+.pdp__buy{
+  border: 1px solid rgba(0,0,0,.08);
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 10px 22px rgba(0,0,0,.05);
+}
+
+.pdp__buyRow{
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 14px;
+  align-items: center;
+}
+
+.pdp__qty{
+  display: grid;
+  grid-template-columns: 40px 1fr 40px;
+  border: 1px solid rgba(0,0,0,.12);
+  border-radius: 12px;
+  overflow: hidden;
+  height: 48px;
+  background: #fff;
+}
+
+.pdp__qtyBtn{
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 20px;
+  color: rgba(0,0,0,.7);
+}
+
+.pdp__qtyInput{
+  border: 0;
+  text-align: center;
+  outline: none;
+  width: 100%;
+}
+
+.pdp__add{
+  height: 48px;
+  border: 0;
+  border-radius: 12px;
+  background: #EDE8E0;
+  color: #111;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.pdp__add:hover{
+  opacity: .92;
+}
+
+.pdp__usp{
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  color: rgba(0,0,0,.68);
+  font-size: 14px;
+}
+
+.pdp__check{
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #343231;
+  color: #EDE8E0;
+  margin-right: 8px;
+  font-weight: 800;
+}
+
+.pdp__back{
+  display: inline-block;
+  margin-top: 14px;
+  color: rgba(0,0,0,.7);
+  text-decoration: none;
+}
+
+.pdp__back:hover{
+  text-decoration: underline;
+}
+
+/* Slider arrows */
+.pdp__nav{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.12);
+  background: rgba(255,255,255,.92);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 26px;
+  line-height: 1;
+  color: rgba(0,0,0,.75);
+  box-shadow: 0 10px 20px rgba(0,0,0,.08);
+}
+
+.pdp__nav:hover{ opacity: .92; }
+.pdp__nav--prev{ left: 14px; }
+.pdp__nav--next{ right: 14px; }
+
+/* Desktop: säkerställ 2 kolumner */
+@media (min-width: 992px){
+  .pdp{
+    display: grid !important;
+    grid-template-columns: 1.25fr 1fr !important;
+    gap: 28px !important;
+    align-items: start !important;
+  }
+  .pdp__gallery{ grid-column: 1; }
+  .pdp__info{ grid-column: 2; }
+}
+
+/* Mobile: en kolumn */
+@media (max-width: 992px){
+  .pdp{
+    grid-template-columns: 1fr;
+  }
+  .pdp__info{
+    position: static;
+    top: auto;
+  }
+  .pdp__title{
+    font-size: 34px;
+  }
+}
+
+/* Small: köp-rad staplas */
+@media (max-width: 520px){
+  .pdp__buyRow{
+    grid-template-columns: 1fr;
+  }
+}
+
 
 footer{
   width: 100%;

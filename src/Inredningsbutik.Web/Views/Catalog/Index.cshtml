@@ -48,12 +48,13 @@
             <td class="text-end">@p.Price.ToString("0.00")</td>
             <td class="text-end">@p.StockQuantity</td>
             <td class="text-end">
-                <a class="btn btn-sm btn-outline-primary"
-                   asp-controller="Catalog"
-                   asp-action="Details"
-                   asp-route-id="@p.Id">
-                    Visa
-                </a>
+<a class="btn btn-sm btn-outline-primary"
+   asp-controller="Catalog"
+   asp-action="Details"
+   asp-route-id="@p.Id"
+   asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">
+    Visa
+</a>
             </td>
         </tr>
     }

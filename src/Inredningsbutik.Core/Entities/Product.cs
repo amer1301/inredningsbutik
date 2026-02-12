@@ -19,4 +19,5 @@ public class Product
 
     public string? HoverImageUrl { get; set; }
 
+    public string? InspirationImageUrls { get; set; }
 }
