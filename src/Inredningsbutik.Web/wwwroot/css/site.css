@@ -840,6 +840,40 @@ min-height: 104px;
 .pdp__nav--prev{ left: 14px; }
 .pdp__nav--next{ right: 14px; }
 
+.product-meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.product-add{
+  margin:0;
+}
+
+.product-add__btn{
+  border:0;
+  background:transparent;
+  padding:0;
+  cursor:pointer;
+  display:inline-grid;
+  place-items:center;
+  width:34px;
+  height:34px;
+  border-radius:999px;
+}
+
+.product-add__btn img{
+  width:20px;
+  height:20px;
+  display:block;
+}
+
+.product-add__btn:hover{
+  background: rgba(0,0,0,.06);
+}
+
+
 /* Desktop: säkerställ 2 kolumner */
 @media (min-width: 992px){
   .pdp{

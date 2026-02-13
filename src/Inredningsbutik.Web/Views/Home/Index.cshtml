@@ -127,10 +127,21 @@
 
               <div class="product-body">
                 <div class="product-title">@p.Name</div>
-                <div class="product-meta">
-                  <span>@p.Category?.Name</span>
-                  <span><strong>@p.Price.ToString("0.00") kr</strong></span>
-                </div>
+<div class="product-meta">
+  <form asp-controller="Cart" asp-action="Add" method="post" class="product-add">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="productId" value="@p.Id" />
+    <input type="hidden" name="quantity" value="1" />
+    <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
+
+    <button type="submit" class="product-add__btn" aria-label="Lägg @p.Name i varukorgen" title="Lägg i varukorgen">
+      <img src="images/icons/köpikon.png" alt="" aria-hidden="true" />
+    </button>
+  </form>
+
+  <span class="product-price"><strong>@p.Price.ToString("0.00") kr</strong></span>
+</div>
+
               </div>
             </a>
           </div>

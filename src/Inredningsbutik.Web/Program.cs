@@ -1,16 +1,19 @@
 using Inredningsbutik.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 using Inredningsbutik.Infrastructure.Identity;
-using Microsoft.AspNetCore.Identity;
 using Inredningsbutik.Web.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
+
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<CartService>();
 
-builder.Services.AddDbContext<AppDbContext>(options =>
+builder.Services.AddDbContext<Inredningsbutik.Infrastructure.Data.AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services
@@ -22,11 +25,7 @@ builder.Services
         options.Stores.MaxLengthForKeys = 450;
     })
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<AppDbContext>();
-
-
-builder.Services.AddRazorPages();
-builder.Services.AddScoped<CartService>();
+    .AddEntityFrameworkStores<Inredningsbutik.Infrastructure.Data.AppDbContext>();
 
 var app = builder.Build();
 
@@ -38,10 +37,14 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseSession();
+
 app.UseRouting();
+
+app.UseSession();
+
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapStaticAssets();
 
 app.MapControllerRoute(
@@ -55,12 +58,7 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.MapRazorPages();
-
+// Seed Identity + data
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -70,9 +68,8 @@ using (var scope = app.Services.CreateScope())
 
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var db = scope.ServiceProvider.GetRequiredService<Inredningsbutik.Infrastructure.Data.AppDbContext>();
     await DataSeeder.SeedAsync(db);
 }
-
 
 app.Run();
