@@ -1,0 +1,52 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Hantera konto";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+<div class="identity-page">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+            <div class="identity-card">
+                <h1 class="mb-4">@ViewData["Title"]</h1>
+
+                <div class="row">
+                    <div class="col-md-3 mb-4">
+                        <partial name="_ManageNav" />
+                    </div>
+
+                    <div class="col-md-9">
+                        <h2 class="h5 mb-3">Profil</h2>
+
+                        <partial name="_StatusMessage" for="StatusMessage" />
+
+                        <form method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+                            <div class="form-floating mb-3">
+                                <input asp-for="Username" class="form-control" disabled />
+                                <label>Användarnamn</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input asp-for="Input.PhoneNumber" class="form-control" autocomplete="tel" />
+                                <label>Telefonnummer</label>
+                                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                                Spara ändringar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

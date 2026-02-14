@@ -1,0 +1,93 @@
+/* Identity / Bootstrap overrides to match your theme */
+:root{
+  /* reuse your palette */
+  --brand: #451e0d;              /* your brown */
+  --brand-soft: #EDE8E0;         /* header bg / warm beige */
+  --focus: rgba(69,30,13,.18);   /* focus ring */
+}
+
+/* Keep Identity pages consistent with your typography */
+.identity-page h1,
+.identity-page h2,
+.identity-page h3{
+  font-family: "Playfair Display", serif;
+}
+
+.identity-page{
+  color: var(--text);
+}
+
+/* Wrap card style (add wrapper div in cshtml, see below) */
+.identity-card{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.06);
+  padding: 24px;
+  margin-top: 1em;
+}
+
+/* Inputs */
+.identity-page .form-control,
+.identity-page .form-select{
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: .65rem .85rem;
+}
+
+.identity-page .form-control:focus,
+.identity-page .form-select:focus{
+  border-color: rgba(69,30,13,.35);
+  box-shadow: 0 0 0 .2rem var(--focus);
+}
+
+/* Primary button -> match your beige CTA style */
+.identity-page .btn-primary{
+  background: var(--brand-soft) !important;
+  border-color: rgba(0,0,0,.08) !important;
+  color: #111 !important;
+  border-radius: 12px;
+  font-weight: 650;
+  padding: .7rem 1.1rem;
+}
+
+.identity-page .btn-primary:hover,
+.identity-page .btn-primary:focus{
+  opacity: .92;
+}
+
+/* Secondary buttons/links */
+.identity-page .btn-link{
+  color: rgba(0,0,0,.7) !important;
+}
+
+.identity-page a{
+  color: rgba(0,0,0,.75);
+  text-decoration: none;
+}
+.identity-page a:hover{
+  text-decoration: underline;
+}
+
+/* Left navigation (Manage) */
+.identity-page .nav-pills .nav-link{
+  border-radius: 12px;
+  padding: .65rem .9rem;
+  color: rgba(0,0,0,.78) !important;
+}
+
+.identity-page .nav-pills .nav-link:hover{
+  background: rgba(0,0,0,.04);
+}
+
+.identity-page .nav-pills .nav-link.active{
+  background: rgba(69, 30, 13, .06) !important;
+  color: #111 !important;
+  font-weight: 650;
+  border: 1px solid rgba(69,30,13,.12);
+}
+
+/* Tabs/sections separators */
+.identity-page hr{
+  border-top: 1px solid rgba(0,0,0)
+}
