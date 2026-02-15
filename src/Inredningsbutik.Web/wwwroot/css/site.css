@@ -894,6 +894,66 @@ footer{
   padding: 40px 20px;
 }
 
+/* Kundtjänst */
+.customer-service .cs-title{
+  letter-spacing: .08em;
+  font-weight: 700;
+}
+
+.customer-service .cs-lead{
+  max-width: 720px;
+  margin: 0 auto;
+  opacity: .8;
+}
+
+.customer-service .cs-nav{
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.customer-service .cs-nav-item{
+  width: 100%;
+  border: 0;
+  background: rgba(69, 30, 13, .06);
+  border-radius: 999px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .08s ease, background .12s ease;
+}
+
+.customer-service .cs-nav-item:hover{
+  transform: translateY(-1px);
+}
+
+.customer-service .cs-nav-item.is-active{
+  background: #EDE8E0;
+}
+
+.customer-service .cs-icon{
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.customer-service .cs-h2{
+  font-weight: 700;
+  letter-spacing: .02em;
+  margin-bottom: 14px;
+}
+
+.customer-service .cs-card{
+  border-radius: 18px;
+}
+
+
+
+
 
 /* ================================
   Responsivitet
