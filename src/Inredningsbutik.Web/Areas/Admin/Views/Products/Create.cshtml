@@ -1,0 +1,19 @@
+@model Product
+@{
+    ViewData["Title"] = "Ny produkt";
+}
+
+<h1 class="h3">Ny produkt</h1>
+
+<form method="post" class="mt-3">
+    <partial name="_ProductForm" model="Model" />
+
+    <div class="d-flex gap-2 mt-3">
+        <button class="btn btn-primary" type="submit">Spara</button>
+        <a class="btn btn-outline-secondary" asp-action="Index">Avbryt</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

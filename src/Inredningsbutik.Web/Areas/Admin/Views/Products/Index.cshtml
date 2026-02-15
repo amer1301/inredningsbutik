@@ -1,0 +1,61 @@
+@model List<Product>
+@{
+    ViewData["Title"] = "Produkter";
+    var categories = ViewBag.Categories as List<Category> ?? new();
+    int? selectedCategoryId = ViewBag.SelectedCategoryId as int?;
+    string? q = ViewBag.Query as string;
+}
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="h3 mb-0">Produkter</h1>
+    <a class="btn btn-primary" asp-action="Create">Ny produkt</a>
+</div>
+
+<form class="row g-2 mb-3" method="get">
+    <div class="col-md-6">
+        <input class="form-control" type="search" name="q" value="@q" placeholder="Sök produkt…" />
+    </div>
+    <div class="col-md-4">
+        <select class="form-select" name="categoryId">
+            <option value="">Alla kategorier</option>
+            @foreach (var c in categories)
+            {
+                <option value="@c.Id" selected="@(selectedCategoryId == c.Id)">@c.Name</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-2 d-grid">
+        <button class="btn btn-outline-secondary" type="submit">Filtrera</button>
+    </div>
+</form>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-striped align-middle mb-0">
+            <thead>
+            <tr>
+                <th>Namn</th>
+                <th>Kategori</th>
+                <th class="text-end">Pris</th>
+                <th class="text-end">Lager</th>
+                <th style="width: 1%"></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var p in Model)
+            {
+                <tr>
+                    <td>@p.Name</td>
+                    <td class="text-muted">@p.Category?.Name</td>
+                    <td class="text-end">@p.Price.ToString("0.00") kr</td>
+                    <td class="text-end">@p.StockQuantity</td>
+                    <td class="text-nowrap">
+                        <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@p.Id">Redigera</a>
+                        <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@p.Id">Ta bort</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

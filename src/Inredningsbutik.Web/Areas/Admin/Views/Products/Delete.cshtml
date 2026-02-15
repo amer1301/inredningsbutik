@@ -1,0 +1,32 @@
+@model Product
+@{
+    ViewData["Title"] = "Ta bort produkt";
+}
+
+<h1 class="h3">Ta bort produkt</h1>
+
+<div class="alert alert-warning mt-3">
+    <strong>Observera:</strong> Detta går inte att ångra.
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Namn</dt>
+    <dd class="col-sm-9">@Model.Name</dd>
+
+    <dt class="col-sm-3">Kategori</dt>
+    <dd class="col-sm-9 text-muted">@Model.Category?.Name</dd>
+
+    <dt class="col-sm-3">Pris</dt>
+    <dd class="col-sm-9">@Model.Price.ToString("0.00") kr</dd>
+
+    <dt class="col-sm-3">Lager</dt>
+    <dd class="col-sm-9">@Model.StockQuantity</dd>
+</dl>
+
+<form method="post" asp-action="DeleteConfirmed">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <div class="d-flex gap-2">
+        <button class="btn btn-danger" type="submit">Ta bort</button>
+        <a class="btn btn-outline-secondary" asp-action="Index">Avbryt</a>
+    </div>
+</form>

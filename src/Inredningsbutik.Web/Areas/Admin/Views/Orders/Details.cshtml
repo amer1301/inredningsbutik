@@ -1,0 +1,79 @@
+@model Order
+@{
+    ViewData["Title"] = $"Order #{Model.Id}";
+    var presetStatuses = new[] { "Ny", "Behandlas", "Skickad", "Avslutad", "Avbruten" };
+}
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+        <h1 class="h3 mb-1">Order #@Model.Id</h1>
+        <div class="text-muted">@Model.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm") • Kund: <code>@Model.UserId</code></div>
+    </div>
+    <a class="btn btn-outline-secondary" asp-action="Index">Tillbaka</a>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="h5">Status</h2>
+                <form asp-action="UpdateStatus" method="post" class="mt-2">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <div class="input-group">
+                        <select class="form-select" name="status">
+                            @foreach (var s in presetStatuses)
+                            {
+                                <option value="@s" selected="@(Model.Status == s)">@s</option>
+                            }
+                            @* Faller tillbaka för ev. andra statusar *@
+                            @if (!presetStatuses.Contains(Model.Status))
+                            {
+                                <option value="@Model.Status" selected="selected">@Model.Status</option>
+                            }
+                        </select>
+                        <button class="btn btn-primary" type="submit">Uppdatera</button>
+                    </div>
+                </form>
+
+                <hr />
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted">Summa</span>
+                    <strong>@Model.TotalAmount.ToString("0.00") kr</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="table-responsive">
+                <table class="table table-striped align-middle mb-0">
+                    <thead>
+                    <tr>
+                        <th>Produkt</th>
+                        <th class="text-end">Antal</th>
+                        <th class="text-end">Á-pris</th>
+                        <th class="text-end">Rad</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var i in Model.OrderItems)
+                    {
+                        var line = i.UnitPrice * i.Quantity;
+                        <tr>
+                            <td>
+                                <div>@i.Product?.Name</div>
+                                <div class="text-muted small">ProduktID: @i.ProductId</div>
+                            </td>
+                            <td class="text-end">@i.Quantity</td>
+                            <td class="text-end">@i.UnitPrice.ToString("0.00") kr</td>
+                            <td class="text-end">@line.ToString("0.00") kr</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

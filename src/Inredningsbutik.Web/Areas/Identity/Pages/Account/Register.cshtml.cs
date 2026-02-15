@@ -64,39 +64,42 @@ public class RegisterModel : PageModel
         ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
     }
 
-    public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
-    {
-        returnUrl ??= Url.Content("~/");
-        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
+{
+    returnUrl ??= Url.Content("~/");
+    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-        if (!ModelState.IsValid)
-            return Page();
-
-        var user = CreateUser();
-
-        await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-        await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-
-        var result = await _userManager.CreateAsync(user, Input.Password);
-
-        if (result.Succeeded)
-        {
-            _logger.LogInformation("User created a new account with password.");
-
-            // Om du kräver bekräftelse senare: här kan du skapa bekräftelselänk
-            // Nu har du RequireConfirmedAccount = false, så vi loggar in direkt:
-            await _signInManager.SignInAsync(user, isPersistent: false);
-
-            return LocalRedirect(returnUrl);
-        }
-
-        foreach (var error in result.Errors)
-        {
-            ModelState.AddModelError(string.Empty, error.Description);
-        }
-
+    if (!ModelState.IsValid)
         return Page();
+
+    var user = CreateUser();
+
+    await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+    await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+
+    var result = await _userManager.CreateAsync(user, Input.Password);
+
+    if (result.Succeeded)
+    {
+        _logger.LogInformation("Användare skapade nytt konto med lösenord.");
+
+        // Lägg nya användare i Customer-rollen 
+        await _userManager.AddToRoleAsync(user, "Customer");
+
+        // RequireConfirmedAccount = false, så vi loggar in direkt:
+        await _signInManager.SignInAsync(user, isPersistent: false);
+
+        return LocalRedirect(returnUrl);
     }
+
+    foreach (var error in result.Errors)
+    {
+        ModelState.AddModelError(string.Empty, error.Description);
+    }
+
+    return Page();
+}
+
 
     private ApplicationUser CreateUser()
     {
@@ -106,8 +109,8 @@ public class RegisterModel : PageModel
         }
         catch
         {
-            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-                                                $"Ensure it has a parameterless constructor.");
+            throw new InvalidOperationException($"Kan inte skapa en instans av '{nameof(ApplicationUser)}'. " +
+                                                $"Kontrollera att det har en parameterlös konstruktor.");
         }
     }
 
@@ -115,7 +118,7 @@ public class RegisterModel : PageModel
     {
         if (!_userManager.SupportsUserEmail)
         {
-            throw new NotSupportedException("The default UI requires a user store with email support.");
+            throw new NotSupportedException("Standardgränssnittet kräver en användarbutik med e-postsupport.");
         }
         return (IUserEmailStore<ApplicationUser>)_userStore;
     }

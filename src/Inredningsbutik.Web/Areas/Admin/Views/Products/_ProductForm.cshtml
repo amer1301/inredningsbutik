@@ -1,0 +1,45 @@
+@model Product
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<div class="row g-3">
+    <div class="col-md-8">
+        <label asp-for="Name" class="form-label">Namn</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="CategoryId" class="form-label">Kategori</label>
+        <select asp-for="CategoryId" asp-items="ViewBag.CategoryOptions" class="form-select"></select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
+
+    <div class="col-12">
+        <label asp-for="Description" class="form-label">Beskrivning</label>
+        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="Price" class="form-label">Pris (kr)</label>
+        <input asp-for="Price" class="form-control" inputmode="decimal" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="StockQuantity" class="form-label">Lager</label>
+        <input asp-for="StockQuantity" class="form-control" inputmode="numeric" />
+        <span asp-validation-for="StockQuantity" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="ImageUrl" class="form-label">Bild-URL</label>
+        <input asp-for="ImageUrl" class="form-control" placeholder="/images/products/…" />
+    </div>
+    <div class="col-md-6">
+        <label asp-for="HoverImageUrl" class="form-label">Hover-bild-URL</label>
+        <input asp-for="HoverImageUrl" class="form-control" placeholder="/images/hover/…" />
+    </div>
+    <div class="col-md-6">
+        <label asp-for="InspirationImageUrls" class="form-label">Inspiration (kommaseparerade URL:er)</label>
+        <input asp-for="InspirationImageUrls" class="form-control" placeholder="/images/inspiration/1.jpg, /images/inspiration/2.jpg" />
+    </div>
+</div>

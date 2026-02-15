@@ -27,6 +27,12 @@ h1,h2,h3{
   font-family: "Playfair Display", serif;
 }
 
+.cart-toast{
+  background: #451e0d; /* välj din färg */
+  color: #fff;
+}
+
+
 /* =========================
    Header / Topbar / Navbar
    ========================= */
@@ -605,7 +611,6 @@ header{
   align-items: start;
 }
 
-/* Gallery = 2 rows (stage + thumbs) så thumbs alltid hamnar under bilden */
 .pdp__gallery{
   display: grid;
   grid-template-rows: auto auto;
@@ -874,40 +879,6 @@ min-height: 104px;
 }
 
 
-/* Desktop: säkerställ 2 kolumner */
-@media (min-width: 992px){
-  .pdp{
-    display: grid !important;
-    grid-template-columns: 1.25fr 1fr !important;
-    gap: 28px !important;
-    align-items: start !important;
-  }
-  .pdp__gallery{ grid-column: 1; }
-  .pdp__info{ grid-column: 2; }
-}
-
-/* Mobile: en kolumn */
-@media (max-width: 992px){
-  .pdp{
-    grid-template-columns: 1fr;
-  }
-  .pdp__info{
-    position: static;
-    top: auto;
-  }
-  .pdp__title{
-    font-size: 34px;
-  }
-}
-
-/* Small: köp-rad staplas */
-@media (max-width: 520px){
-  .pdp__buyRow{
-    grid-template-columns: 1fr;
-  }
-}
-
-
 footer{
   width: 100%;
   text-align: center;
@@ -969,7 +940,28 @@ footer{
   .catalog-filters__groupTitle{
     margin-bottom: 8px;
   }
+
+  .pdp{
+    display: grid !important;
+    grid-template-columns: 1.25fr 1fr !important;
+    gap: 28px !important;
+    align-items: start !important;
+  }
+  .pdp__gallery{ grid-column: 1; }
+  .pdp__info{ grid-column: 2; }
+
+  .pdp{
+    grid-template-columns: 1fr;
+  }
+  .pdp__info{
+    position: static;
+    top: auto;
+  }
+  .pdp__title{
+    font-size: 34px;
+  }
 }
+
 
 @media (max-width: 768px){
   .hero-editorial{
@@ -983,6 +975,12 @@ footer{
 
   .hero-editorial__inner{
     padding: 0 5vw;
+  }
+}
+
+@media (max-width: 520px){
+  .pdp__buyRow{
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1004,7 +1002,7 @@ footer{
   .fade-up{ animation: none; }
   .product-card, .product-media img{ transition: none; }
 }
-/* Disable active dot entirely */
+
 .catalog-filters__link.is-active::before{
   content: none !important;
   display: none !important;

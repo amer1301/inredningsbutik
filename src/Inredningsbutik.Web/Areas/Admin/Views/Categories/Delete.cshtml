@@ -1,0 +1,31 @@
+@model Category
+@{
+    ViewData["Title"] = "Ta bort kategori";
+}
+
+<h1 class="h3">Ta bort kategori</h1>
+
+<div class="alert alert-warning mt-3">
+    <strong>Observera:</strong> Detta går inte att ångra.
+</div>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<dl class="row">
+    <dt class="col-sm-3">Namn</dt>
+    <dd class="col-sm-9">@Model.Name</dd>
+
+    <dt class="col-sm-3">Slug</dt>
+    <dd class="col-sm-9 text-muted"><code>@Model.Slug</code></dd>
+
+    <dt class="col-sm-3">Produkter</dt>
+    <dd class="col-sm-9">@Model.Products.Count</dd>
+</dl>
+
+<form method="post" asp-action="DeleteConfirmed">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <div class="d-flex gap-2">
+        <button class="btn btn-danger" type="submit">Ta bort</button>
+        <a class="btn btn-outline-secondary" asp-action="Index">Avbryt</a>
+    </div>
+</form>

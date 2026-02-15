@@ -6,11 +6,40 @@
 <ul class="navbar-nav flex-row gap-3 align-items-center">
 @if (SignInManager.IsSignedIn(User))
 {
+    @* Adminlänk *@
+    @if (User.IsInRole("Admin"))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="AdminHome" asp-action="Index">Admin</a>
+        </li>
+    }
+
+    @* Konto *@
     <li class="nav-item">
         <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Konto</a>
     </li>
+
+    @* Orders — olika för admin vs kund *@
+    @if (User.IsInRole("Admin"))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Orders" asp-action="Index">Ordrar</a>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Mina ordrar</a>
+        </li>
+    }
+
+    @* Logout *@
     <li class="nav-item">
-        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+        <form class="form-inline"
+              asp-area="Identity"
+              asp-page="/Account/Logout"
+              asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })"
+              method="post">
             <button type="submit" class="nav-link btn btn-link text-dark">Logga ut</button>
         </form>
     </li>

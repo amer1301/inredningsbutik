@@ -1,0 +1,36 @@
+@model List<Category>
+@{
+    ViewData["Title"] = "Kategorier";
+}
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="h3 mb-0">Kategorier</h1>
+    <a class="btn btn-primary" asp-action="Create">Ny kategori</a>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-striped align-middle mb-0">
+            <thead>
+            <tr>
+                <th>Namn</th>
+                <th class="d-none d-md-table-cell">Slug</th>
+                <th style="width: 1%"></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var c in Model)
+            {
+                <tr>
+                    <td>@c.Name</td>
+                    <td class="d-none d-md-table-cell text-muted"><code>@c.Slug</code></td>
+                    <td class="text-nowrap">
+                        <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@c.Id">Redigera</a>
+                        <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@c.Id">Ta bort</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

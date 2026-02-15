@@ -1,0 +1,57 @@
+@model List<Order>
+@{
+    ViewData["Title"] = "Ordrar";
+    var statuses = ViewBag.Statuses as List<string> ?? new();
+    string? selectedStatus = ViewBag.SelectedStatus as string;
+}
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="h3 mb-0">Ordrar</h1>
+</div>
+
+<form class="row g-2 mb-3" method="get">
+    <div class="col-md-4">
+        <select class="form-select" name="status">
+            <option value="">Alla statusar</option>
+            @foreach (var s in statuses)
+            {
+                <option value="@s" selected="@(selectedStatus == s)">@s</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-2 d-grid">
+        <button class="btn btn-outline-secondary" type="submit">Filtrera</button>
+    </div>
+</form>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-striped align-middle mb-0">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Datum</th>
+                <th>Status</th>
+                <th class="text-end">Summa</th>
+                <th class="text-end">Rader</th>
+                <th style="width: 1%"></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var o in Model)
+            {
+                <tr>
+                    <td>@o.Id</td>
+                    <td>@o.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                    <td><span class="badge text-bg-secondary">@o.Status</span></td>
+                    <td class="text-end">@o.TotalAmount.ToString("0.00") kr</td>
+                    <td class="text-end">@o.OrderItems.Count</td>
+                    <td class="text-nowrap">
+                        <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@o.Id">Öppna</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

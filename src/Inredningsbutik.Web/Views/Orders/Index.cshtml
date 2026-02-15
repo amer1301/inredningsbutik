@@ -1,0 +1,43 @@
+@model List<Inredningsbutik.Core.Entities.Order>
+@{
+    ViewData["Title"] = "Mina ordrar";
+}
+
+<h1 class="h3 mb-3">Mina ordrar</h1>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Du har inga ordrar ännu.</div>
+}
+else
+{
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-striped align-middle mb-0">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Datum</th>
+                    <th>Status</th>
+                    <th class="text-end">Summa</th>
+                    <th style="width: 1%"></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var o in Model)
+                {
+                    <tr>
+                        <td>@o.Id</td>
+                        <td>@o.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                        <td><span class="badge text-bg-secondary">@o.Status</span></td>
+                        <td class="text-end">@o.TotalAmount.ToString("0.00") kr</td>
+                        <td class="text-nowrap">
+                            <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@o.Id">Visa</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

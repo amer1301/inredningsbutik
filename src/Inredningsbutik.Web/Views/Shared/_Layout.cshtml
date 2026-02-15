@@ -118,5 +118,28 @@
     </script>
 }
 
+@if (TempData["AdminToast"] is string adminToast)
+{
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="adminToast" class="toast align-items-center text-bg-primary border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">
+                    @adminToast
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var toastEl = document.getElementById('adminToast');
+            var toast = new bootstrap.Toast(toastEl, { delay: 2000 });
+            toast.show();
+        });
+    </script>
+}
+
 </body>
 </html>
