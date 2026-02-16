@@ -9,7 +9,7 @@
 @if (!Model.Items.Any())
 {
     <p>Din varukorg är tom.</p>
-    <a class="btn btn-primary" asp-controller="Catalog" asp-action="Index">Till produkter</a>
+    <a class="btn btn-primary" asp-area="" asp-controller="Catalog" asp-action="Index">Till produkter</a>
     return;
 }
 
@@ -52,5 +52,5 @@
 
 <div class="d-flex justify-content-between">
     <strong>Total: @Model.Total.ToString("0.00") kr</strong>
-    <a class="btn btn-success" asp-controller="Checkout" asp-action="Index">Till kassan</a>
+    <a class="btn btn-success" asp-area="" asp-controller="Checkout" asp-action="Index">Till kassan</a>
 </div>

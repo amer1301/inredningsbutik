@@ -3,7 +3,6 @@ using Inredningsbutik.Infrastructure.Identity;
 using Inredningsbutik.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Inredningsbutik.Web.Areas.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

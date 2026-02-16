@@ -28,7 +28,12 @@ h1,h2,h3{
 }
 
 .cart-toast{
-  background: #451e0d; /* välj din färg */
+  background: #451e0d;
+  color: #fff;
+}
+
+.toast-body {
+  background: #451e0d;
   color: #fff;
 }
 

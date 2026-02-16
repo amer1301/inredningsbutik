@@ -23,12 +23,13 @@
 <div class="topbar">
     <div class="container-fluid topbar__inner">
 
-        <form class="topbar-search"
-              method="get"
-              asp-controller="Home"
-              asp-action="Index"
-              role="search"
-              aria-label="Sök produkter">
+<form class="topbar-search"
+      method="get"
+      asp-area=""
+      asp-controller="Home"
+      asp-action="Index"
+      role="search"
+      aria-label="Sök produkter">
 
             <span class="topbar-search__icon" aria-hidden="true">
   <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
@@ -48,7 +49,7 @@
         </form>
 
         <div class="topbar__right">
-            <a class="topbar__support" asp-controller="CustomerService" asp-action="Index">Kundtjänst</a>
+<a class="topbar__support" asp-area="" asp-controller="CustomerService" asp-action="Index">Kundtjänst</a> 
             <partial name="_LoginPartial" />
         </div>
 

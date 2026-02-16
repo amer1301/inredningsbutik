@@ -406,6 +406,7 @@ public static class DataSeeder
                 CategoryId = belysning.Id,
                 ImageUrl = "/images/products/bordslampa-korp-produkt.png",
                 HoverImageUrl = "/images/hover/bordslampa-korp-inspiration.jpg",
+                InspirationImageUrls = "/images/inspiration/korplampa2.jpg",
                 CreatedAt = DateTime.UtcNow
             },
             new()

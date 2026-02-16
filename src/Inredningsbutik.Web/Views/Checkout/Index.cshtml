@@ -35,5 +35,5 @@
 <form asp-action="PlaceOrder" method="post">
     @Html.AntiForgeryToken()
     <button class="btn btn-success" type="submit">Lägg beställning</button>
-    <a class="btn btn-secondary" asp-controller="Cart" asp-action="Index">Tillbaka</a>
+    <a class="btn btn-secondary" asp-area="" asp-controller="Cart" asp-action="Index">Tillbaka</a>
 </form>
