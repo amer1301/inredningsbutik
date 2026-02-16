@@ -32,6 +32,19 @@ h1,h2,h3{
   color: #fff;
 }
 
+.btn-brand {
+    color: black;
+    background-color: #EDE8E0;
+    border-color: #EDE8E0;
+}
+
+.btn-brand:hover {
+    color: white;
+    background-color: #451e0d;
+    border-color: #451e0d;
+}
+
+
 
 /* =========================
    Header / Topbar / Navbar

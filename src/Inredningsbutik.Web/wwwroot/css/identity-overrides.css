@@ -43,12 +43,16 @@
 
 /* Primary button -> match your beige CTA style */
 .identity-page .btn-primary{
-  background: var(--brand-soft) !important;
-  border-color: rgba(0,0,0,.08) !important;
-  color: #111 !important;
-  border-radius: 12px;
-  font-weight: 650;
-  padding: .7rem 1.1rem;
+    color: black;
+    background-color: #EDE8E0;
+    border-color: #451e0d;
+}
+
+
+.identity-page .btn-primary:hover {
+    color: white;
+    background-color: #451e0d;
+    border-color: #451e0d;
 }
 
 .identity-page .btn-primary:hover,
@@ -90,4 +94,86 @@
 /* Tabs/sections separators */
 .identity-page hr{
   border-top: 1px solid rgba(0,0,0)
+}
+
+.auth-page{
+  min-height: calc(100vh - 220px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+}
+
+.auth-card{
+  width: min(520px, 100%);
+  background: #fff;
+  border-radius: 18px;
+  padding: 32px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.06);
+  border: 1px solid rgba(0,0,0,.06);
+}
+
+.auth-header{
+  margin-bottom: 18px;
+}
+
+.auth-title{
+  font-family: "Playfair Display", serif;
+  font-size: 44px;
+  line-height: 1.05;
+  margin: 0 0 8px 0;
+}
+
+.auth-subtitle{
+  margin: 0;
+  opacity: .75;
+}
+
+.auth-btn{
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+
+.auth-links{
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  opacity: .9;
+}
+
+/* Register ska få samma knappstil som login */
+.auth-page .btn-primary {
+    background: var(--brand-soft) !important;
+    border-color: rgba(0, 0, 0, .08) !important;
+    color: #111 !important;
+    border-radius: 12px;
+    font-weight: 650;
+    padding: .7rem 1.1rem;
+}
+
+/* hover */
+.auth-page .btn-primary:hover {
+    filter: brightness(.97);
+}
+
+.btn-outline-primary,
+.btn-outline-secondary {
+    color: black;
+    background-color: #EDE8E0;
+    border-color: #451e0d;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-secondary:hover {
+    color: white;
+    background-color: #451e0d;
+    border-color: #451e0d;
+}
+
+.alert-warning {
+    --bs-alert-color: black;
+    --bs-alert-bg: #EDE8E0;
+    --bs-alert-border-color: #451e0d;
+    --bs-alert-link-color: #451e0d;
 }

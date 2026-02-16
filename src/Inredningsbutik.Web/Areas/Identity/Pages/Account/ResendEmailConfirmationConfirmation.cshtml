@@ -1,0 +1,20 @@
+@page
+@{
+    ViewData["Title"] = "Bekräftelsemail skickat";
+}
+
+<div class="identity-page">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-5">
+            <div class="identity-card card">
+                <div class="card-body p-4 p-md-5">
+                    <h1 class="mb-2">Klart!</h1>
+                    <p class="text-muted mb-4">
+                        Om en användare med den angivna e-postadressen finns så har vi skickat ett nytt bekräftelsemail.
+                    </p>
+                    <a class="btn btn-primary w-100" asp-page="./Login">Tillbaka till inloggning</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
