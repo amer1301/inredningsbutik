@@ -17,145 +17,153 @@
 </head>
 
 <body class="layout-root">
-    <form method="post" id="__AjaxAntiForgeryForm">
-        @Html.AntiForgeryToken()
-    </form>
+<form method="post" id="__AjaxAntiForgeryForm">
+    @Html.AntiForgeryToken()
+</form>
 
-    @{
-        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
-        var currentPage = ViewContext.RouteData.Values["page"]?.ToString(); // för Identity pages
-        var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentPage = ViewContext.RouteData.Values["page"]?.ToString();
+    var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
 
-        var isAdmin = User.Identity?.IsAuthenticated == true && User.IsInRole("Admin");
-    }
+    var isAdmin = User.Identity?.IsAuthenticated == true && User.IsInRole("Admin");
+}
 
-    <header>
+<header>
 
-        <!-- TOPBAR: SÖK VÄNSTER + KUNDTJÄNST + LOGIN HÖGER -->
-        <div class="topbar">
-            <div class="container-fluid topbar__inner">
+<!-- TOPBAR -->
+<div class="topbar">
+    <div class="container-fluid topbar__inner">
 
-                <form class="topbar-search"
-                      method="get"
-                      asp-area=""
-                      asp-controller="Home"
-                      asp-action="Index"
-                      role="search"
-                      aria-label="Sök produkter">
+        <form class="topbar-search"
+              method="get"
+              asp-area=""
+              asp-controller="Home"
+              asp-action="Index"
+              role="search"
+              aria-label="Sök produkter">
 
-                    <span class="topbar-search__icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
-                             stroke="currentColor" stroke-width="2"
-                             stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="7"></circle>
-                            <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
-                        </svg>
-                    </span>
+            <span class="topbar-search__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="7"></circle>
+                    <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+                </svg>
+            </span>
 
-                    <input class="topbar-search__input"
-                           type="search"
-                           name="q"
-                           value="@(ViewContext.HttpContext.Request.Query["q"])"
-                           placeholder="Sök produkt, varumärke, kategori" />
-                </form>
+            <input class="topbar-search__input"
+                   type="search"
+                   name="q"
+                   value="@(ViewContext.HttpContext.Request.Query["q"])"
+                   placeholder="Sök produkt, varumärke, kategori" />
+        </form>
 
-                <div class="topbar__right">
-                    @* Admin ska gå till Admin/Kundtjänst. Alla andra till vanliga Kundtjänst. *@
-                    @if (isAdmin)
-                    {
-                        <a class="topbar__support @(currentArea == "Admin" && currentController == "CustomerService" ? "is-active" : "")"
-                           asp-area="Admin"
-                           asp-controller="CustomerService"
-                           asp-action="Index">
-                            Kundtjänst
-                        </a>
-                    }
-                    else
-                    {
-                        <a class="topbar__support @(currentArea == null && currentController == "CustomerService" ? "is-active" : "")"
-                           asp-area=""
-                           asp-controller="CustomerService"
-                           asp-action="Index">
-                            Kundtjänst
-                        </a>
-                    }
+        <div class="topbar__right">
 
-                    <partial name="_LoginPartial" />
-                </div>
+            @* Kundtjänst länk — olika för admin/kund *@
+            @if (isAdmin)
+            {
+                <a class="topbar__support @(currentArea == "Admin" && currentController == "CustomerService" ? "is-active" : "")"
+                   asp-area="Admin"
+                   asp-controller="CustomerService"
+                   asp-action="Index">
+                    Kundtjänst
+                </a>
+            }
+            else
+            {
+                <a class="topbar__support @(currentArea == null && currentController == "CustomerService" ? "is-active" : "")"
+                   asp-area=""
+                   asp-controller="CustomerService"
+                   asp-action="Index">
+                    Kundtjänst
+                </a>
+            }
 
-            </div>
+            <partial name="_LoginPartial" />
         </div>
 
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PERSDOTTER</a>
-
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
-                        aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div id="mainNavbar" class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav me-auto">
-                    </ul>
-
-                    <ul class="navbar-nav ms-auto align-items-center">
-                        <li class="nav-item">
-                            @await Component.InvokeAsync("CartSummary")
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-    </header>
-
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
     </div>
+</div>
 
-    <footer>
-        <div class="container">
-            &copy; 2026 - Amanda Persdotter
+<nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom">
+    <div class="container-fluid">
+        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PERSDOTTER</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div id="mainNavbar" class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+            <ul class="navbar-nav me-auto"></ul>
+
+            <ul class="navbar-nav ms-auto align-items-center">
+
+                @* ❗ ADMIN FÅR INTE SE VARUKORG *@
+                @if (!isAdmin)
+                {
+                    <li class="nav-item">
+                        @await Component.InvokeAsync("CartSummary")
+                    </li>
+                }
+
+            </ul>
         </div>
-    </footer>
+    </div>
+</nav>
 
-    @if (TempData["CartToast"] is string toastMessage)
-    {
-        <div class="toast-container position-fixed bottom-0 end-0 p-3">
-            <div id="cartToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        @toastMessage
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                            data-bs-dismiss="toast" aria-label="Close"></button>
+</header>
+
+<div class="container">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
+
+<footer>
+    <div class="container">
+        &copy; 2026 - Amanda Persdotter
+    </div>
+</footer>
+
+
+@* CART TOAST *@
+@if (TempData["CartToast"] is string toastMessage)
+{
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="cartToast" class="toast align-items-center border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">
+                    @toastMessage
                 </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast"></button>
             </div>
         </div>
-    }
+    </div>
+}
 
-    @if (TempData["AdminToast"] is string adminToast)
-    {
-        <div class="toast-container position-fixed bottom-0 end-0 p-3">
-            <div id="adminToast" class="toast custom-toast border-0" role="alert">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        @adminToast
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                            data-bs-dismiss="toast" aria-label="Close"></button>
+@* ADMIN BLOCK TOAST *@
+@if (TempData["AdminToast"] is string adminToast)
+{
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="adminToast" class="toast custom-toast border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">
+                    @adminToast
                 </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast"></button>
             </div>
         </div>
-    }
+    </div>
+}
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
 
 </body>
 </html>

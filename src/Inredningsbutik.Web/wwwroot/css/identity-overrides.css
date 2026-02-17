@@ -142,20 +142,21 @@
   opacity: .9;
 }
 
-/* Register ska få samma knappstil som login */
+/* Register & login knapp stil */
 .auth-page .btn-primary {
-    background: var(--brand-soft) !important;
-    border-color: rgba(0, 0, 0, .08) !important;
-    color: #111 !important;
-    border-radius: 12px;
-    font-weight: 650;
-    padding: .7rem 1.1rem;
+  --bs-btn-bg: var(--brand-soft);
+  --bs-btn-border-color: #451e0d;
+  --bs-btn-color: #111;
+
+  --bs-btn-hover-bg: #451e0d;
+  --bs-btn-hover-border-color: #451e0d;
+  --bs-btn-hover-color: #fff;
+
+  border-radius: 12px;
+  font-weight: 650;
+  padding: .7rem 1.1rem;
 }
 
-/* hover */
-.auth-page .btn-primary:hover {
-    filter: brightness(.97);
-}
 
 .btn-outline-primary,
 .btn-outline-secondary {
@@ -182,4 +183,9 @@ code {
     font-size: 1em;
     color: #451e0d;
     word-wrap: break-word;
+}
+
+.pdp__stockOut {
+    color: #451e0d;
+    font-weight: 600;
 }

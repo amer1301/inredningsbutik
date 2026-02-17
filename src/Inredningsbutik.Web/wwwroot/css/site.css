@@ -37,19 +37,16 @@ h1,h2,h3{
   color: #fff;
 }
 
-/* hela toasten */
 .custom-toast{
   background: #451e0d;
   color: #fff;
 }
 
-/* innehållet */
 .custom-toast .toast-body{
   background: transparent;
   color: inherit;
 }
 
-/* stäng-knappen */
 .custom-toast .btn-close{
   filter: invert(1);
   opacity: .9;
@@ -864,16 +861,20 @@ min-height: 104px;
 
 .pdp__add{
   height: 48px;
-  border: 0;
   border-radius: 12px;
-  background: #EDE8E0;
-  color: #111;
+    color: black;
+    background-color: #EDE8E0;
+    border-color: #451e0d;
   font-weight: 650;
   cursor: pointer;
+  border: 1px solid #451e0d;
 }
 
 .pdp__add:hover{
   opacity: .92;
+      color: white;
+    background-color: #451e0d;
+    border-color: #451e0d;
 }
 
 .pdp__usp{
@@ -1038,7 +1039,10 @@ footer{
   border-radius: 18px;
 }
 
-
+a {
+    color: #451e0d;
+    text-decoration: underline;
+}
 
 
 

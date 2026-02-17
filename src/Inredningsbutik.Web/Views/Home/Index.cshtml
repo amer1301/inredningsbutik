@@ -1,5 +1,10 @@
 ﻿@model Inredningsbutik.Web.ViewModels.HomeIndexVm
 
+@{
+    var isAdmin = User.Identity?.IsAuthenticated == true && User.IsInRole("Admin");
+}
+
+
 <div class="page-wrap">
 
 <!-- HERO -->
@@ -129,6 +134,8 @@
               <div class="product-body">
                 <div class="product-title">@p.Name</div>
 <div class="product-meta">
+@if (!isAdmin)
+{
   <form asp-area="" asp-controller="Cart" asp-action="Add" method="post" class="product-add">
     @Html.AntiForgeryToken()
     <input type="hidden" name="productId" value="@p.Id" />
@@ -139,6 +146,8 @@
       <img src="images/icons/köpikon.png" alt="" aria-hidden="true" />
     </button>
   </form>
+}
+
 
   <span class="product-price"><strong>@p.Price.ToString("0.00") kr</strong></span>
 </div>

@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = Model.Name;
 
+    var isAdmin = User.Identity?.IsAuthenticated == true && User.IsInRole("Admin");
+
     // Returnera användaren till sidan den kom ifrån (med filter)
     var returnUrl = Context.Request.Query["returnUrl"].ToString();
 
@@ -38,7 +40,6 @@
     if (images.Count == 0)
         images.Add("https://via.placeholder.com/1200x1200?text=No+image");
 }
-
 
 <section class="pdp">
     <div class="pdp__gallery">
@@ -87,36 +88,45 @@
 
         <p class="pdp__desc">@Model.Description</p>
 
+        @* ✅ Köp-block: visas bara för gäst/kund, inte admin *@
         @if (Model.StockQuantity > 0)
         {
-            <form asp-controller="Cart" asp-action="Add" method="post" class="pdp__buy">
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="productId" value="@Model.Id" />
-                <input type="hidden" name="returnUrl" value="@returnUrl" />
+            if (!isAdmin)
+            {
+                <form asp-controller="Cart" asp-action="Add" method="post" class="pdp__buy">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="productId" value="@Model.Id" />
+                    <input type="hidden" name="returnUrl" value="@returnUrl" />
 
+                    <div class="pdp__buyRow">
+                        <div class="pdp__qty" aria-label="Välj antal">
+                            <button class="pdp__qtyBtn" type="button" data-qty="dec" aria-label="Minska antal">−</button>
+                            <input id="pdpQtyInput"
+                                   class="pdp__qtyInput"
+                                   type="number"
+                                   name="quantity"
+                                   value="1"
+                                   min="1"
+                                   max="@Model.StockQuantity" />
+                            <button class="pdp__qtyBtn" type="button" data-qty="inc" aria-label="Öka antal">+</button>
+                        </div>
 
-                <div class="pdp__buyRow">
-                    <div class="pdp__qty" aria-label="Välj antal">
-                        <button class="pdp__qtyBtn" type="button" data-qty="dec" aria-label="Minska antal">−</button>
-                        <input id="pdpQtyInput"
-                               class="pdp__qtyInput"
-                               type="number"
-                               name="quantity"
-                               value="1"
-                               min="1"
-                               max="@Model.StockQuantity" />
-                        <button class="pdp__qtyBtn" type="button" data-qty="inc" aria-label="Öka antal">+</button>
+                        <button class="pdp__add" type="submit">Lägg i varukorgen</button>
                     </div>
 
-                    <button class="pdp__add" type="submit">Lägg i varukorgen</button>
+                    <ul class="pdp__usp" aria-label="Köpvillkor">
+                        <li><span class="pdp__check">✓</span> Fri frakt över 499 kr*</li>
+                        <li><span class="pdp__check">✓</span> Snabba och flexibla leveranser</li>
+                        <li><span class="pdp__check">✓</span> Öppet köp i 30 dagar</li>
+                    </ul>
+                </form>
+            }
+            else
+            {
+                <div class="pdp__buy pdp__buy--disabled">
+                    <p class="pdp__stockOut">Administratörer kan inte handla i butiken.</p>
                 </div>
-
-                <ul class="pdp__usp" aria-label="Köpvillkor">
-                    <li><span class="pdp__check">✓</span> Fri frakt över 499 kr*</li>
-                    <li><span class="pdp__check">✓</span> Snabba och flexibla leveranser</li>
-                    <li><span class="pdp__check">✓</span> Öppet köp i 30 dagar</li>
-                </ul>
-            </form>
+            }
         }
         else
         {
