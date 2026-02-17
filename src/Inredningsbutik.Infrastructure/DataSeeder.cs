@@ -419,6 +419,42 @@ public static class DataSeeder
                 ImageUrl = "/images/products/bordslampa-produkt.png",
                 HoverImageUrl = "/images/hover/bordslampa-inspiration.jpg",
                 CreatedAt = DateTime.UtcNow
+            },
+
+            new()
+            {
+                Name = "Orrefors Graphic Vas rund",
+                Description = "Orrefors Graphic är en stilren och stramt utformad vas designad av Magnus Forthmeiier.",
+                Price = 499,
+                StockQuantity = 20,
+                CategoryId = vaser.Id,
+                ImageUrl = "/images/products/OrreforsVas-produkt.png",
+                HoverImageUrl = "/images/hover/Orrefors-inspiration.jpg",
+                CreatedAt = DateTime.UtcNow
+            },
+
+            new()
+            {
+                Name = "Orrefors Graphic Vas cylinder",
+                Description = "Orrefors Graphic är en stilren och stramt utformad vas designad av Magnus Forthmeiier.",
+                Price = 599,
+                StockQuantity = 20,
+                CategoryId = vaser.Id,
+                ImageUrl = "/images/products/OrreforsVasHög-produkt.png",
+                HoverImageUrl = "/images/hover/Orreforshög-inspiration.jpg",
+                CreatedAt = DateTime.UtcNow
+            },
+
+            new()
+            {
+                Name = "Vas nova",
+                Description = "Läcker vas av handgjort glas med mönster i ljus beige och vit färg.",
+                Price = 249,
+                StockQuantity = 20,
+                CategoryId = vaser.Id,
+                ImageUrl = "/images/products/vasNova-produkt.png",
+                HoverImageUrl = "/images/hover/novavas-inspiration.jpg",
+                CreatedAt = DateTime.UtcNow
             }
         };
 
