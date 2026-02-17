@@ -67,6 +67,13 @@ h1,h2,h3{
     border-color:#451e0d;
 }
 
+.alert-success {
+  --bs-alert-color: black;
+    --bs-alert-bg: #EDE8E0;
+    --bs-alert-border-color: #EDE8E0;
+    --bs-alert-link-color: black;
+}
+
 .btn-brand:hover,
 .btn-primary:hover,
 .btn-outline-danger:hover,

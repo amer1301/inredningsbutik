@@ -1,0 +1,92 @@
+@model Inredningsbutik.Core.Entities.SupportTicket
+@using Inredningsbutik.Web.Areas.Admin.ViewModels
+@using Inredningsbutik.Web.Helpers
+
+
+@{
+    ViewData["Title"] = "Ärende";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var statusOptions = (string[])ViewBag.StatusOptions;
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="mb-0">Ärende #@Model.Id</h1>
+        <a class="btn btn-outline-dark" asp-area="Admin" asp-controller="CustomerService" asp-action="Index">Till inkorg</a>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <p class="mb-1"><strong>Kund:</strong> @Model.Name (@Model.Email)</p>
+            <p class="mb-1"><strong>Ämne:</strong> @Model.Subject</p>
+            <strong>Status:</strong> @TicketStatusHelper.ToLabel(Model.Status)
+            <p class="mb-0 text-muted"><small>Skapad: @Model.CreatedAt.ToLocalTime()</small></p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5>Kundens meddelande</h5>
+            <p class="mb-0">@Model.Message</p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5>Status</h5>
+            <form asp-action="UpdateStatus" method="post" class="d-flex gap-2">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.Id" />
+                <select class="form-select" name="status">
+                    @foreach (var s in statusOptions)
+                    {
+                        <option value="@s" selected="@(Model.Status == s)">
+    @TicketStatusHelper.ToLabel(s)
+</option>
+                    }
+                </select>
+                <button class="btn btn-dark" type="submit">Uppdatera</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5>Konversation</h5>
+
+            @if (Model.Replies.Count == 0)
+            {
+                <p class="text-muted mb-0">Inga svar ännu.</p>
+            }
+            else
+            {
+                <div class="d-flex flex-column gap-2">
+                    @foreach (var r in Model.Replies.OrderBy(x => x.CreatedAt))
+                    {
+                        <div class="border rounded p-2">
+                            <div class="d-flex justify-content-between">
+                                <strong>@(r.IsAdmin ? "Admin" : "Kund")</strong>
+                                <small class="text-muted">@r.CreatedAt.ToLocalTime()</small>
+                            </div>
+                            <div>@r.Message</div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5>Svara</h5>
+            <form asp-action="Reply" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="TicketId" value="@Model.Id" />
+                <div class="mb-2">
+                    <textarea class="form-control" name="Message" rows="4" placeholder="Skriv svar..."></textarea>
+                </div>
+                <button class="btn btn-dark" type="submit">Skicka svar</button>
+            </form>
+        </div>
+    </div>
+</div>

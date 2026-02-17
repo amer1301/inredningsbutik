@@ -1,28 +1,80 @@
+@model List<Inredningsbutik.Core.Entities.SupportTicket>
+@using Inredningsbutik.Web.Helpers
+
+
 @{
     ViewData["Title"] = "Kundtjänst (Admin)";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var statusOptions = (string[])ViewBag.StatusOptions;
+    var selected = ViewBag.SelectedStatus as string;
 }
 
 <div class="container mt-4">
+    <h1 class="mb-3">Kundtjänst</h1>
 
-    <h1 class="mb-4">Kundtjänst</h1>
+    <form method="get" class="row g-2 mb-3">
+        <div class="col-auto">
+            <select class="form-select" name="status">
+                <option value="">Alla statusar</option>
+                @foreach (var s in statusOptions)
+                {
+                    <option value="@s" selected="@(selected == s)">
+    @TicketStatusHelper.ToLabel(s)
+</option>
 
-    <div class="card">
-        <div class="card-body">
-
-            <p>Här kan administratören hantera kundärenden.</p>
-
-            <hr />
-
-            <h5>Kommande funktioner</h5>
-            <ul>
-                <li>Se inkomna meddelanden</li>
-                <li>Svara kunder</li>
-                <li>Ärendestatus</li>
-                <li>FAQ-hantering</li>
-            </ul>
-
+                }
+            </select>
         </div>
-    </div>
+        <div class="col-auto">
+            <button class="btn btn-outline-dark" type="submit">Filtrera</button>
+        </div>
+    </form>
 
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="alert alert-secondary">
+            Inga ärenden ännu. Skapa ett via Kundtjänst-sidan (publik) så dyker det upp här.
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body p-0">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Skapad</th>
+                            <th>Kund</th>
+                            <th>Ämne</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var t in Model)
+                    {
+                        <tr>
+                            <td>@t.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>
+                                @t.Name<br />
+                                <small class="text-muted">@t.Email</small>
+                            </td>
+                            <td>@t.Subject</td>
+                            <td>@TicketStatusHelper.ToLabel(t.Status)</td>
+                            <td>
+                                <a class="btn btn-sm btn-dark"
+                                   asp-area="Admin"
+                                   asp-controller="CustomerService"
+                                   asp-action="Details"
+                                   asp-route-id="@t.Id">
+                                    Öppna
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
 </div>

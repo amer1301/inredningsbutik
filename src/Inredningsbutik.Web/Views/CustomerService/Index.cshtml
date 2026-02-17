@@ -1,3 +1,5 @@
+@model Inredningsbutik.Web.ViewModels.CustomerServiceIndexVm
+
 @{
     ViewData["Title"] = "Kundtjänst";
 }
@@ -48,129 +50,236 @@
 
         <!-- Högerinnehåll -->
         <div class="col-12 col-lg-8">
-            <!-- Kontakt -->
+
+            <!-- ======================= KONTAKT + FORM ======================= -->
             <section class="cs-section" data-section="kontakt">
                 <h2 class="cs-h2">Kontakt</h2>
-                <div class="card cs-card">
+
+                <div class="card cs-card mb-4">
                     <div class="card-body">
                         <p class="mb-2"><strong>E-post:</strong> support@persdotter.se</p>
                         <p class="mb-2"><strong>Telefon:</strong> 08-123 45 67</p>
                         <p class="mb-0"><strong>Öppettider:</strong> Mån–Fre 10–15</p>
                     </div>
                 </div>
+
+                  @if (TempData["CustomerServiceToast"] is string msg)
+    {
+        <div class="alert alert-success mt-3">@msg</div>
+    }
+
+                <div class="card cs-card">
+                    <div class="card-body">
+                        <h5 class="mb-3">Skicka ett meddelande</h5>
+
+                        <form asp-action="CreateTicket" method="post">
+                            @Html.AntiForgeryToken()
+
+                            <div class="mb-2">
+                                <label class="form-label">Namn</label>
+                                <input class="form-control" asp-for="Ticket.Name" />
+                                <span class="text-danger" asp-validation-for="Ticket.Name"></span>
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="form-label">E-post</label>
+                                <input class="form-control" asp-for="Ticket.Email" />
+                                <span class="text-danger" asp-validation-for="Ticket.Email"></span>
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="form-label">Ämne</label>
+                                <input class="form-control" asp-for="Ticket.Subject" />
+                                <span class="text-danger" asp-validation-for="Ticket.Subject"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Meddelande</label>
+                                <textarea class="form-control" asp-for="Ticket.Message" rows="4"></textarea>
+                                <span class="text-danger" asp-validation-for="Ticket.Message"></span>
+                            </div>
+
+                            <button class="btn btn-primary" type="submit">Skicka ärende</button>
+                        </form>
+                    </div>
+                </div>
             </section>
 
-            <!-- Populära frågor -->
+
+            <!-- ======================= FAQ RENDER HELPER ======================= -->
+            @functions {
+                List<Inredningsbutik.Core.Entities.FaqItem> GetFaq(string key)
+                {
+                    if (Model.FaqByCategory.ContainsKey(key))
+                        return Model.FaqByCategory[key];
+
+                    return new List<Inredningsbutik.Core.Entities.FaqItem>();
+                }
+            }
+
+
+            <!-- ======================= POPULÄRA ======================= -->
             <section class="cs-section d-none" data-section="populara">
                 <h2 class="cs-h2">Populära frågor</h2>
+                @{ var popularaItems = GetFaq("populara"); }
 
-                <div class="accordion" id="accPopulara">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="p1h">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#p1">
-                                Hur lång är leveranstiden?
-                            </button>
-                        </h2>
-                        <div id="p1" class="accordion-collapse collapse" data-bs-parent="#accPopulara">
-                            <div class="accordion-body">
-                                Normalt 1–3 arbetsdagar beroende på lagerstatus och fraktalternativ.
+                @if (!popularaItems.Any())
+                {
+                    <p>Inga frågor publicerade ännu.</p>
+                }
+                else
+                {
+                    <div class="accordion" id="accPopulara">
+                        @for (int i = 0; i < popularaItems.Count; i++)
+                        {
+                            var q = popularaItems[i];
+                            var id = $"pop{i}";
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#@id">
+                                        @q.Question
+                                    </button>
+                                </h2>
+                                <div id="@id" class="accordion-collapse collapse" data-bs-parent="#accPopulara">
+                                    <div class="accordion-body">@q.Answer</div>
+                                </div>
                             </div>
-                        </div>
+                        }
                     </div>
-
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="p2h">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#p2">
-                                Kan jag ändra min order efter att jag lagt den?
-                            </button>
-                        </h2>
-                        <div id="p2" class="accordion-collapse collapse" data-bs-parent="#accPopulara">
-                            <div class="accordion-body">
-                                Kontakta kundtjänst så fort som möjligt, så försöker vi hjälpa innan ordern packas.
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                }
             </section>
 
-            <!-- Leveranser -->
+
+            <!-- ======================= LEVERANSER ======================= -->
             <section class="cs-section d-none" data-section="leveranser">
                 <h2 class="cs-h2">Leveranser</h2>
+                @{ var leveransItems = GetFaq("leveranser"); }
 
-                <div class="accordion" id="accLeveranser">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="l1h">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#l1">
-                                Vilka fraktalternativ erbjuder ni?
-                            </button>
-                        </h2>
-                        <div id="l1" class="accordion-collapse collapse" data-bs-parent="#accLeveranser">
-                            <div class="accordion-body">
-                                Vi erbjuder hemleverans och ombud (beroende på ort). Fraktkostnad visas i kassan.
+                @if (!leveransItems.Any())
+                {
+                    <p>Inga frågor publicerade ännu.</p>
+                }
+                else
+                {
+                    <div class="accordion" id="accLeveranser">
+                        @for (int i = 0; i < leveransItems.Count; i++)
+                        {
+                            var q = leveransItems[i];
+                            var id = $"lev{i}";
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#@id">
+                                        @q.Question
+                                    </button>
+                                </h2>
+                                <div id="@id" class="accordion-collapse collapse" data-bs-parent="#accLeveranser">
+                                    <div class="accordion-body">@q.Answer</div>
+                                </div>
                             </div>
-                        </div>
+                        }
                     </div>
-                </div>
+                }
             </section>
 
-            <!-- Retur -->
+
+            <!-- ======================= RETUR ======================= -->
             <section class="cs-section d-none" data-section="retur">
                 <h2 class="cs-h2">Retur &amp; Återbetalning</h2>
+                @{ var returItems = GetFaq("retur"); }
 
-                <div class="accordion" id="accRetur">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="r1h">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#r1">
-                                Hur gör jag en retur?
-                            </button>
-                        </h2>
-                        <div id="r1" class="accordion-collapse collapse" data-bs-parent="#accRetur">
-                            <div class="accordion-body">
-                                Skicka ett mail till kundtjänst med ordernummer, så skickar vi instruktioner och returetikett (om aktuellt).
+                @if (!returItems.Any())
+                {
+                    <p>Inga frågor publicerade ännu.</p>
+                }
+                else
+                {
+                    <div class="accordion" id="accRetur">
+                        @for (int i = 0; i < returItems.Count; i++)
+                        {
+                            var q = returItems[i];
+                            var id = $"ret{i}";
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#@id">
+                                        @q.Question
+                                    </button>
+                                </h2>
+                                <div id="@id" class="accordion-collapse collapse" data-bs-parent="#accRetur">
+                                    <div class="accordion-body">@q.Answer</div>
+                                </div>
                             </div>
-                        </div>
+                        }
                     </div>
-                </div>
+                }
             </section>
 
-            <!-- Reklamation -->
+
+            <!-- ======================= REKLAMATION ======================= -->
             <section class="cs-section d-none" data-section="reklamation">
                 <h2 class="cs-h2">Reklamation</h2>
+                @{ var reklamationItems = GetFaq("reklamation"); }
 
-                <div class="accordion" id="accReklamation">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="rk1h">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rk1">
-                                Min vara är trasig – vad gör jag?
-                            </button>
-                        </h2>
-                        <div id="rk1" class="accordion-collapse collapse" data-bs-parent="#accReklamation">
-                            <div class="accordion-body">
-                                Kontakta oss med bilder och ordernummer. Vi återkommer med lösning (ersättning/återbetalning).
+                @if (!reklamationItems.Any())
+                {
+                    <p>Inga frågor publicerade ännu.</p>
+                }
+                else
+                {
+                    <div class="accordion" id="accReklamation">
+                        @for (int i = 0; i < reklamationItems.Count; i++)
+                        {
+                            var q = reklamationItems[i];
+                            var id = $"rek{i}";
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#@id">
+                                        @q.Question
+                                    </button>
+                                </h2>
+                                <div id="@id" class="accordion-collapse collapse" data-bs-parent="#accReklamation">
+                                    <div class="accordion-body">@q.Answer</div>
+                                </div>
                             </div>
-                        </div>
+                        }
                     </div>
-                </div>
+                }
             </section>
 
-            <!-- Betalning -->
+
+            <!-- ======================= BETALNING ======================= -->
             <section class="cs-section d-none" data-section="betalning">
                 <h2 class="cs-h2">Betalning &amp; Faktura</h2>
+                @{ var betalningItems = GetFaq("betalning"); }
 
-                <div class="accordion" id="accBetalning">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="b1h">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#b1">
-                                Vilka betalningssätt kan jag välja?
-                            </button>
-                        </h2>
-                        <div id="b1" class="accordion-collapse collapse" data-bs-parent="#accBetalning">
-                            <div class="accordion-body">
-                                Kort, direktbetalning och faktura (beroende på din checkout). Exakta alternativ visas i kassan.
+                @if (!betalningItems.Any())
+                {
+                    <p>Inga frågor publicerade ännu.</p>
+                }
+                else
+                {
+                    <div class="accordion" id="accBetalning">
+                        @for (int i = 0; i < betalningItems.Count; i++)
+                        {
+                            var q = betalningItems[i];
+                            var id = $"bet{i}";
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#@id">
+                                        @q.Question
+                                    </button>
+                                </h2>
+                                <div id="@id" class="accordion-collapse collapse" data-bs-parent="#accBetalning">
+                                    <div class="accordion-body">@q.Answer</div>
+                                </div>
                             </div>
-                        </div>
+                        }
                     </div>
-                </div>
+                }
             </section>
 
         </div>
@@ -178,7 +287,8 @@
 </div>
 
 @section Scripts {
-<script>
+    <partial name="_ValidationScriptsPartial" />
+    <script>
     (function () {
         const navItems = document.querySelectorAll(".cs-nav-item");
         const sections = document.querySelectorAll(".cs-section");
@@ -193,5 +303,5 @@
             btn.addEventListener("click", () => show(btn.dataset.section));
         });
     })();
-</script>
+    </script>
 }

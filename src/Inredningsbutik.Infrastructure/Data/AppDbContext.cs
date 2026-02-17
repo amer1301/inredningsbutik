@@ -13,6 +13,10 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
+    public DbSet<SupportTicket> SupportTickets => Set<SupportTicket>();
+public DbSet<SupportReply> SupportReplies => Set<SupportReply>();
+public DbSet<FaqItem> FaqItems => Set<FaqItem>();
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -47,6 +51,16 @@ modelBuilder.Entity<Order>()
             .HasMany(p => p.OrderItems)
             .WithOne(oi => oi.Product!)
             .HasForeignKey(oi => oi.ProductId);
+
+            modelBuilder.Entity<SupportTicket>()
+    .HasMany(t => t.Replies)
+    .WithOne(r => r.Ticket!)
+    .HasForeignKey(r => r.SupportTicketId)
+    .OnDelete(DeleteBehavior.Cascade);
+
+modelBuilder.Entity<FaqItem>()
+    .Property(f => f.CategoryKey)
+    .HasMaxLength(50);
 
     }
 }
