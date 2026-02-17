@@ -3,6 +3,20 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
+@{
+    var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
+    var currentPage = ViewContext.RouteData.Values["page"]?.ToString();
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+
+    // Robust match för Identity pages (ibland kan currentPage vara null/variera)
+    var isRegisterPage = currentPage?.EndsWith("/Account/Register") == true || currentPage == "/Account/Register";
+    var isLoginPage = currentPage?.EndsWith("/Account/Login") == true || currentPage == "/Account/Login";
+    var isManagePage = currentPage?.Contains("/Account/Manage") == true;
+
+    var isAdminArea = currentArea == "Admin";
+    var isAdminOrders = isAdminArea && currentController == "Orders";
+}
+
 <ul class="navbar-nav flex-row gap-3 align-items-center">
 @if (SignInManager.IsSignedIn(User))
 {
@@ -10,26 +24,38 @@
     @if (User.IsInRole("Admin"))
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Admin" asp-controller="AdminHome" asp-action="Index">Admin</a>
+<a class="nav-link text-dark @((currentArea == "Admin" && currentController == "AdminHome") ? "is-active" : "")"
+   asp-area="Admin" asp-controller="AdminHome" asp-action="Index">
+    Admin
+</a>
         </li>
     }
 
     @* Konto *@
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Konto</a>
+        <a class="nav-link text-dark @(isManagePage ? "is-active" : "")"
+           asp-area="Identity" asp-page="/Account/Manage/Index">
+            Konto
+        </a>
     </li>
 
     @* Orders — olika för admin vs kund *@
     @if (User.IsInRole("Admin"))
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Orders" asp-action="Index">Ordrar</a>
+<a class="nav-link text-dark @((currentArea == "Admin" && currentController == "Orders") ? "is-active" : "")"
+   asp-area="Admin" asp-controller="Orders" asp-action="Index">
+    Ordrar
+</a>
         </li>
     }
     else
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Mina ordrar</a>
+<a class="nav-link text-dark @((currentArea == null && currentController == "Orders") ? "is-active" : "")"
+   asp-area="" asp-controller="Orders" asp-action="Index">
+    Mina ordrar
+</a>
         </li>
     }
 
@@ -47,10 +73,16 @@
 else
 {
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Registrera</a>
+        <a class="nav-link text-dark @(isRegisterPage ? "is-active" : "")"
+           asp-area="Identity" asp-page="/Account/Register">
+            Registrera
+        </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Logga in</a>
+        <a class="nav-link text-dark @(isLoginPage ? "is-active" : "")"
+           asp-area="Identity" asp-page="/Account/Login">
+            Logga in
+        </a>
     </li>
 }
 </ul>

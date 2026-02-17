@@ -32,18 +32,48 @@ h1,h2,h3{
   color: #fff;
 }
 
-.toast-body {
+#cartToast {
+  background: #451e0d !important;
+  color: #fff;
+}
+
+/* hela toasten */
+.custom-toast{
   background: #451e0d;
   color: #fff;
 }
 
-.btn-brand {
-    color: black;
-    background-color: #EDE8E0;
-    border-color: #EDE8E0;
+/* innehållet */
+.custom-toast .toast-body{
+  background: transparent;
+  color: inherit;
 }
 
-.btn-brand:hover {
+/* stäng-knappen */
+.custom-toast .btn-close{
+  filter: invert(1);
+  opacity: .9;
+}
+
+
+.btn-brand,
+.btn-primary {
+    color: black;
+    background-color: #EDE8E0;
+    border-color: #451e0d;
+}
+
+.btn-outline-danger,
+.btn-success {
+      color: black;
+    background-color: #EDE8E0;
+    border-color:#451e0d;
+}
+
+.btn-brand:hover,
+.btn-primary:hover,
+.btn-outline-danger:hover,
+.btn-success:hover {
     color: white;
     background-color: #451e0d;
     border-color: #451e0d;
@@ -114,13 +144,55 @@ header{
   white-space: nowrap;
 }
 
-.topbar__support{
-  color: rgba(0,0,0,.75);
+.topbar__right a,
+.topbar__right .nav-link,
+.topbar__right button.nav-link{
+  position: relative;
   text-decoration: none;
+  color: rgba(0,0,0,.80) !important;
+  padding: 4px 2px;
   font-size: 14px;
+  background: none;
+  border: 0;
+  transition: color .2s ease, opacity .2s ease;
 }
-.topbar__support:hover{ 
-  text-decoration: underline; 
+
+/* hover färg */
+.topbar__right a:hover,
+.topbar__right .nav-link:hover,
+.topbar__right button.nav-link:hover{
+  color: #000 !important;
+  opacity: .85;
+}
+
+/* underline animation */
+.topbar__right a::after,
+.topbar__right .nav-link::after,
+.topbar__right button.nav-link::after{
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  height: 2px;
+  width: 0%;
+  background: currentColor;
+  transition: width .25s ease;
+}
+
+.topbar__right a:hover::after,
+.topbar__right .nav-link:hover::after,
+.topbar__right button.nav-link:hover::after{
+  width: 100%;
+}
+
+/* aktiv sida */
+.topbar__right .is-active{
+  color: #000 !important;
+  font-weight: 600;
+}
+
+.topbar__right .is-active::after{
+  width: 100%;
 }
 
 .topbar__right ul{
@@ -133,10 +205,6 @@ header{
 .topbar__right li{
   display:inline-flex;
   align-items:center;
-}
-.topbar__right .nav-link{
-  padding: 0;
-  color: rgba(0,0,0,.85) !important;
 }
 
 .navbar{
@@ -164,6 +232,7 @@ header{
   padding-top: 0;
   padding-bottom: 48px;
 }
+
 /* =========================
    HERO (Video med text overlay)
    ========================= */

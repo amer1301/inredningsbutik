@@ -177,3 +177,9 @@
     --bs-alert-border-color: #451e0d;
     --bs-alert-link-color: #451e0d;
 }
+
+code {
+    font-size: 1em;
+    color: #451e0d;
+    word-wrap: break-word;
+}

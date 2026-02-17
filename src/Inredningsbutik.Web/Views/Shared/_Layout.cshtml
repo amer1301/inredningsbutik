@@ -17,130 +17,145 @@
 </head>
 
 <body class="layout-root">
-<header>
+    <form method="post" id="__AjaxAntiForgeryForm">
+        @Html.AntiForgeryToken()
+    </form>
 
-<!-- TOPBAR: SÖK VÄNSTER + KUNDTJÄNST + LOGIN HÖGER -->
-<div class="topbar">
-    <div class="container-fluid topbar__inner">
+    @{
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+        var currentPage = ViewContext.RouteData.Values["page"]?.ToString(); // för Identity pages
+        var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
 
-<form class="topbar-search"
-      method="get"
-      asp-area=""
-      asp-controller="Home"
-      asp-action="Index"
-      role="search"
-      aria-label="Sök produkter">
+        var isAdmin = User.Identity?.IsAuthenticated == true && User.IsInRole("Admin");
+    }
 
-            <span class="topbar-search__icon" aria-hidden="true">
-  <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
-       stroke="currentColor" stroke-width="2"
-       stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="11" cy="11" r="7"></circle>
-    <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
-  </svg>
-</span>
+    <header>
 
+        <!-- TOPBAR: SÖK VÄNSTER + KUNDTJÄNST + LOGIN HÖGER -->
+        <div class="topbar">
+            <div class="container-fluid topbar__inner">
 
-            <input class="topbar-search__input"
-                   type="search"
-                   name="q"
-                   value="@(ViewContext.HttpContext.Request.Query["q"])"
-                   placeholder="Sök produkt, varumärke, kategori" />
-        </form>
+                <form class="topbar-search"
+                      method="get"
+                      asp-area=""
+                      asp-controller="Home"
+                      asp-action="Index"
+                      role="search"
+                      aria-label="Sök produkter">
 
-        <div class="topbar__right">
-<a class="topbar__support" asp-area="" asp-controller="CustomerService" asp-action="Index">Kundtjänst</a> 
-            <partial name="_LoginPartial" />
-        </div>
+                    <span class="topbar-search__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+                             stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="7"></circle>
+                            <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+                        </svg>
+                    </span>
 
-    </div>
-</div>
+                    <input class="topbar-search__input"
+                           type="search"
+                           name="q"
+                           value="@(ViewContext.HttpContext.Request.Query["q"])"
+                           placeholder="Sök produkt, varumärke, kategori" />
+                </form>
 
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom">
-        <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PERSDOTTER</a>
+                <div class="topbar__right">
+                    @* Admin ska gå till Admin/Kundtjänst. Alla andra till vanliga Kundtjänst. *@
+                    @if (isAdmin)
+                    {
+                        <a class="topbar__support @(currentArea == "Admin" && currentController == "CustomerService" ? "is-active" : "")"
+                           asp-area="Admin"
+                           asp-controller="CustomerService"
+                           asp-action="Index">
+                            Kundtjänst
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="topbar__support @(currentArea == null && currentController == "CustomerService" ? "is-active" : "")"
+                           asp-area=""
+                           asp-controller="CustomerService"
+                           asp-action="Index">
+                            Kundtjänst
+                        </a>
+                    }
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
-                    aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+                    <partial name="_LoginPartial" />
+                </div>
 
-            <div id="mainNavbar" class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav me-auto">
-                </ul>
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item">
-                        @await Component.InvokeAsync("CartSummary")
-                    </li>
-                </ul>
             </div>
         </div>
-    </nav>
 
-</header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PERSDOTTER</a>
 
-<div class="container">
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
-</div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                        aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-<footer>
+                <div id="mainNavbar" class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav me-auto">
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item">
+                            @await Component.InvokeAsync("CartSummary")
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+    </header>
+
     <div class="container">
-        &copy; 2026 - Amanda Persdotter
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
     </div>
-</footer>
 
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-@await RenderSectionAsync("Scripts", required: false)
+    <footer>
+        <div class="container">
+            &copy; 2026 - Amanda Persdotter
+        </div>
+    </footer>
 
-@if (TempData["CartToast"] is string toastMessage)
-{
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="cartToast" class="toast align-items-center text-bg-success border-0" role="alert">
-            <div class="d-flex">
-                <div class="toast-body">
-                    @toastMessage
+    @if (TempData["CartToast"] is string toastMessage)
+    {
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="cartToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        @toastMessage
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                            data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                        data-bs-dismiss="toast"></button>
             </div>
         </div>
-    </div>
+    }
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var toastEl = document.getElementById('cartToast');
-            var toast = new bootstrap.Toast(toastEl, { delay: 2000 });
-            toast.show();
-        });
-    </script>
-}
-
-@if (TempData["AdminToast"] is string adminToast)
-{
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="adminToast" class="toast align-items-center text-bg-primary border-0" role="alert">
-            <div class="d-flex">
-                <div class="toast-body">
-                    @adminToast
+    @if (TempData["AdminToast"] is string adminToast)
+    {
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="adminToast" class="toast custom-toast border-0" role="alert">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        @adminToast
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                            data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                        data-bs-dismiss="toast"></button>
             </div>
         </div>
-    </div>
+    }
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var toastEl = document.getElementById('adminToast');
-            var toast = new bootstrap.Toast(toastEl, { delay: 2000 });
-            toast.show();
-        });
-    </script>
-}
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 
 </body>
 </html>

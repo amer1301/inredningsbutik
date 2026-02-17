@@ -26,18 +26,30 @@
     <tbody>
     @foreach (var item in Model.Items)
     {
-        <tr>
+        <tr class="cart-row">
             <td>@item.Name</td>
+
             <td class="text-end">@item.UnitPrice.ToString("0.00")</td>
+
             <td>
-                <form asp-action="Update" method="post" class="d-flex gap-2">
+                @* Vi behåller en form här för AntiForgeryToken + hidden productId (JS postar till UpdateQuantity) *@
+                <form method="post" class="d-flex gap-2 align-items-center">
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="productId" value="@item.ProductId" />
-                    <input class="form-control" type="number" name="quantity" value="@item.Quantity" min="0" />
-                    <button class="btn btn-outline-secondary" type="submit">Uppdatera</button>
+
+                    <input class="form-control cart-qty"
+                           type="number"
+                           name="quantity"
+                           value="@item.Quantity"
+                           min="0"
+                           data-product-id="@item.ProductId" />
                 </form>
             </td>
-            <td class="text-end">@((item.UnitPrice * item.Quantity).ToString("0.00"))</td>
+
+            <td class="text-end cart-line-total">
+                @((item.UnitPrice * item.Quantity).ToString("0.00"))
+            </td>
+
             <td class="text-end">
                 <form asp-action="Remove" method="post">
                     @Html.AntiForgeryToken()
@@ -50,7 +62,7 @@
     </tbody>
 </table>
 
-<div class="d-flex justify-content-between">
-    <strong>Total: @Model.Total.ToString("0.00") kr</strong>
+<div class="d-flex justify-content-between align-items-center">
+    <strong>Total: <span id="cartTotal">@Model.Total.ToString("0.00")</span> kr</strong>
     <a class="btn btn-success" asp-area="" asp-controller="Checkout" asp-action="Index">Till kassan</a>
 </div>
