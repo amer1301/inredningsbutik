@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Fel";
+    var code = (int)(ViewBag.StatusCode ?? 0);
+}
+
+<h1>Fel (@code)</h1>
+
+@if (code == 404)
+{
+    <p>Sidan kunde inte hittas.</p>
+}
+else if (code == 403)
+{
+    <p>Du saknar behörighet att se den här sidan.</p>
+}
+else if (code == 401)
+{
+    <p>Du behöver logga in för att se den här sidan.</p>
+}
+else
+{
+    <p>Något gick fel.</p>
+}
+
+<p>
+    <a asp-controller="Home" asp-action="Index">Till startsidan</a>
+</p>

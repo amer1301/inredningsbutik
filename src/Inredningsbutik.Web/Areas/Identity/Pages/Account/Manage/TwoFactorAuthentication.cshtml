@@ -97,6 +97,7 @@
                         @if (Model.IsMachineRemembered)
                         {
                             <form method="post" asp-page-handler="ForgetBrowser">
+                            @Html.AntiForgeryToken()
                                 <button type="submit" class="btn btn-link p-0">
                                     Glöm denna enhet (kräv 2FA här nästa gång)
                                 </button>

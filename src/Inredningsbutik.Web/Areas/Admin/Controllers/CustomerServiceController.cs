@@ -4,11 +4,12 @@ using Inredningsbutik.Web.Areas.Admin.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Inredningsbutik.Infrastructure;
 
 namespace Inredningsbutik.Web.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Authorize(Roles = "Admin")]
+[Authorize(Policy = AuthPolicies.AdminOnly)]
 public class CustomerServiceController : Controller
 {
     private readonly AppDbContext _db;
@@ -73,32 +74,39 @@ public class CustomerServiceController : Controller
         return RedirectToAction(nameof(Details), new { id });
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Reply(SupportReplyVm vm)
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Reply(SupportReplyVm vm)
+{
+    var ticket = await _db.SupportTickets
+        .Include(t => t.Replies)
+        .FirstOrDefaultAsync(t => t.Id == vm.TicketId);
+
+    if (ticket == null) 
+        return NotFound();
+
+    if (!ModelState.IsValid)
     {
-        if (!ModelState.IsValid)
-            return RedirectToAction(nameof(Details), new { id = vm.TicketId });
-
-        var ticket = await _db.SupportTickets.FirstOrDefaultAsync(t => t.Id == vm.TicketId);
-        if (ticket == null) return NotFound();
-
-        _db.SupportReplies.Add(new SupportReply
-        {
-            SupportTicketId = vm.TicketId,
-            Message = vm.Message,
-            IsAdmin = true,
-            CreatedAt = DateTime.UtcNow
-        });
-
-        if (ticket.Status == "New")
-            ticket.Status = "Open";
-
-        ticket.UpdatedAt = DateTime.UtcNow;
-
-        await _db.SaveChangesAsync();
-
-        TempData["AdminToast"] = "Svar sparat.";
-        return RedirectToAction(nameof(Details), new { id = vm.TicketId });
+        return View("Details", ticket);
     }
+
+    _db.SupportReplies.Add(new SupportReply
+    {
+        SupportTicketId = vm.TicketId,
+        Message = vm.Message,
+        IsAdmin = true,
+        CreatedAt = DateTime.UtcNow
+    });
+
+    if (ticket.Status == "New")
+        ticket.Status = "Open";
+
+    ticket.UpdatedAt = DateTime.UtcNow;
+
+    await _db.SaveChangesAsync();
+
+    TempData["AdminToast"] = "Svar sparat.";
+    return RedirectToAction(nameof(Details), new { id = vm.TicketId });
+}
+
 }

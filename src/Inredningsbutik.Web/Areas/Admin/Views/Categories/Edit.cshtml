@@ -6,6 +6,8 @@
 <h1 class="h3">Redigera kategori</h1>
 
 <form method="post" class="mt-3">
+@Html.AntiForgeryToken()
+
     <input type="hidden" asp-for="Id" />
     <div asp-validation-summary="All" class="text-danger"></div>
 

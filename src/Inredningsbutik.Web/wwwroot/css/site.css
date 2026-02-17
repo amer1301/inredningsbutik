@@ -83,7 +83,14 @@ h1,h2,h3{
     border-color: #451e0d;
 }
 
-
+.btn-danger {
+    --bs-btn-color: #000000;
+    --bs-btn-bg: #EDE8E0;
+    --bs-btn-border-color:#451e0d;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #451e0d;
+    --bs-btn-hover-border-color: #451e0d;
+}
 
 /* =========================
    Header / Topbar / Navbar

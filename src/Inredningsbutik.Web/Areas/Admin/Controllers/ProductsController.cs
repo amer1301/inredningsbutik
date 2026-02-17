@@ -1,14 +1,16 @@
 using Inredningsbutik.Core.Entities;
 using Inredningsbutik.Infrastructure.Data;
+using Inredningsbutik.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace Inredningsbutik.Web.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Authorize(Roles = "Admin")]
+[Authorize(Policy = AuthPolicies.AdminOnly)]
 public class ProductsController : Controller
 {
     private readonly AppDbContext _db;

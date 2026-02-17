@@ -22,6 +22,7 @@
                         <partial name="_StatusMessage" for="StatusMessage" />
 
                         <form method="post">
+                        @Html.AntiForgeryToken()
                             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 
                             <div class="form-floating mb-3">

@@ -3,11 +3,12 @@ using Inredningsbutik.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Inredningsbutik.Infrastructure;
 
 namespace Inredningsbutik.Web.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Authorize(Roles = "Admin")]
+[Authorize(Policy = AuthPolicies.AdminOnly)]
 public class CategoriesController : Controller
 {
     private readonly AppDbContext _db;
@@ -27,30 +28,41 @@ public class CategoriesController : Controller
 
     public IActionResult Create() => View(new Category());
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Category model)
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Create(Category model)
+{
+    if (string.IsNullOrWhiteSpace(model.Name))
     {
-        if (string.IsNullOrWhiteSpace(model.Name))
-        {
-            ModelState.AddModelError(nameof(Category.Name), "Namn är obligatoriskt.");
-        }
-
-        if (string.IsNullOrWhiteSpace(model.Slug))
-        {
-            model.Slug = Slugify(model.Name);
-        }
-
-        if (!ModelState.IsValid) return View(model);
-
-        model.Name = model.Name.Trim();
-        model.Slug = model.Slug.Trim();
-
-        _db.Categories.Add(model);
-        await _db.SaveChangesAsync();
-        TempData["AdminToast"] = "Kategorin skapades.";
-        return RedirectToAction(nameof(Index));
+        ModelState.AddModelError(nameof(Category.Name), "Namn är obligatoriskt.");
     }
+
+    // Autogenerera slug om tom
+    if (string.IsNullOrWhiteSpace(model.Slug) && !string.IsNullOrWhiteSpace(model.Name))
+    {
+        model.Slug = Slugify(model.Name);
+
+        // Ta bort ev. "required" fel som redan satts av model binding
+        ModelState.Remove(nameof(Category.Slug));
+        ModelState.Remove("Slug");
+        ModelState.Remove("Category.Slug");
+    }
+
+    if (!ModelState.IsValid)
+    {
+        return View(model);
+    }
+
+    model.Name = model.Name.Trim();
+    model.Slug = (model.Slug ?? "").Trim();
+
+    _db.Categories.Add(model);
+    await _db.SaveChangesAsync();
+
+    TempData["AdminToast"] = "Kategorin skapades.";
+    return RedirectToAction(nameof(Index));
+}
+
 
     public async Task<IActionResult> Edit(int id)
     {

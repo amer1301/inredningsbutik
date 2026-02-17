@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Inredningsbutik.Infrastructure;
 
 namespace Inredningsbutik.Web.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Authorize(Roles = "Admin")]
+[Authorize(Policy = AuthPolicies.AdminOnly)]
 public class AdminHomeController : Controller
 {
     public IActionResult Index() => View();

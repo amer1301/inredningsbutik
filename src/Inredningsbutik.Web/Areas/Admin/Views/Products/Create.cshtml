@@ -6,6 +6,7 @@
 <h1 class="h3">Ny produkt</h1>
 
 <form method="post" class="mt-3">
+@Html.AntiForgeryToken()
     <partial name="_ProductForm" model="Model" />
 
     <div class="d-flex gap-2 mt-3">

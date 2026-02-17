@@ -24,6 +24,7 @@
 </dl>
 
 <form method="post" asp-action="DeleteConfirmed">
+@Html.AntiForgeryToken()
     <input type="hidden" name="id" value="@Model.Id" />
     <div class="d-flex gap-2">
         <button class="btn btn-danger" type="submit">Ta bort</button>
