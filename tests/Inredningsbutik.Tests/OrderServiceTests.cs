@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging.Abstractions;
 using Inredningsbutik.Core.Entities;
 using Inredningsbutik.Infrastructure.Data;
 using Inredningsbutik.Infrastructure.Services;
@@ -28,7 +29,7 @@ public class OrderServiceTests
         db.AddRange(cat, p1, p2);
         await db.SaveChangesAsync();
 
-        var service = new OrderService(db);
+        var service = new OrderService(db, NullLogger<OrderService>.Instance);
 
         var order = await service.CreateOrderAsync(
             userId: "user-1",
@@ -53,7 +54,7 @@ public class OrderServiceTests
         db.AddRange(cat, p);
         await db.SaveChangesAsync();
 
-        var service = new OrderService(db);
+        var service = new OrderService(db, NullLogger<OrderService>.Instance);
 
         await service.CreateOrderAsync(
             userId: "user-1",
@@ -77,7 +78,7 @@ public class OrderServiceTests
         db.AddRange(cat, p);
         await db.SaveChangesAsync();
 
-        var service = new OrderService(db);
+        var service = new OrderService(db, NullLogger<OrderService>.Instance);
 
         var ex = await Assert.ThrowsAsync<InvalidOperationException>(async () =>
             await service.CreateOrderAsync(

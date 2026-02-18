@@ -24,4 +24,10 @@
     <ProjectReference Include="..\..\src\Inredningsbutik.Infrastructure\Inredningsbutik.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+  <ProjectReference Include="..\..\src\Inredningsbutik.Core\Inredningsbutik.Core.csproj" />
+  <ProjectReference Include="..\..\src\Inredningsbutik.Web\Inredningsbutik.Web.csproj" />
+</ItemGroup>
+
+
 </Project>
