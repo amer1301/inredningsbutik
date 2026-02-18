@@ -25,35 +25,39 @@ public class CustomerServiceController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(string? status)
-    {
-        var q = _db.SupportTickets.AsQueryable();
+public async Task<IActionResult> Index(string? status)
+{
+    var q = _db.SupportTickets
+        .AsNoTracking()
+        .AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(status))
-            q = q.Where(t => t.Status == status);
+    if (!string.IsNullOrWhiteSpace(status))
+        q = q.Where(t => t.Status == status);
 
-        var tickets = await q
-            .OrderByDescending(t => t.UpdatedAt)
-            .ToListAsync();
+    var tickets = await q
+        .OrderByDescending(t => t.UpdatedAt)
+        .ToListAsync();
 
-        ViewBag.StatusOptions = StatusOptions;
-        ViewBag.SelectedStatus = status;
+    ViewBag.StatusOptions = StatusOptions;
+    ViewBag.SelectedStatus = status;
 
-        return View(tickets);
-    }
+    return View(tickets);
+}
 
     [HttpGet]
-    public async Task<IActionResult> Details(int id)
-    {
-        var ticket = await _db.SupportTickets
-            .Include(t => t.Replies)
-            .FirstOrDefaultAsync(t => t.Id == id);
+public async Task<IActionResult> Details(int id)
+{
+    var ticket = await _db.SupportTickets
+        .AsNoTracking()
+        .Include(t => t.Replies)
+        .FirstOrDefaultAsync(t => t.Id == id);
 
-        if (ticket == null) return NotFound();
+    if (ticket == null) return NotFound();
 
-        ViewBag.StatusOptions = StatusOptions;
-        return View(ticket);
-    }
+    ViewBag.StatusOptions = StatusOptions;
+    return View(ticket);
+}
+
 
     [HttpPost]
     [ValidateAntiForgeryToken]

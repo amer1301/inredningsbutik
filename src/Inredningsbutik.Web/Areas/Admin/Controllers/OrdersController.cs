@@ -17,35 +17,40 @@ public class OrdersController : Controller
         _db = db;
     }
 
-    public async Task<IActionResult> Index(string? status)
+public async Task<IActionResult> Index(string? status)
+{
+    var query = _db.Orders
+        .AsNoTracking()
+        .Include(o => o.OrderItems)
+        .ThenInclude(i => i.Product)
+        .AsQueryable();
+
+    if (!string.IsNullOrWhiteSpace(status))
     {
-        var query = _db.Orders
-            .Include(o => o.OrderItems)
-            .ThenInclude(i => i.Product)
-            .AsQueryable();
-
-        if (!string.IsNullOrWhiteSpace(status))
-        {
-            query = query.Where(o => o.Status == status);
-        }
-
-        var orders = await query
-            .OrderByDescending(o => o.CreatedAt)
-            .ToListAsync();
-
-        ViewBag.SelectedStatus = status;
-        ViewBag.Statuses = await _db.Orders
-            .Select(o => o.Status)
-            .Distinct()
-            .OrderBy(s => s)
-            .ToListAsync();
-
-        return View(orders);
+        query = query.Where(o => o.Status == status);
     }
+
+    var orders = await query
+        .OrderByDescending(o => o.CreatedAt)
+        .ToListAsync();
+
+    ViewBag.SelectedStatus = status;
+
+    ViewBag.Statuses = await _db.Orders
+        .AsNoTracking()
+        .Select(o => o.Status)
+        .Distinct()
+        .OrderBy(s => s)
+        .ToListAsync();
+
+    return View(orders);
+}
+
 
     public async Task<IActionResult> Details(int id)
     {
         var order = await _db.Orders
+        .AsNoTracking()
             .Include(o => o.OrderItems)
             .ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(o => o.Id == id);

@@ -52,16 +52,18 @@ public class CustomerServiceController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    private async Task<Dictionary<string, List<FaqItem>>> LoadFaqAsync()
-    {
-        var items = await _db.FaqItems
-            .Where(f => f.IsPublished)
-            .OrderBy(f => f.CategoryKey)
-            .ThenBy(f => f.SortOrder)
-            .ToListAsync();
+private async Task<Dictionary<string, List<FaqItem>>> LoadFaqAsync()
+{
+    var items = await _db.FaqItems
+        .AsNoTracking()
+        .Where(f => f.IsPublished)
+        .OrderBy(f => f.CategoryKey)
+        .ThenBy(f => f.SortOrder)
+        .ToListAsync();
 
-        return items
-            .GroupBy(i => i.CategoryKey)
-            .ToDictionary(g => g.Key, g => g.ToList());
-    }
+    return items
+        .GroupBy(i => i.CategoryKey)
+        .ToDictionary(g => g.Key, g => g.ToList());
+}
+
 }

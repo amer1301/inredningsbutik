@@ -42,6 +42,10 @@ public DbSet<FaqItem> FaqItems => Set<FaqItem>();
             .HasForeignKey(p => p.CategoryId)
             .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Category>()
+    .Property(c => c.Slug)
+    .IsRequired(false);
+
 modelBuilder.Entity<Order>()
     .HasMany(o => o.OrderItems)
     .WithOne(oi => oi.Order!)

@@ -97,18 +97,20 @@ public class CheckoutController : Controller
         return RedirectToAction(nameof(Confirmation), new { id = order.Id });
     }
 
-    public async Task<IActionResult> Confirmation(int id)
-    {
-        var user = await _users.GetUserAsync(User);
-        if (user is null) return Challenge();
+public async Task<IActionResult> Confirmation(int id)
+{
+    var user = await _users.GetUserAsync(User);
+    if (user is null) return Challenge();
 
-        var order = await _db.Orders
-            .Include(o => o.OrderItems)
-            .ThenInclude(i => i.Product)
-            .FirstOrDefaultAsync(o => o.Id == id && o.UserId == user.Id);
+    var order = await _db.Orders
+        .AsNoTracking()
+        .Include(o => o.OrderItems)
+        .ThenInclude(i => i.Product)
+        .FirstOrDefaultAsync(o => o.Id == id && o.UserId == user.Id);
 
-        if (order is null) return NotFound();
+    if (order is null) return NotFound();
 
-        return View(order);
-    }
+    return View(order);
+}
+
 }

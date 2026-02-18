@@ -17,13 +17,14 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<CategoryDto>>> GetAll()
-    {
-        var categories = await _db.Categories
-            .OrderBy(c => c.Name)
-            .Select(c => new CategoryDto(c.Id, c.Name, c.Slug))
-            .ToListAsync();
+public async Task<ActionResult<List<CategoryDto>>> GetAll()
+{
+    var categories = await _db.Categories
+        .AsNoTracking()
+        .OrderBy(c => c.Name)
+        .Select(c => new CategoryDto(c.Id, c.Name, c.Slug))
+        .ToListAsync();
 
-        return Ok(categories);
-    }
+    return Ok(categories);
+}
 }

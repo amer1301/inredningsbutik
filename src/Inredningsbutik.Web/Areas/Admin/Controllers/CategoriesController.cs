@@ -18,13 +18,15 @@ public class CategoriesController : Controller
         _db = db;
     }
 
-    public async Task<IActionResult> Index()
-    {
-        var categories = await _db.Categories
-            .OrderBy(c => c.Name)
-            .ToListAsync();
-        return View(categories);
-    }
+public async Task<IActionResult> Index()
+{
+    var categories = await _db.Categories
+        .AsNoTracking()
+        .OrderBy(c => c.Name)
+        .ToListAsync();
+
+    return View(categories);
+}
 
     public IActionResult Create() => View(new Category());
 

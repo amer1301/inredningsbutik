@@ -20,29 +20,42 @@ public class ProductsController : Controller
         _db = db;
     }
 
-    public async Task<IActionResult> Index(string? q, int? categoryId)
+public async Task<IActionResult> Index(string? q, int? categoryId)
+{
+    var query = _db.Products
+        .AsNoTracking()
+        .Include(p => p.Category)
+        .AsQueryable();
+
+    if (!string.IsNullOrWhiteSpace(q))
     {
-        var query = _db.Products.Include(p => p.Category).AsQueryable();
-
-        if (!string.IsNullOrWhiteSpace(q))
-        {
-            var term = q.Trim();
-            query = query.Where(p => p.Name.Contains(term) || p.Description.Contains(term));
-        }
-
-        if (categoryId.HasValue)
-        {
-            query = query.Where(p => p.CategoryId == categoryId.Value);
-        }
-
-        var categories = await _db.Categories.OrderBy(c => c.Name).ToListAsync();
-        ViewBag.Categories = categories;
-        ViewBag.SelectedCategoryId = categoryId;
-        ViewBag.Query = q;
-
-        var products = await query.OrderBy(p => p.Name).ToListAsync();
-        return View(products);
+        var term = q.Trim();
+        query = query.Where(p =>
+            p.Name.Contains(term) ||
+            p.Description.Contains(term));
     }
+
+    if (categoryId.HasValue)
+    {
+        query = query.Where(p => p.CategoryId == categoryId.Value);
+    }
+
+    var categories = await _db.Categories
+        .AsNoTracking()
+        .OrderBy(c => c.Name)
+        .ToListAsync();
+
+    ViewBag.Categories = categories;
+    ViewBag.SelectedCategoryId = categoryId;
+    ViewBag.Query = q;
+
+    var products = await query
+        .OrderBy(p => p.Name)
+        .ToListAsync();
+
+    return View(products);
+}
+
 
     public async Task<IActionResult> Create()
     {
@@ -131,11 +144,21 @@ public class ProductsController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    private async Task PopulateCategoriesAsync(int? selected = null)
-    {
-        var categories = await _db.Categories.OrderBy(c => c.Name).ToListAsync();
-        ViewBag.CategoryOptions = new SelectList(categories, nameof(Category.Id), nameof(Category.Name), selected);
-    }
+private async Task PopulateCategoriesAsync(int? selected = null)
+{
+    var categories = await _db.Categories
+        .AsNoTracking()
+        .OrderBy(c => c.Name)
+        .ToListAsync();
+
+    ViewBag.CategoryOptions = new SelectList(
+        categories,
+        nameof(Category.Id),
+        nameof(Category.Name),
+        selected
+    );
+}
+
 
     private void ValidateProduct(Product model)
     {

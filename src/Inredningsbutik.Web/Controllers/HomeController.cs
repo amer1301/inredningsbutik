@@ -14,13 +14,15 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index(string? q, int? categoryId)
     {
-        // 1) Kategorier (för ev. lookup i vyn + annan användning)
+        // 1) Kategorier
         var categories = await _db.Categories
+            .AsNoTracking()
             .OrderBy(c => c.Name)
             .ToListAsync();
 
-        // 2) Basquery för PRODUKT-LISTAN (påverkas av q + vald kategori)
+        // 2) Basquery för PRODUKT-LISTAN
         var query = _db.Products
+            .AsNoTracking()
             .Include(p => p.Category)
             .AsQueryable();
 
@@ -39,10 +41,10 @@ public class HomeController : Controller
             .OrderByDescending(p => p.CreatedAt)
             .ToListAsync();
 
-        // ============================================================
-        // 3) IMPLEMENTERING 2A: Counts per kategori (påverkas av q, ej av vald kategori)
-        // ============================================================
-        var countsQuery = _db.Products.AsQueryable();
+        // 3) Counts per kategori
+        var countsQuery = _db.Products
+            .AsNoTracking()
+            .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(q))
         {
@@ -57,14 +59,12 @@ public class HomeController : Controller
             .Select(g => new { CategoryId = g.Key, Count = g.Count() })
             .ToListAsync();
 
-        var countsByCategoryId = categoryCounts.ToDictionary(x => x.CategoryId, x => x.Count);
+        var countsByCategoryId = categoryCounts
+            .ToDictionary(x => x.CategoryId, x => x.Count);
+
         var allProductsCount = await countsQuery.CountAsync();
 
-        // ============================================================
-        // 4) Grupplogik för sidebar + "Visa alla" (med counts)
-        // ============================================================
-
-        // Spec för grupper (matchar på kategorinamnet)
+        // 4) Grupplogik
         var groupSpec = new List<(string Title, string[] Names)>
         {
             ("Hem & inredning", new[] { "Belysning", "Dekorationer", "Krukor", "Vaser" }),
@@ -83,7 +83,7 @@ public class HomeController : Controller
                 [
                     new CategoryItemVm
                     {
-                        Id = null,                // null => "Visa alla"
+                        Id = null,
                         Name = "Visa alla",
                         ProductCount = allProductsCount
                     }
@@ -117,7 +117,6 @@ public class HomeController : Controller
             }
         }
 
-        // Kategorier som inte matchar någon grupp hamnar under "Övrigt"
         var unassigned = categories
             .Where(c => !assigned.Contains(c.Id))
             .Select(c => new CategoryItemVm
@@ -143,12 +142,10 @@ public class HomeController : Controller
             CategoryId = categoryId,
             Categories = categories,
             Products = products,
-
             CategoryGroups = grouped,
             AllProductsCount = allProductsCount
         };
 
         return View(vm);
     }
-
 }
