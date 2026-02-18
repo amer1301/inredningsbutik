@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Inredningsbutik.Infrastructure;
+using Inredningsbutik.Web.ViewModels;
+
 
 namespace Inredningsbutik.Web.Areas.Admin.Controllers;
 
@@ -25,8 +27,11 @@ public class CustomerServiceController : Controller
     }
 
     [HttpGet]
-public async Task<IActionResult> Index(string? status)
+public async Task<IActionResult> Index(string? status, int page = 1, int pageSize = 25)
 {
+    page = page < 1 ? 1 : page;
+    pageSize = pageSize is < 5 or > 200 ? 25 : pageSize;
+
     var q = _db.SupportTickets
         .AsNoTracking()
         .AsQueryable();
@@ -34,15 +39,29 @@ public async Task<IActionResult> Index(string? status)
     if (!string.IsNullOrWhiteSpace(status))
         q = q.Where(t => t.Status == status);
 
-    var tickets = await q
-        .OrderByDescending(t => t.UpdatedAt)
+    q = q.OrderByDescending(t => t.UpdatedAt);
+
+    var total = await q.CountAsync();
+
+    var items = await q
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
         .ToListAsync();
 
     ViewBag.StatusOptions = StatusOptions;
     ViewBag.SelectedStatus = status;
 
-    return View(tickets);
+    var vm = new PagedListVm<SupportTicket>
+    {
+        Items = items,
+        Page = page,
+        PageSize = pageSize,
+        TotalCount = total
+    };
+
+    return View(vm);
 }
+
 
     [HttpGet]
 public async Task<IActionResult> Details(int id)

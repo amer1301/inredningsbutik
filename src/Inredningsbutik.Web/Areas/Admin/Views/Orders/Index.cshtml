@@ -1,4 +1,5 @@
-@model List<Order>
+@model Inredningsbutik.Web.ViewModels.PagedListVm<Order>
+
 @{
     ViewData["Title"] = "Ordrar";
     var statuses = ViewBag.Statuses as List<string> ?? new();
@@ -38,7 +39,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach (var o in Model)
+            @foreach (var o in Model.Items)
             {
                 <tr>
                     <td>@o.Id</td>
@@ -55,3 +56,4 @@
         </table>
     </div>
 </div>
+<partial name="_Pager" model="Model" />

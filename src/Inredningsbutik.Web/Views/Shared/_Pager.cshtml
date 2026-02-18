@@ -1,0 +1,52 @@
+@using Microsoft.AspNetCore.WebUtilities
+
+@model dynamic
+
+@{
+    int currentPage = (int)Model.Page;
+    int totalPages = (int)Model.TotalPages;
+
+    var http = ViewContext.HttpContext;
+
+    string BuildUrl(int targetPage)
+    {
+        // Starta från nuvarande querystring
+        var dict = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
+        foreach (var kv in http.Request.Query)
+        {
+            dict[kv.Key] = kv.Value.ToString();
+        }
+
+        // Sätt/ersätt page
+        dict["page"] = targetPage.ToString();
+
+        // Bygg url med befintliga parametrar kvar (q, categoryId, pageSize, osv)
+        return QueryHelpers.AddQueryString(http.Request.Path, dict!);
+    }
+}
+
+@if (totalPages > 1)
+{
+    <nav aria-label="Pagination" style="display:flex; gap:12px; align-items:center; margin-top:16px;">
+        @if (currentPage > 1)
+        {
+            <a href="@BuildUrl(currentPage - 1)">← Föregående</a>
+        }
+        else
+        {
+            <span style="opacity:.5;">← Föregående</span>
+        }
+
+        <span>Sida @currentPage av @totalPages</span>
+
+        @if (currentPage < totalPages)
+        {
+            <a href="@BuildUrl(currentPage + 1)">Nästa →</a>
+        }
+        else
+        {
+            <span style="opacity:.5;">Nästa →</span>
+        }
+    </nav>
+}
+

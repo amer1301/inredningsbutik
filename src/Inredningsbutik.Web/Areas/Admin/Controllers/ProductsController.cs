@@ -1,3 +1,4 @@
+using Inredningsbutik.Web.ViewModels;
 using Inredningsbutik.Core.Entities;
 using Inredningsbutik.Infrastructure.Data;
 using Inredningsbutik.Infrastructure;
@@ -20,8 +21,12 @@ public class ProductsController : Controller
         _db = db;
     }
 
-public async Task<IActionResult> Index(string? q, int? categoryId)
+public async Task<IActionResult> Index(string? q, int? categoryId, int page = 1, int pageSize = 25)
 {
+    // guards
+    page = page < 1 ? 1 : page;
+    pageSize = pageSize is < 5 or > 200 ? 25 : pageSize;
+
     var query = _db.Products
         .AsNoTracking()
         .Include(p => p.Category)
@@ -40,6 +45,7 @@ public async Task<IActionResult> Index(string? q, int? categoryId)
         query = query.Where(p => p.CategoryId == categoryId.Value);
     }
 
+    // Categories för filter-UI (behåll din befintliga logik)
     var categories = await _db.Categories
         .AsNoTracking()
         .OrderBy(c => c.Name)
@@ -49,11 +55,25 @@ public async Task<IActionResult> Index(string? q, int? categoryId)
     ViewBag.SelectedCategoryId = categoryId;
     ViewBag.Query = q;
 
-    var products = await query
+    // Count innan paging
+    var total = await query.CountAsync();
+
+    // Paging
+    var items = await query
         .OrderBy(p => p.Name)
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
         .ToListAsync();
 
-    return View(products);
+    var vm = new PagedListVm<Product>
+    {
+        Items = items,
+        Page = page,
+        PageSize = pageSize,
+        TotalCount = total
+    };
+
+    return View(vm);
 }
 
 

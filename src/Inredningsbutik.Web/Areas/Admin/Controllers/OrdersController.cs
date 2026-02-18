@@ -3,6 +3,9 @@ using Inredningsbutik.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Inredningsbutik.Web.ViewModels;
+using Inredningsbutik.Core.Entities;
+
 
 namespace Inredningsbutik.Web.Areas.Admin.Controllers;
 
@@ -17,8 +20,11 @@ public class OrdersController : Controller
         _db = db;
     }
 
-public async Task<IActionResult> Index(string? status)
+public async Task<IActionResult> Index(string? status, int page = 1, int pageSize = 25)
 {
+    page = page < 1 ? 1 : page;
+    pageSize = pageSize is < 5 or > 200 ? 25 : pageSize;
+
     var query = _db.Orders
         .AsNoTracking()
         .Include(o => o.OrderItems)
@@ -30,8 +36,14 @@ public async Task<IActionResult> Index(string? status)
         query = query.Where(o => o.Status == status);
     }
 
-    var orders = await query
-        .OrderByDescending(o => o.CreatedAt)
+    query = query.OrderByDescending(o => o.CreatedAt);
+
+    // Viktigt: count på filtrerad query (innan paging)
+    var total = await query.CountAsync();
+
+    var items = await query
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
         .ToListAsync();
 
     ViewBag.SelectedStatus = status;
@@ -43,9 +55,16 @@ public async Task<IActionResult> Index(string? status)
         .OrderBy(s => s)
         .ToListAsync();
 
-    return View(orders);
-}
+var vm = new PagedListVm<Order>
+    {
+        Items = items,
+        Page = page,
+        PageSize = pageSize,
+        TotalCount = total
+    };
 
+    return View(vm);
+}
 
     public async Task<IActionResult> Details(int id)
     {
