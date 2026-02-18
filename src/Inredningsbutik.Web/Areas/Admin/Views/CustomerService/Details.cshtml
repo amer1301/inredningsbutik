@@ -76,17 +76,36 @@
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-body">
-            <h5>Svara</h5>
-            <form asp-action="Reply" method="post">
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="TicketId" value="@Model.Id" />
-                <div class="mb-2">
-                    <textarea class="form-control" name="Message" rows="4" placeholder="Skriv svar..."></textarea>
-                </div>
-                <button class="btn btn-dark" type="submit">Skicka svar</button>
-            </form>
-        </div>
+<div class="card">
+    <div class="card-body">
+        <h5>Svara</h5>
+
+        <form asp-action="Reply" method="post">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="TicketId" value="@Model.Id" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+            <div class="mb-2">
+                <label class="form-label">Meddelande</label>
+                <textarea class="form-control"
+                          name="Message"
+                          rows="4"
+                          placeholder="Skriv svar...">@(
+                    ViewData.ModelState.TryGetValue("Message", out var entry) 
+                        ? entry?.AttemptedValue 
+                        : ""
+                )</textarea>
+
+                @if (ViewData.ModelState.TryGetValue("Message", out var msgState) && msgState.Errors.Count > 0)
+                {
+                    <div class="text-danger mt-1">@msgState.Errors[0].ErrorMessage</div>
+                }
+            </div>
+
+            <button class="btn btn-dark" type="submit">Skicka svar</button>
+        </form>
     </div>
+</div>
 </div>
