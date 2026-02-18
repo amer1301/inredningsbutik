@@ -10,10 +10,12 @@ namespace Inredningsbutik.Api.Controllers;
 public class ProductsController : ControllerBase
 {
     private readonly AppDbContext _db;
+    private readonly ILogger<ProductsController> _logger;
 
-    public ProductsController(AppDbContext db)
+    public ProductsController(AppDbContext db, ILogger<ProductsController> logger)
     {
         _db = db;
+        _logger = logger;
     }
 
     // GET /api/products?q=...&categoryId=...&page=1&pageSize=25
@@ -24,9 +26,12 @@ public class ProductsController : ControllerBase
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 25)
     {
-        // Guards (skyddar mot konstiga värden)
         page = page < 1 ? 1 : page;
         pageSize = pageSize is < 5 or > 200 ? 25 : pageSize;
+
+        _logger.LogInformation(
+            "API listar produkter. q={Q}, categoryId={CategoryId}, page={Page}, pageSize={PageSize}",
+            q, categoryId, page, pageSize);
 
         var query = _db.Products
             .AsNoTracking()
@@ -36,9 +41,7 @@ public class ProductsController : ControllerBase
         if (!string.IsNullOrWhiteSpace(q))
         {
             var term = q.Trim();
-            query = query.Where(p =>
-                p.Name.Contains(term) ||
-                p.Description.Contains(term));
+            query = query.Where(p => p.Name.Contains(term) || p.Description.Contains(term));
         }
 
         if (categoryId.HasValue)
@@ -46,7 +49,6 @@ public class ProductsController : ControllerBase
             query = query.Where(p => p.CategoryId == categoryId.Value);
         }
 
-        // Total count innan paging
         var total = await query.CountAsync();
 
         var items = await query
@@ -65,6 +67,10 @@ public class ProductsController : ControllerBase
             ))
             .ToListAsync();
 
+        _logger.LogInformation(
+            "API produkter hämtade. returned={Returned}, total={Total}",
+            items.Count, total);
+
         return Ok(new PagedResponse<ProductDto>
         {
             Items = items,
@@ -78,6 +84,8 @@ public class ProductsController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<ProductDto>> GetById(int id)
     {
+        _logger.LogInformation("API hämtar produkt. productId={ProductId}", id);
+
         var product = await _db.Products
             .AsNoTracking()
             .Include(p => p.Category)
@@ -96,6 +104,8 @@ public class ProductsController : ControllerBase
 
         if (product is null)
         {
+            _logger.LogWarning("API produkt hittades inte. productId={ProductId}", id);
+
             return NotFound(new ProblemDetails
             {
                 Status = StatusCodes.Status404NotFound,
