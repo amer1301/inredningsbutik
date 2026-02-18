@@ -140,15 +140,17 @@ document.querySelectorAll(".cart-qty").forEach((input) => {
     const productId = input.dataset.productId;
     const quantity = Number(input.value);
 
-    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+    const token = document.querySelector(
+      'input[name="__RequestVerificationToken"]'
+    )?.value;
 
     const res = await fetch("/Cart/UpdateQuantity", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        ...(token ? { "RequestVerificationToken": token } : {})
+        ...(token ? { RequestVerificationToken: token } : {}),
       },
-      body: JSON.stringify({ productId: Number(productId), quantity })
+      body: JSON.stringify({ productId: Number(productId), quantity }),
     });
 
     if (!res.ok) return;
@@ -188,4 +190,35 @@ document.addEventListener("DOMContentLoaded", () => {
   if (adminToast && window.bootstrap?.Toast) {
     new bootstrap.Toast(adminToast, { delay: 2000 }).show();
   }
+
+  // ✅ Scroll-fix: behåll position när man postar "lägg i varukorgen" från listvy.
+  // Formen gör en full page reload (PRG-redirect), så vi sparar scrollY innan submit
+  // och återställer efter reload.
+  const scrollKey = `scrollPos:${window.location.pathname}${window.location.search}`;
+
+  const saved = sessionStorage.getItem(scrollKey);
+  if (saved) {
+    const y = Number(saved);
+    if (!Number.isNaN(y)) window.scrollTo(0, y);
+    sessionStorage.removeItem(scrollKey);
+  }
+
+  // Lyssna på submit och spara scroll för just "lägg i varukorg"-formen.
+  document.addEventListener(
+    "submit",
+    (e) => {
+      const form = e.target;
+      if (!(form instanceof HTMLFormElement)) return;
+      if (!form.classList.contains("product-add")) return;
+
+      sessionStorage.setItem(scrollKey, String(window.scrollY || 0));
+
+      // Säkerställ att returnUrl är nuvarande vy (path + query)
+      const returnUrl = form.querySelector('input[name="returnUrl"]');
+      if (returnUrl) {
+        returnUrl.value = `${window.location.pathname}${window.location.search}`;
+      }
+    },
+    true
+  );
 });

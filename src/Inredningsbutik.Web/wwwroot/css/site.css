@@ -54,7 +54,8 @@ h1,h2,h3{
 
 
 .btn-brand,
-.btn-primary {
+.btn-primary,
+.btn-secondary {
     color: black;
     background-color: #EDE8E0;
     border-color: #451e0d;
@@ -76,6 +77,7 @@ h1,h2,h3{
 
 .btn-brand:hover,
 .btn-primary:hover,
+.btn-secondary:hover,
 .btn-outline-danger:hover,
 .btn-success:hover {
     color: white;

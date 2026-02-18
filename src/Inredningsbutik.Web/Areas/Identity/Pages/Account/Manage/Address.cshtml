@@ -1,0 +1,67 @@
+@page
+@model Inredningsbutik.Web.Areas.Identity.Pages.Account.Manage.AddressModel
+@{
+    ViewData["Title"] = "Adress";
+    ViewData["ActivePage"] = "Address"; // eller ManageNavPages.Address om du la till den
+}
+
+<div class="identity-page">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+            <div class="identity-card">
+                <h1 class="mb-4">Hantera konto</h1>
+
+                <div class="row">
+                    <div class="col-md-3 mb-4">
+                        <partial name="_ManageNav" />
+                    </div>
+
+                    <div class="col-md-9">
+                        <h2 class="h5 mb-3">@ViewData["Title"]</h2>
+
+                        <partial name="_StatusMessage" for="StatusMessage" />
+
+                        <form method="post">
+                            @Html.AntiForgeryToken()
+
+                            <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+
+                            <div class="form-floating mb-3">
+                                <input asp-for="Input.Street" class="form-control" placeholder="Gatuadress" />
+                                <label asp-for="Input.Street" class="form-label">Gatuadress</label>
+                                <span asp-validation-for="Input.Street" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input asp-for="Input.PostalCode" class="form-control" placeholder="Postnummer" />
+                                <label asp-for="Input.PostalCode" class="form-label">Postnummer</label>
+                                <span asp-validation-for="Input.PostalCode" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input asp-for="Input.City" class="form-control" placeholder="Stad" />
+                                <label asp-for="Input.City" class="form-label">Stad</label>
+                                <span asp-validation-for="Input.City" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input asp-for="Input.Country" class="form-control" placeholder="Land" />
+                                <label asp-for="Input.Country" class="form-label">Land</label>
+                                <span asp-validation-for="Input.Country" class="text-danger"></span>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                                Spara adress
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Inredningsbutik.Web.Controllers;
 
-[Authorize] // måste vara inloggad för att beställa
+[Authorize(Roles = "Customer")]
 public class CheckoutController : Controller
 {
     private readonly CartService _cart;
@@ -25,15 +25,18 @@ public class CheckoutController : Controller
 
     public IActionResult Index()
     {
-        var cart = _cart.GetCart();
-        if (!cart.Items.Any()) return RedirectToAction("Index", "Cart");
-        return View(cart);
+    if (IsAdminUser) return BlockAdminCheckout();
+
+    var cart = _cart.GetCart();
+    if (!cart.Items.Any()) return RedirectToAction("Index", "Cart");
+    return View(cart);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> PlaceOrder()
     {
+        if (IsAdminUser) return BlockAdminCheckout();
         var cart = _cart.GetCart();
         if (!cart.Items.Any()) return RedirectToAction("Index", "Cart");
 
@@ -111,6 +114,16 @@ public async Task<IActionResult> Confirmation(int id)
     if (order is null) return NotFound();
 
     return View(order);
+}
+private bool IsAdminUser =>
+    User.Identity?.IsAuthenticated == true && User.IsInRole("Admin");
+
+private IActionResult BlockAdminCheckout()
+{
+    TempData["AdminToast"] =
+        "Administratörer kan inte handla i butiken. Logga in som kund.";
+
+    return RedirectToAction("Index", "Home");
 }
 
 }
