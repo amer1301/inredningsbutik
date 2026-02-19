@@ -235,8 +235,27 @@ header{
 .navbar-brand{
   font-family: "Playfair Display", serif;
   font-size: 20px;
-  letter-spacing: 0.04em;
-  padding: 14px 0;
+  letter-spacing: 3px;
+  position: relative;
+  font-weight: 400;
+  margin-bottom: 1em;
+  margin-top: 0.5em;
+  margin-left: 1.5em;
+    align-items: center;
+  gap: 10px;
+  display: flex;
+}
+
+.navbar-brand::after,
+.navbar-brand::before {
+  content: "";
+  width: 30px;
+  height: 1px;
+  background: #d8cec4;
+}
+
+.navbar-brand:hover::after {
+  opacity: 1;
 }
 
 .navbar .nav-link:hover{ opacity: .7; }
@@ -250,15 +269,27 @@ header{
    HERO (Video med text overlay)
    ========================= */
 
+/* Yttersektion */
 .hero-editorial{
   background: var(--header-bg);
-
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
   padding: 3em 0;
   position: relative;
+  box-shadow: 
+  0 -10px 20px #EDE8E0,   /* upptill */
+  0 10px 20px #EDE8E0;    /* nertill */
 }
+
+/* Media-wrapper (håller video + overlay + text) */
+.hero-editorial__media{
+  position: relative;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* Själva “rutan” där videon ligger */
 .hero-editorial__media--video{
   position: relative;
   width: 100%;
@@ -266,49 +297,33 @@ header{
   min-height: 560px;
   border-radius: 18px;
   overflow: hidden;
-  max-width: 1600px;
-  margin: 0 auto;
   background: transparent;
-  -webkit-mask-image: linear-gradient(#000, #000);
-  -webkit-mask-composite: source-in;
-  -webkit-mask-image:
-    linear-gradient(to right,
-      transparent 0%,
-      #000 4%,
-      #000 96%,
-      transparent 100%
-    ),
-    linear-gradient(to bottom,
-      transparent 0%,
-      #000 6%,
-      #000 94%,
-      transparent 100%
-    );
-  -webkit-mask-composite: intersect;
-  mask-image:
-    linear-gradient(to right,
-      transparent 0%,
-      #000 4%,
-      #000 96%,
-      transparent 100%
-    ),
-    linear-gradient(to bottom,
-      transparent 0%,
-      #000 6%,
-      #000 94%,
-      transparent 100%
-    );
-  mask-composite: intersect;
 }
 
-.hero-editorial__video{
+/* ✅ Viktigt: wrappern måste fylla hela videorutan */
+.hero-video-wrap{
+  position: absolute;
+  inset: 0;
+}
+
+/* Videolagren (A och B) */
+.hero-video-wrap .hero-video{
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+
+  opacity: 0;
+  transition: opacity 80ms linear;
 }
 
+/* Aktiv video syns */
+.hero-video-wrap .hero-video.is-active{
+  opacity: 1;
+}
+
+/* Overlay ovanpå videon */
 .hero-editorial__videoOverlay{
   position: absolute;
   inset: 0;
@@ -319,8 +334,11 @@ header{
     rgba(0,0,0,.18) 100%
   );
   border-radius: inherit;
+  z-index: 1;
+  pointer-events: none;
 }
 
+/* Textlager */
 .hero-editorial__inner{
   position: absolute;
   inset: 0;
@@ -364,16 +382,26 @@ header{
   background: rgba(255,255,255,0.10);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-
   border: 1px solid rgba(255,255,255,0.55);
   color: #fff !important;
   border-radius: 6px;
+
 }
 
 .hero-editorial__cta::before{
   content: "";
   position: absolute;
-  inset: 0;
+    top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.4),
+    transparent
+  );
+  transition: 0.6s;
   border-radius: inherit;
   box-shadow: inset 0 0 18px rgba(255,255,255,0.25);
   pointer-events: none;
@@ -382,6 +410,11 @@ header{
 .hero-editorial__cta:hover{
   background: rgba(255,255,255,0.18);
   backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.55);
+}
+
+.hero-editorial__cta:hover::before {
+  left: 120%;
 }
 
 .filter-bar{
@@ -514,6 +547,7 @@ header{
 .usp-strip{
   background: #fff;
   border-bottom: 1px solid rgba(0,0,0,.06);
+  margin-top: 4em;
 }
 
 .usp-strip__inner{
@@ -567,7 +601,7 @@ header{
   position: sticky;
   top: 110px;
   padding-top: 6px;
-  
+  margin-top: 2em;
 }
 
 .catalog-content__title{

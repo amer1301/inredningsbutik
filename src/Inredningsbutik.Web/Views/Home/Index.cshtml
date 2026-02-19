@@ -10,9 +10,15 @@
 <!-- HERO -->
 <section class="hero-editorial mb-4 fade-up">
   <div class="hero-editorial__media hero-editorial__media--video" aria-hidden="true">
-    <video id="heroVideo" class="hero-editorial__video" autoplay muted playsinline preload="auto">
-      <source src="/videos/hero.mp4" type="video/mp4" />
-    </video>
+<div class="hero-video-wrap">
+<video id="heroVideoA" autoplay muted playsinline preload="auto"
+       class="hero-video is-active" src="/videos/hero.mp4"></video>
+
+<video id="heroVideoB" autoplay muted playsinline preload="auto"
+       class="hero-video" src="/videos/hero-reverse.mp4"></video>
+</div>
+
+
     <div class="hero-editorial__videoOverlay"></div>
 
   </div>

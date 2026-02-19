@@ -482,6 +482,61 @@ public static class DataSeeder
         }
 
         await db.SaveChangesAsync();
+
+        // ================================
+// SEEDA FAQ (UPSERT)
+// ================================
+var faq = new List<FaqItem>
+{
+    // ---------- POPULÄRA ----------
+    new() { CategoryKey = "populara", SortOrder = 1, Question = "Jag har precis beställt – vad händer nu?", Answer = "När du lagt din beställning får du en orderbekräftelse via e-post. Därefter plockas ordern på vårt lager och du får ett nytt mail när den är skickad. I leveransmailet finns spårningslänk så du kan följa paketet hela vägen.", IsPublished = true },
+    new() { CategoryKey = "populara", SortOrder = 2, Question = "Kan jag ändra eller avboka min order?", Answer = "Vi behandlar ordern snabbt. Hör av dig så fort som möjligt via kundtjänst med ordernummer. Om ordern inte är packad ännu kan vi ofta hjälpa dig att ändra eller avboka.", IsPublished = true },
+    new() { CategoryKey = "populara", SortOrder = 3, Question = "Varför saknas en vara i min leverans?", Answer = "Ibland skickas ordern i flera paket om produkter finns på olika lager eller har olika leveranstider. Kontrollera dina leveransmail – där ser du om din order delas upp.", IsPublished = true },
+    new() { CategoryKey = "populara", SortOrder = 4, Question = "Var är min beställning? Kan jag spåra den?", Answer = "När din order lämnat vårt lager får du ett leveransmail med spårningslänk. Om du inte hittar mailet, kontrollera skräppost eller logga in och titta under “Mina ordrar”.", IsPublished = true },
+    new() { CategoryKey = "populara", SortOrder = 5, Question = "Hur gör jag en retur?", Answer = "Du har normalt 30 dagars returrätt. Kontakta kundtjänst för returinformation och instruktioner. När vi mottagit och godkänt returen återbetalar vi enligt vald betalmetod.", IsPublished = true },
+    new() { CategoryKey = "populara", SortOrder = 6, Question = "Jag har ett presentkort – hur använder jag det?", Answer = "Du anger presentkortskoden i kassan. Beloppet dras direkt från totalsumman. Om presentkortet inte täcker hela köpet betalar du resterande med valfri betalmetod.", IsPublished = true },
+    new() { CategoryKey = "populara", SortOrder = 7, Question = "Kan jag kombinera rabatter och presentkort?", Answer = "Presentkort kan normalt kombineras med rabatter. Kampanjkoder kan däremot i vissa fall inte kombineras med andra erbjudanden. I kassan ser du om koden godkänns.", IsPublished = true },
+    new() { CategoryKey = "populara", SortOrder = 8, Question = "Hur länge är ett presentkort giltigt?", Answer = "Presentkort är giltiga i 24 månader från inköpsdatum, om inget annat anges vid köpet.", IsPublished = true },
+
+    // ---------- LEVERANSER ----------
+    new() { CategoryKey = "leveranser", SortOrder = 1, Question = "Vilka leveransalternativ erbjuder ni?", Answer = "Vi erbjuder leverans till ombud samt hemleverans (beroende på postnummer och varornas storlek). Tillgängliga alternativ visas i kassan.", IsPublished = true },
+    new() { CategoryKey = "leveranser", SortOrder = 2, Question = "Hur lång är leveranstiden?", Answer = "Normal leveranstid är 1–4 arbetsdagar efter att ordern har skickats. Vid hög belastning eller för beställningsvaror kan det ta längre tid. Aktuell info syns i kassan.", IsPublished = true },
+    new() { CategoryKey = "leveranser", SortOrder = 3, Question = "Vad kostar frakten?", Answer = "Fraktkostnaden beror på leveranssätt och orderns storlek. Du ser alltid fraktpriset innan du slutför köpet.", IsPublished = true },
+    new() { CategoryKey = "leveranser", SortOrder = 4, Question = "Kan jag ändra leveransadress efter lagd order?", Answer = "Kontakta kundtjänst direkt med ordernummer. Om ordern inte är skickad ännu kan vi ibland ändra adressen.", IsPublished = true },
+    new() { CategoryKey = "leveranser", SortOrder = 5, Question = "Paketet är försenat – vad gör jag?", Answer = "Kontrollera spårningen först. Om paketet står stilla i flera dagar eller om du saknar spårningsinfo är du välkommen att kontakta kundtjänst så hjälper vi dig vidare.", IsPublished = true },
+
+    // ---------- RETUR & ÅTERBETALNING ----------
+    new() { CategoryKey = "retur", SortOrder = 1, Question = "Hur lång returrätt har jag?", Answer = "Du har normalt 30 dagars returrätt från att du mottagit varan. Produkten ska returneras i väsentligen oförändrat skick.", IsPublished = true },
+    new() { CategoryKey = "retur", SortOrder = 2, Question = "När får jag min återbetalning?", Answer = "När vi har mottagit och kontrollerat returen återbetalar vi normalt inom 3–10 bankdagar. Tiden kan variera beroende på betalmetod och bank.", IsPublished = true },
+    new() { CategoryKey = "retur", SortOrder = 3, Question = "Vad kostar det att returnera?", Answer = "Returkostnad kan tillkomma beroende på varutyp och returorsak. Kontakta kundtjänst så hjälper vi dig med instruktioner.", IsPublished = true },
+    new() { CategoryKey = "retur", SortOrder = 4, Question = "Kan jag byta en vara?", Answer = "Vi erbjuder i första hand retur och ny beställning. Då får du snabbare leverans på rätt produkt och du kan följa processen tydligt.", IsPublished = true },
+    new() { CategoryKey = "retur", SortOrder = 5, Question = "Vilka varor kan inte returneras?", Answer = "Specialbeställningar och varor som inte kan säljas igen i originalskick kan undantas. Kontakta oss om du är osäker innan du skickar tillbaka.", IsPublished = true },
+
+    // ---------- REKLAMATION ----------
+    new() { CategoryKey = "reklamation", SortOrder = 1, Question = "Min vara är trasig – hur reklamerar jag?", Answer = "Kontakta kundtjänst med ordernummer, beskrivning av felet och gärna bilder. Vi återkommer med nästa steg så snabbt vi kan.", IsPublished = true },
+    new() { CategoryKey = "reklamation", SortOrder = 2, Question = "Vad händer efter att jag skickat in en reklamation?", Answer = "Vi bedömer ärendet och kan be om kompletterande information. Om reklamationen godkänns erbjuder vi i regel ersättningsvara, reservdel eller återbetalning.", IsPublished = true },
+    new() { CategoryKey = "reklamation", SortOrder = 3, Question = "Måste jag spara originalförpackningen?", Answer = "Det underlättar vid transport och hantering, särskilt för ömtåliga produkter. Om du inte har förpackningen kvar, hör av dig så hjälper vi dig med alternativ.", IsPublished = true },
+    new() { CategoryKey = "reklamation", SortOrder = 4, Question = "Hur länge kan jag reklamera?", Answer = "Du har reklamationsrätt enligt konsumentköplagen. Kontakta oss så snart du upptäcker felet.", IsPublished = true },
+
+    // ---------- BETALNING & FAKTURA ----------
+    new() { CategoryKey = "betalning", SortOrder = 1, Question = "Vilka betalningsmetoder erbjuder ni?", Answer = "Du kan betala med kort och/eller faktura/delbetalning beroende på vad som är aktiverat i kassan. Exakta alternativ visas när du går till betalning.", IsPublished = true },
+    new() { CategoryKey = "betalning", SortOrder = 2, Question = "När dras pengarna från mitt kort?", Answer = "Kortbetalningar reserveras normalt vid köp och dras när ordern behandlas eller skickas, beroende på betalningslösning.", IsPublished = true },
+    new() { CategoryKey = "betalning", SortOrder = 3, Question = "Jag har inte fått min faktura – vad gör jag?", Answer = "Kontrollera skräppost och eventuella betalningsappar/portaler. Om du fortfarande inte hittar den, kontakta kundtjänst så hjälper vi dig.", IsPublished = true },
+    new() { CategoryKey = "betalning", SortOrder = 4, Question = "Kan jag få en delåterbetalning?", Answer = "Ja, vid retur av en del av ordern återbetalar vi motsvarande belopp. Eventuell frakt återbetalas enligt villkor och returorsak.", IsPublished = true },
+};
+
+// UPSERT: lägg till om den inte redan finns (CategoryKey + Question)
+foreach (var item in faq)
+{
+    var exists = await db.FaqItems.AnyAsync(f =>
+        f.CategoryKey == item.CategoryKey && f.Question == item.Question);
+
+    if (!exists)
+        db.FaqItems.Add(item);
+}
+
+await db.SaveChangesAsync();
+
     }
 
     private static async Task<Category> GetCat(AppDbContext db, string slug)

@@ -1,4 +1,6 @@
-﻿// Autosubmit för filter-formulär (input + select)
+﻿// =========================
+// Autosubmit för filter-formulär (input + select)
+// =========================
 document.querySelectorAll('form[data-autosubmit="true"]').forEach((form) => {
   const input = form.querySelector(
     'input[type="search"], input[name="q"], input[type="text"]'
@@ -10,9 +12,7 @@ document.querySelectorAll('form[data-autosubmit="true"]').forEach((form) => {
   if (input) {
     input.addEventListener("input", () => {
       clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        form.submit();
-      }, 250);
+      timeout = setTimeout(() => form.submit(), 250);
     });
 
     input.addEventListener("keydown", (e) => {
@@ -24,14 +24,14 @@ document.querySelectorAll('form[data-autosubmit="true"]').forEach((form) => {
   }
 
   if (select) {
-    select.addEventListener("change", () => {
-      form.submit();
-    });
+    select.addEventListener("change", () => form.submit());
   }
 });
 
+// =========================
+// AJAX-sök i topbaren (uppdaterar #productResults om det finns)
+// =========================
 (() => {
-  // AJAX-sök i topbaren (uppdaterar #productResults om det finns)
   const form = document.querySelector(".topbar-search");
   if (!form) return;
 
@@ -41,10 +41,7 @@ document.querySelectorAll('form[data-autosubmit="true"]').forEach((form) => {
   let timeout;
 
   const run = async () => {
-    const url = new URL(
-      form.action || window.location.href,
-      window.location.origin
-    );
+    const url = new URL(form.action || window.location.href, window.location.origin);
 
     const fd = new FormData(form);
     for (const [k, v] of fd.entries()) {
@@ -58,7 +55,6 @@ document.querySelectorAll('form[data-autosubmit="true"]').forEach((form) => {
     });
 
     if (!res.ok) {
-      // Om fetch misslyckas, fallback till vanlig navigation
       window.location.href = url.toString();
       return;
     }
@@ -69,15 +65,13 @@ document.querySelectorAll('form[data-autosubmit="true"]').forEach((form) => {
     const next = doc.querySelector("#productResults");
     const current = document.querySelector("#productResults");
 
-    // ✅ Fallback: om sidan inte har #productResults (eller svaret saknar det),
-    // gå till sök-URL:en som vanligt.
+    // Fallback: om sidan inte har #productResults -> normal navigation
     if (!(next && current)) {
       window.location.href = url.toString();
       return;
     }
 
     current.replaceWith(next);
-
     history.replaceState(null, "", url.toString());
 
     // Behåll fokus och caret i input
@@ -106,43 +100,17 @@ document.querySelectorAll('form[data-autosubmit="true"]').forEach((form) => {
   });
 })();
 
-// Hero-video loopar fram och tillbaka
-const video = document.getElementById("heroVideo");
-
-if (video) {
-  let reversing = false;
-
-  video.addEventListener("ended", () => {
-    reversing = true;
-    reverse();
-  });
-
-  function reverse() {
-    if (!reversing) return;
-
-    video.currentTime -= 0.03;
-
-    if (video.currentTime <= 0) {
-      reversing = false;
-      video.play();
-      return;
-    }
-
-    requestAnimationFrame(reverse);
-  }
-}
-
+// =========================
 // Live uppdatering av kundvagn
+// =========================
 document.querySelectorAll(".cart-qty").forEach((input) => {
   let timeout;
 
   const update = async () => {
-    const productId = input.dataset.productId;
+    const productId = Number(input.dataset.productId);
     const quantity = Number(input.value);
 
-    const token = document.querySelector(
-      'input[name="__RequestVerificationToken"]'
-    )?.value;
+    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
 
     const res = await fetch("/Cart/UpdateQuantity", {
       method: "POST",
@@ -150,7 +118,7 @@ document.querySelectorAll(".cart-qty").forEach((input) => {
         "Content-Type": "application/json",
         ...(token ? { RequestVerificationToken: token } : {}),
       },
-      body: JSON.stringify({ productId: Number(productId), quantity }),
+      body: JSON.stringify({ productId, quantity }),
     });
 
     if (!res.ok) return;
@@ -180,7 +148,11 @@ document.querySelectorAll(".cart-qty").forEach((input) => {
   input.addEventListener("change", update);
 });
 
+// =========================
+// DOMContentLoaded: toasts + HERO ping-pong + scroll-fix
+// =========================
 document.addEventListener("DOMContentLoaded", () => {
+  // Toasts
   const cartToast = document.getElementById("cartToast");
   if (cartToast && window.bootstrap?.Toast) {
     new bootstrap.Toast(cartToast, { delay: 2000 }).show();
@@ -191,9 +163,99 @@ document.addEventListener("DOMContentLoaded", () => {
     new bootstrap.Toast(adminToast, { delay: 2000 }).show();
   }
 
-  // ✅ Scroll-fix: behåll position när man postar "lägg i varukorgen" från listvy.
-  // Formen gör en full page reload (PRG-redirect), så vi sparar scrollY innan submit
-  // och återställer efter reload.
+  // =========================
+  // HERO ping-pong (stabil): INGEN nested DOMContentLoaded
+  // =========================
+  const a = document.getElementById("heroVideoA");
+  const b = document.getElementById("heroVideoB");
+
+  if (a && b) {
+    [a, b].forEach((v) => {
+      v.muted = true;
+      v.playsInline = true;
+      v.preload = "auto";
+      v.setAttribute("muted", "");
+      v.setAttribute("playsinline", "");
+    });
+
+    let active = a;
+    let next = b;
+    let swapping = false;
+
+    const SWAP_BEFORE_END = 0.40; // sekunder innan slut
+
+    const safePlay = async (v) => {
+      try {
+        const p = v.play();
+        if (p && typeof p.then === "function") await p;
+        return true;
+      } catch (e) {
+        console.warn("[hero] play failed", e);
+        return false;
+      }
+    };
+
+    // värm nästa så den har en frame redo (minskar svart-blink)
+    const prepareNext = async (v) => {
+      v.pause();
+      try { v.currentTime = 0; } catch {}
+      await safePlay(v);
+      v.pause();
+      return true;
+    };
+
+    const swap = async () => {
+      if (swapping) return;
+      swapping = true;
+
+      await prepareNext(next);
+
+      // byt visuellt
+      active.classList.remove("is-active");
+      next.classList.add("is-active");
+
+      const ok = await safePlay(next);
+      if (!ok) {
+        // om play failar -> revert så vi inte blir svart
+        next.classList.remove("is-active");
+        active.classList.add("is-active");
+        swapping = false;
+        return;
+      }
+
+      // reset gamla
+      active.pause();
+      try { active.currentTime = 0; } catch {}
+
+      // swap refs
+      const tmp = active;
+      active = next;
+      next = tmp;
+
+      swapping = false;
+    };
+
+    // Starta första
+    safePlay(a);
+
+    // Byt innan slut (timeupdate)
+    const tick = () => {
+      if (swapping) return;
+      const d = active.duration;
+      const t = active.currentTime;
+      if (d && isFinite(d) && (d - t) < SWAP_BEFORE_END) swap();
+    };
+
+    a.addEventListener("timeupdate", tick);
+    b.addEventListener("timeupdate", tick);
+
+    // autoplay fallback (om browsern kräver user gesture)
+    window.addEventListener("pointerdown", () => safePlay(active), { once: true });
+  }
+
+  // =========================
+  // Scroll-fix: behåll position efter "lägg i varukorgen" (PRG reload)
+  // =========================
   const scrollKey = `scrollPos:${window.location.pathname}${window.location.search}`;
 
   const saved = sessionStorage.getItem(scrollKey);
@@ -203,7 +265,6 @@ document.addEventListener("DOMContentLoaded", () => {
     sessionStorage.removeItem(scrollKey);
   }
 
-  // Lyssna på submit och spara scroll för just "lägg i varukorg"-formen.
   document.addEventListener(
     "submit",
     (e) => {
