@@ -1,4 +1,3 @@
-
 /* ================================
    Design tokens
    ================================ */
@@ -27,6 +26,9 @@ h1,h2,h3{
   font-family: "Playfair Display", serif;
 }
 
+/* =========================
+   Toasts / Buttons
+   ========================= */
 .cart-toast{
   background: #451e0d;
   color: #fff;
@@ -52,27 +54,26 @@ h1,h2,h3{
   opacity: .9;
 }
 
-
 .btn-brand,
 .btn-primary,
 .btn-secondary {
-    color: black;
-    background-color: #EDE8E0;
-    border-color: #451e0d;
+  color: black;
+  background-color: #EDE8E0;
+  border-color: #451e0d;
 }
 
 .btn-outline-danger,
 .btn-success {
-      color: black;
-    background-color: #EDE8E0;
-    border-color:#451e0d;
+  color: black;
+  background-color: #EDE8E0;
+  border-color:#451e0d;
 }
 
 .alert-success {
   --bs-alert-color: black;
-    --bs-alert-bg: #EDE8E0;
-    --bs-alert-border-color: #EDE8E0;
-    --bs-alert-link-color: black;
+  --bs-alert-bg: #EDE8E0;
+  --bs-alert-border-color: #EDE8E0;
+  --bs-alert-link-color: black;
 }
 
 .btn-brand:hover,
@@ -80,18 +81,18 @@ h1,h2,h3{
 .btn-secondary:hover,
 .btn-outline-danger:hover,
 .btn-success:hover {
-    color: white;
-    background-color: #451e0d;
-    border-color: #451e0d;
+  color: white;
+  background-color: #451e0d;
+  border-color: #451e0d;
 }
 
 .btn-danger {
-    --bs-btn-color: #000000;
-    --bs-btn-bg: #EDE8E0;
-    --bs-btn-border-color:#451e0d;
-    --bs-btn-hover-color: #fff;
-    --bs-btn-hover-bg: #451e0d;
-    --bs-btn-hover-border-color: #451e0d;
+  --bs-btn-color: #000000;
+  --bs-btn-bg: #EDE8E0;
+  --bs-btn-border-color:#451e0d;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #451e0d;
+  --bs-btn-hover-border-color: #451e0d;
 }
 
 /* =========================
@@ -170,7 +171,6 @@ header{
   transition: color .2s ease, opacity .2s ease;
 }
 
-/* hover färg */
 .topbar__right a:hover,
 .topbar__right .nav-link:hover,
 .topbar__right button.nav-link:hover{
@@ -178,7 +178,6 @@ header{
   opacity: .85;
 }
 
-/* underline animation */
 .topbar__right a::after,
 .topbar__right .nav-link::after,
 .topbar__right button.nav-link::after{
@@ -198,7 +197,6 @@ header{
   width: 100%;
 }
 
-/* aktiv sida */
 .topbar__right .is-active{
   color: #000 !important;
   font-weight: 600;
@@ -215,39 +213,25 @@ header{
   padding: 0;
   list-style: none;
 }
+
 .topbar__right li{
   display:inline-flex;
   align-items:center;
 }
 
-/* Se till att navbar-raden är korrekt centrerad */
-.navbar > .container-fluid {
-    display: flex;
-    align-items: center;   /* centrera vertikalt */
-}
-
-/* Centrera actions-blocket */
-.navbar-actions {
-    display: flex;
-    align-items: center;
-}
-
-/* Justera ikoner exakt i linje med loggan */
-.navbar-cart,
-.navbar-toggler {
-    display: flex;
-    align-items: center;
-}
-
-.navbar-cart {
-    margin-left: auto;
-}
-
+/* -------- NAVBAR: FIXAD LAYOUT -------- */
 .navbar .nav-link,
 .navbar-brand{
   color: var(--text) !important;
 }
 
+/* container-fluid blir en rad: brand vänster, actions+toggler höger */
+.navbar > .container-fluid{
+  display:flex;
+  align-items:center;
+}
+
+/* Brand */
 .navbar-brand{
   font-family: "Playfair Display", serif;
   font-size: 20px;
@@ -257,21 +241,17 @@ header{
   margin-bottom: 1em;
   margin-top: 0.5em;
   margin-left: 1.5em;
-    align-items: center;
-  gap: 10px;
   display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .navbar-brand::after,
-.navbar-brand::before {
+.navbar-brand::before{
   content: "";
   width: 30px;
   height: 1px;
   background: #d8cec4;
-}
-
-.navbar-brand:hover::after {
-  opacity: 1;
 }
 
 .navbar .nav-link:hover{ opacity: .7; }
@@ -281,18 +261,34 @@ header{
   padding-bottom: 48px;
 }
 
-.navbar .navbar-toggler {
+/* Actions: trycks till höger */
+.navbar-actions{
+  margin-left: auto;     /* <-- nyckeln */
+  display:flex;
+  align-items:center;
+  gap: 10px;
+}
+
+/* Se till att cart/toggler är flex och centrerade */
+.navbar-cart,
+.navbar-toggler{
+  display:flex;
+  align-items:center;
+}
+
+/* Toggler-styling */
+.navbar .navbar-toggler{
   border: 1.5px solid #EDE8E0;
 }
 
-.navbar .navbar-toggler-icon {
+.navbar .navbar-toggler-icon{
   background-image: none;
   width: 28px;
   height: 20px;
   position: relative;
 }
 
-.navbar .navbar-toggler-icon::before {
+.navbar .navbar-toggler-icon::before{
   content: "";
   position: absolute;
   left: 0;
@@ -309,8 +305,6 @@ header{
 /* =========================
    HERO (Video med text overlay)
    ========================= */
-
-/* Yttersektion */
 .hero-editorial{
   background: var(--header-bg);
   width: 100vw;
@@ -318,19 +312,17 @@ header{
   margin-right: calc(50% - 50vw);
   padding: 3em 0;
   position: relative;
-  box-shadow: 
-  0 -10px 20px #EDE8E0,   /* upptill */
-  0 10px 20px #EDE8E0;    /* nertill */
+  box-shadow:
+    0 -10px 20px #EDE8E0,
+    0 10px 20px #EDE8E0;
 }
 
-/* Media-wrapper (håller video + overlay + text) */
 .hero-editorial__media{
   position: relative;
   max-width: 1600px;
   margin: 0 auto;
 }
 
-/* Själva “rutan” där videon ligger */
 .hero-editorial__media--video{
   position: relative;
   width: 100%;
@@ -341,30 +333,25 @@ header{
   background: transparent;
 }
 
-/* ✅ Viktigt: wrappern måste fylla hela videorutan */
 .hero-video-wrap{
   position: absolute;
   inset: 0;
 }
 
-/* Videolagren (A och B) */
 .hero-video-wrap .hero-video{
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-
   opacity: 0;
   transition: opacity 80ms linear;
 }
 
-/* Aktiv video syns */
 .hero-video-wrap .hero-video.is-active{
   opacity: 1;
 }
 
-/* Overlay ovanpå videon */
 .hero-editorial__videoOverlay{
   position: absolute;
   inset: 0;
@@ -379,15 +366,12 @@ header{
   pointer-events: none;
 }
 
-/* Textlager */
 .hero-editorial__inner{
   position: absolute;
   inset: 0;
   z-index: 2;
-
   display: flex;
   align-items: center;
-
   max-width: 1600px;
   margin: 0 auto;
   padding: 0 6vw;
@@ -426,13 +410,12 @@ header{
   border: 1px solid rgba(255,255,255,0.55);
   color: #fff !important;
   border-radius: 6px;
-
 }
 
 .hero-editorial__cta::before{
   content: "";
   position: absolute;
-    top: 0;
+  top: 0;
   left: -100%;
   width: 50%;
   height: 100%;
@@ -454,7 +437,7 @@ header{
   border: 1px solid rgba(255,255,255,0.55);
 }
 
-.hero-editorial__cta:hover::before {
+.hero-editorial__cta:hover::before{
   left: 120%;
 }
 
@@ -469,7 +452,6 @@ header{
 /* =========================
    Product cards
    ========================= */
-
 .product-card{
   background: var(--surface);
   border: 1px solid var(--border);
@@ -479,6 +461,7 @@ header{
   transition: transform .18s ease, box-shadow .18s ease;
   height: 100%;
 }
+
 .product-card:hover{
   transform: translateY(-3px);
   box-shadow: var(--shadow);
@@ -492,6 +475,7 @@ header{
   overflow: hidden;
   background: #ffffff;
 }
+
 .product-media img{
   position:absolute;
   inset:0;
@@ -500,32 +484,27 @@ header{
   object-fit: contain;
   transition: transform .35s ease, opacity .25s ease;
 }
-.product-media img.base{
-  opacity: 1;
-  z-index: 1;
-}
-.product-media img.hover{
-  opacity: 0;
-  z-index: 2;
-}
+
+.product-media img.base{ opacity: 1; z-index: 1; }
+.product-media img.hover{ opacity: 0; z-index: 2; }
+
 .product-card:hover .product-media img.base{
   opacity: 0;
-  transform: scale(1.02);
+  transform: scale(1.03);
 }
 
-.product-card:hover .product-media img.hover{
-  opacity: 1;
-  transform: scale(1.02);
-}
-.product-media img.hover{ opacity: 0; border-radius: 16px; }
-.product-card:hover .product-media img.base{ transform: scale(1.03); }
 .product-card:hover .product-media img.hover{
   opacity: 1;
   transform: scale(1.06);
 }
 
 .product-body{ padding: 14px 14px 16px; }
-.product-title{ font-weight: 600; margin: 0 0 6px; }
+
+.product-title{
+  font-weight: 600;
+  margin: 0 0 6px;
+}
+
 .product-meta{
   color: var(--muted);
   font-size: .95rem;
@@ -537,7 +516,6 @@ header{
 /* =========================
    Cart icon
    ========================= */
-
 .cart-icon-link{
   position: relative;
   display: inline-flex;
@@ -550,6 +528,7 @@ header{
   color: #451e0d;
   text-decoration: none;
 }
+
 .cart-icon-link:hover{ opacity: .85; }
 
 .cart-icon-link svg,
@@ -578,13 +557,12 @@ header{
   display: flex;
   flex-direction: column;
 }
+
 .layout-root main{ flex: 1; }
 
-
 /* =========================
-   USP STRIP (3 fördelar)
+   USP STRIP
    ========================= */
-
 .usp-strip{
   background: #fff;
   border-bottom: 1px solid rgba(0,0,0,.06);
@@ -631,6 +609,9 @@ header{
   line-height: 1.35;
 }
 
+/* =========================
+   Catalog
+   ========================= */
 .catalog-layout{
   display: grid;
   grid-template-columns: 220px 1fr;
@@ -675,28 +656,27 @@ header{
   gap: 10px;
 }
 
+.catalog-filters__list li{ list-style: none; }
+
 .catalog-filters__link{
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   text-decoration: none;
   color: rgba(0,0,0,.85);
   padding: 6px 14px;
+  transition: opacity .15s ease;
   border-radius: 10px;
-  transition: background .15s ease, opacity .15s ease;
+  width: 100%;
 }
 
-.catalog-filters__link:hover{
-  opacity: .85;
-  background: rgba(0,0,0,.04);
-}
+.catalog-filters__link:hover{ opacity: .7; background: rgba(0,0,0,.04);}
 
-.catalog-filters__linkText{
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-left: 0.5em;
+.catalog-filters__link.is-active{
+  font-weight: 600;
+  color: #111;
+  background: rgba(69, 30, 13, .06);
 }
 
 .catalog-filters__count{
@@ -709,61 +689,6 @@ header{
   margin-right: 0.5em;
 }
 
-.catalog-filters__link.is-active{
-  font-weight: 600;
-  color: #111;
-  background: rgba(69, 30, 13, .06);
-}
-
-.catalog-filters__title{
-  font-size: 12px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: rgba(0,0,0,.55);
-  margin-bottom: 12px;
-}
-
-.catalog-filters__list{
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 10px;
-}
-
-.catalog-filters__list li{
-  list-style: none;
-}
-
-.catalog-filters__link{
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: rgba(0,0,0,.85);
-  padding: 6px 0;
-  transition: opacity .15s ease;
-  width: 100%;
-}
-
-.catalog-filters__link:hover{
-  opacity: .7;
-}
-
-.catalog-filters__link.is-active{
-  font-weight: 600;
-  color: #111;
-}
-
-.catalog-filters__link.is-active::before{
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: #451e0d;
-  display: inline-block;
-}
-
 .catalog-filters__clear{
   display: inline-block;
   margin-top: 14px;
@@ -772,10 +697,15 @@ header{
   text-decoration: underline;
 }
 
+/* Ta bort din aktiva prick helt (du hade det längst ner) */
+.catalog-filters__link.is-active::before{
+  content: none !important;
+  display: none !important;
+}
+
 /* =========================
    PDP (Product details page)
    ========================= */
-
 .pdp{
   max-width: 1200px;
   margin: 18px auto 0;
@@ -816,14 +746,13 @@ header{
   gap: 12px;
   padding: 16px;
   border-top: 1px solid rgba(0,0,0,.06);
-min-height: 104px;
+  min-height: 104px;
   overflow-x: auto;
   overflow-y: hidden;
-  scrollbar-width: none;         /* Firefox */
+  scrollbar-width: none;
 }
-.pdp__thumbs::-webkit-scrollbar{ /* Chrome/Edge */
-  display: none;
-}
+
+.pdp__thumbs::-webkit-scrollbar{ display:none; }
 
 .pdp__thumb{
   border: 1px solid rgba(0,0,0,.10);
@@ -849,7 +778,6 @@ min-height: 104px;
   box-shadow: 0 0 0 3px rgba(69,30,13,.10);
 }
 
-/* Info panel */
 .pdp__info{
   position: sticky;
   top: 110px;
@@ -953,9 +881,9 @@ min-height: 104px;
 .pdp__add{
   height: 48px;
   border-radius: 12px;
-    color: black;
-    background-color: #EDE8E0;
-    border-color: #451e0d;
+  color: black;
+  background-color: #EDE8E0;
+  border-color: #451e0d;
   font-weight: 650;
   cursor: pointer;
   border: 1px solid #451e0d;
@@ -963,9 +891,9 @@ min-height: 104px;
 
 .pdp__add:hover{
   opacity: .92;
-      color: white;
-    background-color: #451e0d;
-    border-color: #451e0d;
+  color: white;
+  background-color: #451e0d;
+  border-color: #451e0d;
 }
 
 .pdp__usp{
@@ -997,11 +925,8 @@ min-height: 104px;
   text-decoration: none;
 }
 
-.pdp__back:hover{
-  text-decoration: underline;
-}
+.pdp__back:hover{ text-decoration: underline; }
 
-/* Slider arrows */
 .pdp__nav{
   position: absolute;
   top: 50%;
@@ -1024,40 +949,9 @@ min-height: 104px;
 .pdp__nav--prev{ left: 14px; }
 .pdp__nav--next{ right: 14px; }
 
-.product-meta{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-}
-
-.product-add{
-  margin:0;
-}
-
-.product-add__btn{
-  border:0;
-  background:transparent;
-  padding:0;
-  cursor:pointer;
-  display:inline-grid;
-  place-items:center;
-  width:34px;
-  height:34px;
-  border-radius:999px;
-}
-
-.product-add__btn img{
-  width:20px;
-  height:20px;
-  display:block;
-}
-
-.product-add__btn:hover{
-  background: rgba(0,0,0,.06);
-}
-
-
+/* =========================
+   Footer
+   ========================= */
 footer{
   width: 100%;
   text-align: center;
@@ -1073,7 +967,6 @@ footer{
   padding: 40px 20px;
 }
 
-/* Kundtjänst */
 .customer-service .cs-title{
   letter-spacing: .08em;
   font-weight: 700;
@@ -1130,19 +1023,61 @@ footer{
   border-radius: 18px;
 }
 
-a {
-    color: #451e0d;
-    text-decoration: underline;
+a{
+  color: #451e0d;
+  text-decoration: underline;
 }
-
-
 
 /* ================================
    Responsivitet
    ================================ */
 
+   @media (min-width: 992px){
+  .navbar-mobileCategories{ display: none; }
+}
+
 /* <= lg */
 @media (max-width: 991.98px){
+    /* --- Navbar: brand vänster, varukorg + toggler till höger, meny under --- */
+ .navbar > .container-fluid{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .navbar-brand{
+    order: 1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 10px 0 6px;
+    text-align: center;
+  }
+
+  .navbar-actions{
+    order: 2;
+    margin: 0;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .navbar-toggler{
+    order: 3;
+    margin-left: 0; 
+    flex: 0 0 auto;
+  }
+
+  #mainNavbar.navbar-collapse{
+    order: 4;
+    flex-basis: 100%;
+    width: 100%;
+  }
+  .navbar-mobileCategories{ display: block; }
+  .catalog-filters{ display: none; }
   /* Topbar: sök överst, länkar under */
   .topbar__inner{ flex-wrap: wrap; gap: 10px; }
   .topbar-search{ width: 100%; max-width: none; height: 42px; padding: 0 12px; }
@@ -1171,22 +1106,23 @@ a {
   .pdp{ grid-template-columns: 1fr; gap: 18px; }
   .pdp__info{ position: static; top: auto; }
   .pdp__title{ font-size: 34px; }
-.pdp__stage{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
-.pdp__stage img{
-  width: auto !important;
-  height: auto !important;
-  max-width: calc(100% - 32px);
-  max-height: 60vh;
+  .pdp__stage{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-  object-fit: contain;
-  display: block;
-}
-    /* Mobilkategorier i navbar */
+  .pdp__stage img{
+    width: auto !important;
+    height: auto !important;
+    max-width: calc(100% - 32px);
+    max-height: 60vh;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* Mobilkategorier i navbar */
   .navbar-collapse{ background: #fff; }
   .navbar-mobileCategories{ padding: 8px 0 14px; }
   .mobile-cat__title{
@@ -1212,27 +1148,17 @@ a {
 
 /* <= sm */
 @media (max-width: 575.98px){
- #produkter.d-flex{
-    display: block !important;
-  }
+  /* Produkter: bryt d-flex */
+  #produkter.d-flex{ display: block !important; }
+
+  .catalog-layout{ grid-template-columns: 1fr; }
+  .catalog-content{ width: 100%; }
 
   .catalog-content__title{
     text-align: center;
     width: 100%;
     margin: 1em 0;
-  }
-
-  .catalog-layout{
-    grid-template-columns: 1fr;
-  }
-
-  .catalog-content{
-    width: 100%;
-  }
-
-  .catalog-content__title {
-    text-align: center;
-    margin: 1em 0;
+    font-size: 28px;
   }
 
   .topbar__inner{ padding: 10px 10px; }
@@ -1243,18 +1169,31 @@ a {
   .hero-editorial__media--video{ height: 56vh; min-height: 360px; border-radius: 14px; }
   .hero-editorial__lead{ font-size: 15px; }
 
-  .catalog-content__title{ font-size: 28px; }
   .pdp__buyRow{ grid-template-columns: 1fr; }
 
   /* Kategorier i toggle-menyn istället för sidebar */
   .catalog-filters{ display: none; }
+
 }
 
 /* >= sm: dölj mobilkategorier (du använder sidebar-kategorierna på Home) */
 @media (min-width: 576px){
-  .navbar-mobileCategories{ display: none; }
+
+  /* Desktop: actions i högerkant */
+  .navbar > .container-fluid{
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar-actions{
+    margin-left: auto !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 }
 
+/* Gemensamt */
 .navbar-actions{ gap: 10px; }
 .navbar-cart .nav-link,
 .navbar-cart a{ display: inline-flex; align-items: center; }
@@ -1267,48 +1206,25 @@ a {
   .hero-editorial__cta::before{ transition: none !important; }
 }
 
-@media (max-width: 457px) {
-
-  /* Gör navbaren vertikal */
-  .navbar > .container-fluid {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  /* Centrera loggan */
-  .navbar-brand {
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  /* Actions på egen rad */
-  .navbar-actions {
-    width: 100%;
-    justify-content: center;
-    margin-top: 8px;
-  }
-
-  /* Ta bort auto-marginaler */
-  .navbar-actions.ms-auto {
-    margin-left: 0 !important;
-  }
-
+/* Fix: add-to-cart icon i produktkort */
+.product-meta .product-add__btn{
+  width: 34px;
+  height: 34px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border:0;
+  background:transparent;
 }
 
-/* =========================
-   Animations
-   ========================= */
-.fade-up{ animation: fadeUp .55s ease both; }
-@keyframes fadeUp{
-  from{ opacity:0; transform: translateY(10px); }
-  to{ opacity:1; transform: translateY(0); }
-}
-@media (prefers-reduced-motion: reduce){
-  .fade-up{ animation: none; }
-  .product-card, .product-media img{ transition: none; }
+.product-meta .product-add__btn img{
+  width: 20px !important;
+  height: 20px !important;
+  max-width: 20px !important;
+  max-height: 20px !important;
+  display: block;
 }
 
-.catalog-filters__link.is-active::before{
-  content: none !important;
-  display: none !important;
+.product-add__btn:hover{
+  background: rgba(0,0,0,.06);
 }
