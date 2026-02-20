@@ -86,28 +86,40 @@
     </div>
 </div>
 
+
 <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom">
     <div class="container-fluid">
         <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Design By Persdotter</a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div id="mainNavbar" class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-            <ul class="navbar-nav me-auto"></ul>
-
-            <ul class="navbar-nav ms-auto align-items-center">
+        <div class="navbar-actions ms-auto d-flex align-items-center gap-2">
 
                 @* ❗ ADMIN FÅR INTE SE VARUKORG *@
                 @if (!isAdmin)
                 {
-                    <li class="nav-item">
+                    <div class="navbar-cart">
                         @await Component.InvokeAsync("CartSummary")
-                    </li>
+                    </div>
+                }
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                    aria-controls="mainNavbar" aria-expanded="false" aria-label="Öppna meny">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+
+        @* Mobilmeny: visar Kategorier i togglen *@
+        <div id="mainNavbar" class="navbar-collapse collapse">
+            <div class="navbar-mobileCategories">
+                @{
+                    var q = Context.Request.Query["q"].ToString();
+                    int? categoryId = null;
+                    if (int.TryParse(Context.Request.Query["categoryId"].ToString(), out var cid))
+                    {
+                        categoryId = cid;
+                    }
                 }
 
-            </ul>
+                @await Component.InvokeAsync("MobileCategoryMenu", new { categoryId, q })
+            </div>
         </div>
     </div>
 </nav>

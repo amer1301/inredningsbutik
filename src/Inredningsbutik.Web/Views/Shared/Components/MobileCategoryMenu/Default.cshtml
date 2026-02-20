@@ -1,0 +1,26 @@
+@model Inredningsbutik.Web.ViewComponents.MobileCategoryMenuVm
+
+<div class="mobile-cat">
+  <div class="mobile-cat__title">Kategorier</div>
+
+  <ul class="mobile-cat__list">
+    <li>
+      <a class="mobile-cat__link @(Model.CategoryId == null ? "is-active" : "")"
+         asp-area="" asp-controller="Home" asp-action="Index"
+         asp-route-q="@Model.Q" asp-route-categoryId="">
+        Visa alla
+      </a>
+    </li>
+
+    @foreach (var c in Model.Categories)
+    {
+      <li>
+        <a class="mobile-cat__link @(Model.CategoryId == c.Id ? "is-active" : "")"
+           asp-area="" asp-controller="Home" asp-action="Index"
+           asp-route-q="@Model.Q" asp-route-categoryId="@c.Id">
+          @c.Name
+        </a>
+      </li>
+    }
+  </ul>
+</div>
