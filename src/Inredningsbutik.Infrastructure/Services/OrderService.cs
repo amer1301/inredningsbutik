@@ -6,6 +6,7 @@ using Inredningsbutik.Core.Entities;
 using Inredningsbutik.Core.Interfaces;
 using Inredningsbutik.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 
 namespace Inredningsbutik.Infrastructure.Services;
@@ -38,10 +39,16 @@ public class OrderService : IOrderService
         if (items == null || items.Count == 0)
             throw new InvalidOperationException("Varukorgen är tom.");
 
-        await using var transaction = await _db.Database.BeginTransactionAsync();
+        IDbContextTransaction? transaction = null;
 
         try
         {
+            // 🔹 Starta transaktion endast om databasen stödjer det
+            if (_db.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
+            {
+                transaction = await _db.Database.BeginTransactionAsync();
+            }
+
             _logger.LogInformation(
                 "Skapar order för userId={UserId}. Antal rader={ItemCount}",
                 userId, items.Count);
@@ -76,7 +83,7 @@ public class OrderService : IOrderService
                     throw new InvalidOperationException(
                         $"Otillräckligt lager för '{product.Name}'.");
 
-                // Minskar lagret
+                // 🔹 Minska lagret
                 product.StockQuantity -= quantity;
 
                 order.OrderItems.Add(new OrderItem
@@ -93,9 +100,11 @@ public class OrderService : IOrderService
             _db.Orders.Add(order);
 
             await _db.SaveChangesAsync();
-            await transaction.CommitAsync();
 
-            // Skicka mail EFTER commit
+            if (transaction != null)
+                await transaction.CommitAsync();
+
+            // 🔹 Skicka mail EFTER commit (ska ej påverka ordern)
             try
             {
                 await _emailService.SendOrderConfirmationAsync(
@@ -116,7 +125,10 @@ public class OrderService : IOrderService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Order skapades inte.");
-            await transaction.RollbackAsync();
+
+            if (transaction != null)
+                await transaction.RollbackAsync();
+
             throw;
         }
     }
