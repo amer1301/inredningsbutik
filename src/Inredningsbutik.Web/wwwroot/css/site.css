@@ -1028,6 +1028,15 @@ a{
   text-decoration: underline;
 }
 
+.table-responsive{
+  border-radius: 12px;
+}
+
+.table td, 
+.table th{
+  white-space: nowrap;
+}
+
 /* ================================
    Responsivitet
    ================================ */
@@ -1144,6 +1153,13 @@ a{
   }
   .mobile-cat__link:hover{ background: rgba(0,0,0,0.04); }
   .mobile-cat__link.is-active{ background: rgba(0,0,0,0.06); font-weight: 600; }
+}
+
+@media (max-width: 768px){
+  .table td, 
+  .table th{
+    font-size: 14px;
+  }
 }
 
 /* <= sm */

@@ -13,8 +13,8 @@
 <div class="container mt-4">
     <h1 class="mb-3">Kundtjänst</h1>
 
-    <form method="get" class="row g-2 mb-3">
-        <div class="col-auto">
+    <form method="get" class="row g-2 mb-3 align-items-end">
+        <div class="col-12 col-sm-auto">
             <select class="form-select" name="status">
                 <option value="">Alla statusar</option>
                 @foreach (var s in statusOptions)
@@ -26,8 +26,8 @@
                 }
             </select>
         </div>
-        <div class="col-auto">
-            <button class="btn btn-outline-dark" type="submit">Filtrera</button>
+        <div class="col-12 col-sm-auto">
+            <button class="btn btn-primary" type="submit">Filtrera</button>
         </div>
     </form>
 
@@ -39,9 +39,10 @@
     }
     else
     {
-        <div class="card">
-            <div class="card-body p-0">
-                <table class="table mb-0">
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-sm align-middle mb-0">
                     <thead>
                         <tr>
                             <th>Skapad</th>
@@ -63,7 +64,7 @@
                             <td>@t.Subject</td>
                             <td>@TicketStatusHelper.ToLabel(t.Status)</td>
                             <td>
-                                <a class="btn btn-sm btn-dark"
+                                <a class="btn btn-primary"
                                    asp-area="Admin"
                                    asp-controller="CustomerService"
                                    asp-action="Details"
@@ -75,6 +76,7 @@
                     }
                     </tbody>
                 </table>
+                </div> 
             </div>
         </div>
     }
