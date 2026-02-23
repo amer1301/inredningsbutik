@@ -80,6 +80,7 @@ Projektet använder:
 ```bash
 git clone https://github.com/amer1301/inredningsbutik.git
 cd inredningsbutik
+```
 
 ### Kör projektet
 ```bash
@@ -97,7 +98,7 @@ Migrationer appliceras automatiskt vid start.
 Vill du uppdatera manuellt:
 ```bash
 dotnet ef database update --project src/Inredningsbutik.Infrastructure --startup-project src/Inredningsbutik.Web
-
+```
 ---
 
 ## Testa felhantering
