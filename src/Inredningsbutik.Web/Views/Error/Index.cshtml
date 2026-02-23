@@ -1,9 +1,24 @@
-@{
-    ViewData["Title"] = "Ett fel inträffade";
+@model Inredningsbutik.Web.Models.ErrorViewModel
+
+<h1>Fel @Model.StatusCode</h1>
+
+@if (Model.StatusCode == 404)
+{
+    <p>Sidan kunde inte hittas.</p>
+}
+else if (Model.StatusCode == 403)
+{
+    <p>Du har inte behörighet till denna sida.</p>
+}
+else
+{
+    <p>Ett oväntat fel inträffade.</p>
 }
 
-<h1>Ett oväntat fel inträffade</h1>
-<p>Försök igen om en stund.</p>
+@if (!string.IsNullOrEmpty(Model.TraceId))
+{
+    <p><strong>TraceId:</strong> @Model.TraceId</p>
+}
 
 <p>
     <a asp-controller="Home" asp-action="Index">Till startsidan</a>

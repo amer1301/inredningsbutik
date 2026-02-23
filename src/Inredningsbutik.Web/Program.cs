@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Inredningsbutik.Core.Interfaces;
 using Inredningsbutik.Infrastructure.Services;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews(options =>
@@ -22,6 +21,7 @@ builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<CartService>();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

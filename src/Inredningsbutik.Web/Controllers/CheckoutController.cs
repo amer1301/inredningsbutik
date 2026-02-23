@@ -1,4 +1,4 @@
-using Inredningsbutik.Core.Entities;
+using Inredningsbutik.Core.Interfaces;
 using Inredningsbutik.Infrastructure.Data;
 using Inredningsbutik.Infrastructure.Identity;
 using Inredningsbutik.Infrastructure.Services;
@@ -16,19 +16,19 @@ public class CheckoutController : Controller
     private readonly CartService _cart;
     private readonly AppDbContext _db;
     private readonly UserManager<ApplicationUser> _users;
-    private readonly OrderService _orderService;
+    private readonly IOrderService _orderService;
 
-    public CheckoutController(
-        CartService cart,
-        AppDbContext db,
-        UserManager<ApplicationUser> users,
-        OrderService orderService)
-    {
-        _cart = cart;
-        _db = db;
-        _users = users;
-        _orderService = orderService;
-    }
+public CheckoutController(
+    CartService cart,
+    AppDbContext db,
+    UserManager<ApplicationUser> users,
+    IOrderService orderService)
+{
+    _cart = cart;
+    _db = db;
+    _users = users;
+    _orderService = orderService;
+}
 
     public IActionResult Index()
     {
