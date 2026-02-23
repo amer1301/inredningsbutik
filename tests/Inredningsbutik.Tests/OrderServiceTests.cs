@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using Inredningsbutik.Core.Entities;
+using Inredningsbutik.Core.Interfaces;
 using Inredningsbutik.Infrastructure.Data;
 using Inredningsbutik.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,15 @@ public class OrderServiceTests
         return new AppDbContext(options);
     }
 
+    private static OrderService CreateService(AppDbContext db)
+    {
+        var emailService = new FakeEmailService();
+        return new OrderService(
+            db,
+            NullLogger<OrderService>.Instance,
+            emailService);
+    }
+
     [Fact]
     public async Task CreateOrderAsync_Beräknar_totalbelopp_korrekt()
     {
@@ -29,14 +39,16 @@ public class OrderServiceTests
         db.AddRange(cat, p1, p2);
         await db.SaveChangesAsync();
 
-        var service = new OrderService(db, NullLogger<OrderService>.Instance);
+        var service = CreateService(db);
 
         var order = await service.CreateOrderAsync(
             userId: "user-1",
+            customerEmail: "test@test.se",
+            customerName: "Test User",
             items: new List<(int productId, int quantity)>
             {
-                (p1.Id, 2), // 2 * 100
-                (p2.Id, 3)  // 3 * 50
+                (p1.Id, 2),
+                (p2.Id, 3)
             });
 
         Assert.Equal(2 * 100m + 3 * 50m, order.TotalAmount);
@@ -54,10 +66,12 @@ public class OrderServiceTests
         db.AddRange(cat, p);
         await db.SaveChangesAsync();
 
-        var service = new OrderService(db, NullLogger<OrderService>.Instance);
+        var service = CreateService(db);
 
         await service.CreateOrderAsync(
             userId: "user-1",
+            customerEmail: "test@test.se",
+            customerName: "Test User",
             items: new List<(int productId, int quantity)>
             {
                 (p.Id, 2)
@@ -78,11 +92,13 @@ public class OrderServiceTests
         db.AddRange(cat, p);
         await db.SaveChangesAsync();
 
-        var service = new OrderService(db, NullLogger<OrderService>.Instance);
+        var service = CreateService(db);
 
         var ex = await Assert.ThrowsAsync<InvalidOperationException>(async () =>
             await service.CreateOrderAsync(
                 userId: "user-1",
+                customerEmail: "test@test.se",
+                customerName: "Test User",
                 items: new List<(int productId, int quantity)>
                 {
                     (p.Id, 2)
