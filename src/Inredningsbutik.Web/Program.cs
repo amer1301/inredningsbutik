@@ -24,7 +24,15 @@ builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 10,
+                maxRetryDelay: TimeSpan.FromSeconds(5),
+                errorNumbersToAdd: null);
+        }));
 
 builder.Services
     .AddDefaultIdentity<ApplicationUser>(options =>
@@ -51,7 +59,6 @@ builder.Services.AddAuthorization(options =>
 
 var app = builder.Build();
 
-
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -72,7 +79,6 @@ app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Status codes (404/403 osv) – efter auth så du får “rätt” status
 app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
 app.MapStaticAssets();
@@ -88,19 +94,35 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-
-// Seed Identity + data
 using (var scope = app.Services.CreateScope())
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<AppDbContext>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+
+    // Vänta in SQL (Docker-start)
+    var retries = 10;
+    while (retries > 0)
+    {
+        try
+        {
+            context.Database.Migrate();
+            break;
+        }
+        catch
+        {
+            retries--;
+            Thread.Sleep(5000);
+        }
+    }
+
+    // Seed identity
     await IdentitySeeder.SeedAsync(roleManager, userManager);
-}
 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<Inredningsbutik.Infrastructure.Data.AppDbContext>();
-    await DataSeeder.SeedAsync(db);
+    // Seed produkter + FAQ
+    await DataSeeder.SeedAsync(context);
 }
 
 app.Run();

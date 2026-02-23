@@ -43,7 +43,7 @@ public class OrderService : IOrderService
 
         try
         {
-            // 🔹 Starta transaktion endast om databasen stödjer det
+            // Starta transaktion endast om databasen stödjer det
             if (_db.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
             {
                 transaction = await _db.Database.BeginTransactionAsync();
@@ -83,7 +83,7 @@ public class OrderService : IOrderService
                     throw new InvalidOperationException(
                         $"Otillräckligt lager för '{product.Name}'.");
 
-                // 🔹 Minska lagret
+                // Minska lagret
                 product.StockQuantity -= quantity;
 
                 order.OrderItems.Add(new OrderItem
@@ -104,7 +104,7 @@ public class OrderService : IOrderService
             if (transaction != null)
                 await transaction.CommitAsync();
 
-            // 🔹 Skicka mail EFTER commit (ska ej påverka ordern)
+            //Skicka mail EFTER commit (ska ej påverka ordern)
             try
             {
                 await _emailService.SendOrderConfirmationAsync(
