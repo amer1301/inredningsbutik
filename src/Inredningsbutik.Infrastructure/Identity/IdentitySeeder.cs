@@ -40,5 +40,31 @@ public static class IdentitySeeder
         {
             await userManager.AddToRoleAsync(adminUser, "Admin");
         }
+
+        var customerEmail = "customer@inredningsbutik.local";
+var customerUser = await userManager.FindByEmailAsync(customerEmail);
+
+if (customerUser is null)
+{
+    customerUser = new ApplicationUser
+    {
+        UserName = customerEmail,
+        Email = customerEmail,
+        EmailConfirmed = true
+    };
+
+    var result = await userManager.CreateAsync(customerUser, "Customer123!");
+
+    if (!result.Succeeded)
+    {
+        var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+        throw new Exception($"Kunde inte skapa customer: {errors}");
+    }
+}
+
+if (!await userManager.IsInRoleAsync(customerUser, "Customer"))
+{
+    await userManager.AddToRoleAsync(customerUser, "Customer");
+}
     }
 }
