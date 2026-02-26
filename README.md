@@ -108,4 +108,5 @@ Testa:
 - 403 → Försök nå skyddad route utan rätt roll
 - 500 → Släng ett test-exception i en controller
 
-## DOCKER - .....
+## Publicering på Azure
+https://designbypersdotter-e5gzdxgva3e8hrg2.swedencentral-01.azurewebsites.net/
