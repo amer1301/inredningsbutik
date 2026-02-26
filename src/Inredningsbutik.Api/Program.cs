@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // Controllers + auto-400 -> ValidationProblemDetails
 builder.Services
@@ -32,7 +35,7 @@ builder.Services
 builder.Services.AddProblemDetails();
 
 // OpenAPI
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
 
 // DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -42,7 +45,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    builder.Services.AddSwaggerGen();
 }
 
 app.UseHttpsRedirection();
@@ -105,6 +108,9 @@ app.UseStatusCodePages(async statusCodeContext =>
 
     await context.Response.WriteAsJsonAsync(problem);
 });
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.MapControllers();
 
