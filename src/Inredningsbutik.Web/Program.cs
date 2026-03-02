@@ -23,7 +23,10 @@ builder.Services.AddScoped<CartService>();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
-var dbPath = Path.Combine(Environment.GetEnvironmentVariable("HOME") ?? "", "site", "wwwroot", "inredningsbutik.db");
+var dbPath = Path.Combine(builder.Environment.ContentRootPath, "inredningsbutik.db");
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite($"Data Source={dbPath}"));
     
 builder.Services
     .AddDefaultIdentity<ApplicationUser>(options =>
