@@ -105,7 +105,10 @@ public class OrderService : IOrderService
             if (transaction != null)
                 await transaction.CommitAsync();
 
-            //Skicka mail EFTER commit (ska ej påverka ordern)
+            _logger.LogInformation("=== MAIL DEBUG START ===");
+_logger.LogInformation("CustomerEmail: {Email}", customerEmail);
+_logger.LogInformation("CustomerName: {Name}", customerName);
+_logger.LogInformation("OrderId: {OrderId}", order.Id);
             try
             {
                 await _emailService.SendOrderConfirmationAsync(

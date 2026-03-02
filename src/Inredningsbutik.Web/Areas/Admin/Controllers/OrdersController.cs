@@ -118,6 +118,9 @@ public class OrdersController : Controller
 
             if (user != null && !string.IsNullOrEmpty(user.Email))
             {
+                _logger.LogInformation("=== STATUS MAIL DEBUG ===");
+_logger.LogInformation("UserId: {UserId}", order.UserId);
+_logger.LogInformation("UserEmail: {Email}", user?.Email);
                 await _emailService.SendOrderStatusChangedAsync(
                     user.Email,
                     user.UserName ?? "kund",
