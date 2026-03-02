@@ -23,8 +23,14 @@ builder.Services.AddScoped<CartService>();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
-// ✅ SQLite fungerar både lokalt och på Azure
-var dbPath = Path.Combine(builder.Environment.ContentRootPath, "inredningsbutik.db");
+var dbPath = Path.Combine(
+    Environment.GetEnvironmentVariable("HOME")!,
+    "site",
+    "data",
+    "inredningsbutik.db"
+);
+
+Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite($"Data Source={dbPath}"));
