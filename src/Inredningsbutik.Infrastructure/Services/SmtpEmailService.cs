@@ -169,10 +169,12 @@ public class SmtpEmailService : IEmailService
     // GEMENSAM SMTP-LOGIK (ENDA STÄLLET SOM SKAPAR SMTPCLIENT)
     // ================================
     private async Task SendEmailAsync(
+        
         string toEmail,
         string subject,
         string htmlBody)
     {
+        Console.WriteLine("SMTP METHOD EXECUTED");
         _logger.LogInformation("SMTP CONFIG -> Host: {Host}, Port: {Port}, User: {User}",
     _config["Smtp:Host"],
     _config["Smtp:Port"],
