@@ -173,6 +173,10 @@ public class SmtpEmailService : IEmailService
         string subject,
         string htmlBody)
     {
+        _logger.LogInformation("SMTP CONFIG -> Host: {Host}, Port: {Port}, User: {User}",
+    _config["Smtp:Host"],
+    _config["Smtp:Port"],
+    _config["Smtp:Username"]);
         var host = _config["Smtp:Host"]
             ?? throw new Exception("SMTP Host saknas");
 
