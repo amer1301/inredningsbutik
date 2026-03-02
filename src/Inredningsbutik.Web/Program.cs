@@ -98,8 +98,8 @@ app.MapControllerRoute(
 app.MapRazorPages();
 
 
-// ✅ Säker migrering + seed (dödar inte appen vid fel)
-using (var scope = app.Services.CreateScope())
+
+/*using (var scope = app.Services.CreateScope())
 {
     try
     {
@@ -120,5 +120,5 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine(ex);
     }
 }
-
+*/
 app.Run();
