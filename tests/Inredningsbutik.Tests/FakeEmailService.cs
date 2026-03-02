@@ -5,9 +5,31 @@ namespace Inredningsbutik.Tests;
 
 public class FakeEmailService : IEmailService
 {
-    public Task SendOrderConfirmationAsync(string toEmail, string customerName, int orderId)
+    public Task SendOrderConfirmationAsync(
+        string toEmail,
+        string customerName,
+        int orderId)
     {
-        // Gör ingenting – vi vill inte skicka riktiga mail i tester
+        // Gör ingenting
+        return Task.CompletedTask;
+    }
+
+    public Task SendOrderStatusChangedAsync(
+        string toEmail,
+        string customerName,
+        int orderId,
+        string newStatus)
+    {
+        // Fake – gör ingenting
+        return Task.CompletedTask;
+    }
+
+    public Task SendSupportReplyAsync(
+        string toEmail,
+        string subject,
+        string message)
+    {
+        // Fake – gör ingenting
         return Task.CompletedTask;
     }
 }
