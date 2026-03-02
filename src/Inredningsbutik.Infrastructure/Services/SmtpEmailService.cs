@@ -174,7 +174,7 @@ public class SmtpEmailService : IEmailService
         string subject,
         string htmlBody)
     {
-        Console.WriteLine("SMTP METHOD EXECUTED");
+        _logger.LogInformation("SMTP METHOD EXECUTED");
         _logger.LogInformation("SMTP CONFIG -> Host: {Host}, Port: {Port}, User: {User}",
     _config["Smtp:Host"],
     _config["Smtp:Port"],
