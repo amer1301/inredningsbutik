@@ -23,11 +23,12 @@ builder.Services.AddScoped<CartService>();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
+// ✅ SQLite fungerar både lokalt och på Azure
 var dbPath = Path.Combine(builder.Environment.ContentRootPath, "inredningsbutik.db");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite($"Data Source={dbPath}"));
-    
+
 builder.Services
     .AddDefaultIdentity<ApplicationUser>(options =>
     {
@@ -82,39 +83,31 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-    
 
 app.MapRazorPages();
 
+
+// ✅ Säker migrering + seed (dödar inte appen vid fel)
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
-
-    var context = services.GetRequiredService<AppDbContext>();
-    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-
-    // Vänta in SQL (Docker-start)
-    var retries = 10;
-    while (retries > 0)
+    try
     {
-        try
-        {
-            context.Database.Migrate();
-            break;
-        }
-        catch
-        {
-            retries--;
-            Thread.Sleep(5000);
-        }
+        var services = scope.ServiceProvider;
+
+        var context = services.GetRequiredService<AppDbContext>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+
+        context.Database.Migrate();
+
+        await IdentitySeeder.SeedAsync(roleManager, userManager);
+        await DataSeeder.SeedAsync(context);
     }
-
-    // Seed identity
-    await IdentitySeeder.SeedAsync(roleManager, userManager);
-
-    // Seed produkter + FAQ
-    await DataSeeder.SeedAsync(context);
+    catch (Exception ex)
+    {
+        Console.WriteLine("Startup error:");
+        Console.WriteLine(ex);
+    }
 }
 
 app.Run();
