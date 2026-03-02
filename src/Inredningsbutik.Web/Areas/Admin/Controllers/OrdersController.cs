@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Inredningsbutik.Web.ViewModels;
 using Inredningsbutik.Core.Entities;
+using Inredningsbutik.Core.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace Inredningsbutik.Web.Areas.Admin.Controllers;
 
@@ -14,20 +16,25 @@ public class OrdersController : Controller
 {
     private readonly AppDbContext _db;
     private readonly ILogger<OrdersController> _logger;
+    private readonly IEmailService _emailService;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public OrdersController(AppDbContext db, ILogger<OrdersController> logger)
+    public OrdersController(
+        AppDbContext db,
+        ILogger<OrdersController> logger,
+        IEmailService emailService,
+        UserManager<IdentityUser> userManager)
     {
         _db = db;
         _logger = logger;
+        _emailService = emailService;
+        _userManager = userManager;
     }
 
     public async Task<IActionResult> Index(string? status, int page = 1, int pageSize = 25)
     {
         page = page < 1 ? 1 : page;
         pageSize = pageSize is < 5 or > 200 ? 25 : pageSize;
-
-        _logger.LogInformation("Admin listar ordrar. status={Status}, page={Page}, pageSize={PageSize}",
-            status, page, pageSize);
 
         var query = _db.Orders
             .AsNoTracking()
@@ -36,13 +43,10 @@ public class OrdersController : Controller
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(status))
-        {
             query = query.Where(o => o.Status == status);
-        }
 
         query = query.OrderByDescending(o => o.CreatedAt);
 
-        // count på filtrerad query (innan paging)
         var total = await query.CountAsync();
 
         var items = await query
@@ -72,8 +76,6 @@ public class OrdersController : Controller
 
     public async Task<IActionResult> Details(int id)
     {
-        _logger.LogInformation("Admin öppnar orderdetaljer. orderId={OrderId}", id);
-
         var order = await _db.Orders
             .AsNoTracking()
             .Include(o => o.OrderItems)
@@ -81,10 +83,7 @@ public class OrdersController : Controller
             .FirstOrDefaultAsync(o => o.Id == id);
 
         if (order is null)
-        {
-            _logger.LogWarning("Admin öppnade order som saknas. orderId={OrderId}", id);
             return NotFound();
-        }
 
         return View(order);
     }
@@ -94,26 +93,45 @@ public class OrdersController : Controller
     public async Task<IActionResult> UpdateStatus(int id, string status)
     {
         if (string.IsNullOrWhiteSpace(status))
-        {
-            _logger.LogWarning("Admin skickade tom status vid UpdateStatus. orderId={OrderId}", id);
             return BadRequest();
-        }
-
-        _logger.LogInformation("Admin uppdaterar orderstatus. orderId={OrderId}, newStatus={Status}",
-            id, status);
 
         var order = await _db.Orders.FindAsync(id);
         if (order is null)
-        {
-            _logger.LogWarning("Admin försökte uppdatera status på saknad order. orderId={OrderId}", id);
             return NotFound();
+
+        var newStatus = status.Trim();
+        var oldStatus = order.Status;
+
+        if (oldStatus == newStatus)
+        {
+            TempData["AdminToast"] = "Orderstatus var redan satt.";
+            return RedirectToAction(nameof(Details), new { id });
         }
 
-        order.Status = status.Trim();
+        order.Status = newStatus;
         await _db.SaveChangesAsync();
 
-        TempData["AdminToast"] = "Orderstatus uppdaterades.";
+        try
+        {
+            // Hämta användaren via Identity
+            var user = await _userManager.FindByIdAsync(order.UserId);
 
+            if (user != null && !string.IsNullOrEmpty(user.Email))
+            {
+                await _emailService.SendOrderStatusChangedAsync(
+                    user.Email,
+                    user.UserName ?? "kund",
+                    order.Id,
+                    newStatus);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex,
+                "Fel vid utskick av statusmail för order {OrderId}", id);
+        }
+
+        TempData["AdminToast"] = "Orderstatus uppdaterades.";
         return RedirectToAction(nameof(Details), new { id });
     }
 }

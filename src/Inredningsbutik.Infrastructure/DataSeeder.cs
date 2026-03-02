@@ -472,11 +472,9 @@ public static class DataSeeder
             {
                 existing.Description = p.Description;
                 existing.Price = p.Price;
-                existing.StockQuantity = p.StockQuantity;
                 existing.ImageUrl = p.ImageUrl;
                 existing.HoverImageUrl = p.HoverImageUrl;
                 existing.InspirationImageUrls = p.InspirationImageUrls;
-
                 existing.CategoryId = p.CategoryId;
             }
         }
