@@ -23,6 +23,8 @@ builder.Services.AddScoped<CartService>();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
+// ---------- DATABASE PATH (Azure safe) ----------
+
 var home = Environment.GetEnvironmentVariable("HOME");
 
 string dbPath;
@@ -37,10 +39,12 @@ else
     dbPath = Path.Combine(builder.Environment.ContentRootPath, "inredningsbutik.db");
 }
 
-/*builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite($"Data Source={dbPath}"));*/
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite($"Data Source={dbPath}"));
 
-/*builder.Services
+// ---------- IDENTITY ----------
+
+builder.Services
     .AddDefaultIdentity<ApplicationUser>(options =>
     {
         options.SignIn.RequireConfirmedAccount = false;
@@ -49,7 +53,7 @@ else
         options.Stores.MaxLengthForKeys = 450;
     })
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<AppDbContext>();*/
+    .AddEntityFrameworkStores<AppDbContext>();
 
 builder.Services.AddAuthorization(options =>
 {
@@ -65,6 +69,8 @@ builder.Services.AddAuthorization(options =>
 
 var app = builder.Build();
 
+// ---------- MIDDLEWARE ----------
+
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -77,13 +83,10 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseSession();
-
-/*app.UseAuthentication();
-app.UseAuthorization();*/
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
@@ -97,9 +100,9 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
+// ---------- MIGRATION + SEED (SAFE VERSION) ----------
 
-
-/*using (var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
     try
     {
@@ -120,5 +123,5 @@ app.MapRazorPages();
         Console.WriteLine(ex);
     }
 }
-*/
+
 app.Run();
