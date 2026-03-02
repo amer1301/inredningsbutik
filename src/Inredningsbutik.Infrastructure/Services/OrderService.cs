@@ -33,6 +33,7 @@ public class OrderService : IOrderService
         string customerName,
         List<(int productId, int quantity)> items)
     {
+        _logger.LogWarning("CREATE ORDER HIT");
         if (string.IsNullOrWhiteSpace(userId))
             throw new ArgumentException("UserId saknas.");
 
