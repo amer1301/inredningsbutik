@@ -23,14 +23,19 @@ builder.Services.AddScoped<CartService>();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
-var dbPath = Path.Combine(
-    Environment.GetEnvironmentVariable("HOME")!,
-    "site",
-    "data",
-    "inredningsbutik.db"
-);
+var home = Environment.GetEnvironmentVariable("HOME");
 
-Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
+string dbPath;
+
+if (!string.IsNullOrEmpty(home))
+{
+    dbPath = Path.Combine(home, "site", "data", "inredningsbutik.db");
+    Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
+}
+else
+{
+    dbPath = Path.Combine(builder.Environment.ContentRootPath, "inredningsbutik.db");
+}
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite($"Data Source={dbPath}"));
