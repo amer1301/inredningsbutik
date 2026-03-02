@@ -37,10 +37,10 @@ else
     dbPath = Path.Combine(builder.Environment.ContentRootPath, "inredningsbutik.db");
 }
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite($"Data Source={dbPath}"));
+/*builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite($"Data Source={dbPath}"));*/
 
-builder.Services
+/*builder.Services
     .AddDefaultIdentity<ApplicationUser>(options =>
     {
         options.SignIn.RequireConfirmedAccount = false;
@@ -49,7 +49,7 @@ builder.Services
         options.Stores.MaxLengthForKeys = 450;
     })
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<AppDbContext>();
+    .AddEntityFrameworkStores<AppDbContext>();*/
 
 builder.Services.AddAuthorization(options =>
 {
@@ -82,8 +82,8 @@ app.UseRouting();
 
 app.UseSession();
 
-app.UseAuthentication();
-app.UseAuthorization();
+/*app.UseAuthentication();
+app.UseAuthorization();*/
 
 app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
