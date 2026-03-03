@@ -7,6 +7,7 @@ using Inredningsbutik.Web.ViewModels;
 using Inredningsbutik.Core.Entities;
 using Inredningsbutik.Core.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Inredningsbutik.Infrastructure.Identity;
 
 namespace Inredningsbutik.Web.Areas.Admin.Controllers;
 
@@ -15,18 +16,15 @@ namespace Inredningsbutik.Web.Areas.Admin.Controllers;
 public class OrdersController : Controller
 {
     private readonly AppDbContext _db;
-    private readonly ILogger<OrdersController> _logger;
     private readonly IEmailService _emailService;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
 
     public OrdersController(
         AppDbContext db,
-        ILogger<OrdersController> logger,
         IEmailService emailService,
-        UserManager<IdentityUser> userManager)
+        UserManager<ApplicationUser> userManager)
     {
         _db = db;
-        _logger = logger;
         _emailService = emailService;
         _userManager = userManager;
     }
@@ -113,14 +111,10 @@ public class OrdersController : Controller
 
         try
         {
-            // Hämta användaren via Identity
             var user = await _userManager.FindByIdAsync(order.UserId);
 
-            if (user != null && !string.IsNullOrEmpty(user.Email))
+            if (user != null && !string.IsNullOrWhiteSpace(user.Email))
             {
-                _logger.LogInformation("=== STATUS MAIL DEBUG ===");
-_logger.LogInformation("UserId: {UserId}", order.UserId);
-_logger.LogInformation("UserEmail: {Email}", user?.Email);
                 await _emailService.SendOrderStatusChangedAsync(
                     user.Email,
                     user.UserName ?? "kund",
@@ -128,10 +122,9 @@ _logger.LogInformation("UserEmail: {Email}", user?.Email);
                     newStatus);
             }
         }
-        catch (Exception ex)
+        catch
         {
-            _logger.LogError(ex,
-                "Fel vid utskick av statusmail för order {OrderId}", id);
+
         }
 
         TempData["AdminToast"] = "Orderstatus uppdaterades.";
