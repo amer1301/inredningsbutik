@@ -100,27 +100,26 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-// ---------- MIGRATION + SEED (SAFE VERSION) ----------
+// ---------- MIGRATION + SEED ----------
 
 using (var scope = app.Services.CreateScope())
 {
-    try
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<AppDbContext>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+
+    context.Database.Migrate();
+
+    if (!context.Users.Any())
     {
-        var services = scope.ServiceProvider;
-
-        var context = services.GetRequiredService<AppDbContext>();
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-
-        context.Database.Migrate();
-
         await IdentitySeeder.SeedAsync(roleManager, userManager);
-        await DataSeeder.SeedAsync(context);
     }
-    catch (Exception ex)
+
+    if (!context.Orders.Any())
     {
-        Console.WriteLine("Startup error:");
-        Console.WriteLine(ex);
+        await DataSeeder.SeedAsync(context);
     }
 }
 
