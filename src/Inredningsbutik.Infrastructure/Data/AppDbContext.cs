@@ -17,6 +17,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
 public DbSet<SupportReply> SupportReplies => Set<SupportReply>();
 public DbSet<FaqItem> FaqItems => Set<FaqItem>();
 
+public DbSet<StockHistory> StockHistories => Set<StockHistory>();
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -66,5 +68,10 @@ modelBuilder.Entity<FaqItem>()
     .Property(f => f.CategoryKey)
     .HasMaxLength(50);
 
+modelBuilder.Entity<StockHistory>()
+    .HasOne(sh => sh.Product)
+    .WithMany(p => p.StockHistories)
+    .HasForeignKey(sh => sh.ProductId)
+    .OnDelete(DeleteBehavior.Cascade);
     }
 }

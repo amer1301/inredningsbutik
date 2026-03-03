@@ -1,0 +1,120 @@
+@model Inredningsbutik.Core.Entities.Product
+
+@{
+    ViewData["Title"] = "Hantera lager";
+}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h4 class="mb-1">Hantera lager</h4>
+                <div class="text-muted">@Model.Name</div>
+            </div>
+            <a asp-action="Index" class="btn btn-sm btn-outline-secondary">
+                Tillbaka
+            </a>
+        </div>
+
+        <hr />
+
+        <!-- Nuvarande lager -->
+        <div class="mb-4">
+            <h6 class="text-muted">Nuvarande lager</h6>
+            <div class="fs-4 fw-semibold">
+                @Model.StockQuantity st
+            </div>
+        </div>
+
+        <!-- Justera lager -->
+        <h6 class="mb-3">Justera lagersaldo</h6>
+
+        <form asp-action="UpdateStock" method="post" class="row g-3">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="productId" value="@Model.Id" />
+
+            <div class="col-md-3">
+                <label class="form-label">Antal (+ / -)</label>
+                <input type="number"
+                       name="delta"
+                       class="form-control"
+                       required />
+                <div class="form-text">
+                    Exempel: 5 (påfyllning) eller -2 (svinn)
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Orsak</label>
+                <input type="text"
+                       name="reason"
+                       class="form-control"
+                       required />
+            </div>
+
+            <div class="col-md-3 d-grid align-self-end">
+                <button type="submit" class="btn btn-outline-primary">
+                    Uppdatera lager
+                </button>
+            </div>
+        </form>
+
+        <hr class="my-4" />
+
+        <!-- Lagerhistorik -->
+        <h6 class="mb-3">Lagerhistorik</h6>
+
+        @if (Model.StockHistories != null && Model.StockHistories.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-sm table-striped align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Ändring</th>
+                            <th>Orsak</th>
+                            <th>Admin</th>
+                            <th class="text-end">Datum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var entry in Model.StockHistories
+                            .OrderByDescending(x => x.CreatedAt))
+                        {
+                            <tr>
+                                <td>
+                                    @if (entry.Change > 0)
+                                    {
+                                        <span class="fw-semibold">
+                                            +@entry.Change
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="fw-semibold">
+                                            @entry.Change
+                                        </span>
+                                    }
+                                </td>
+                                <td>@entry.Reason</td>
+                                <td class="text-muted small">
+                                    @entry.AdminEmail
+                                </td>
+                                <td class="text-end small text-muted">
+                                    @entry.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-muted">
+                Ingen lagerhistorik ännu.
+            </div>
+        }
+
+    </div>
+</div>

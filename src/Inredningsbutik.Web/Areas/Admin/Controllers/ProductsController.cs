@@ -177,6 +177,61 @@ public class ProductsController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+public async Task<IActionResult> ManageStock(int id)
+{
+    var product = await _db.Products
+        .Include(p => p.StockHistories)
+        .FirstOrDefaultAsync(p => p.Id == id);
+
+    if (product is null)
+    {
+        _logger.LogWarning("Admin försökte hantera lager för saknad produkt. productId={ProductId}", id);
+        return NotFound();
+    }
+
+    return View(product);
+}
+
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> UpdateStock(int productId, int delta, string reason)
+{
+    var product = await _db.Products.FindAsync(productId);
+
+    if (product is null)
+    {
+        _logger.LogWarning("Admin försökte uppdatera lager för saknad produkt. productId={ProductId}", productId);
+        return NotFound();
+    }
+
+    if (product.StockQuantity + delta < 0)
+    {
+        TempData["AdminToast"] = "Lagret kan inte bli negativt.";
+        return RedirectToAction(nameof(ManageStock), new { id = productId });
+    }
+
+    product.StockQuantity += delta;
+
+    var history = new StockHistory
+    {
+        ProductId = product.Id,
+        Change = delta,
+        Reason = reason,
+        AdminEmail = User.Identity?.Name ?? "Admin"
+    };
+
+    _db.StockHistories.Add(history);
+
+    await _db.SaveChangesAsync();
+
+    _logger.LogInformation(
+        "Admin uppdaterade lager. productId={ProductId}, delta={Delta}",
+        product.Id, delta);
+
+    TempData["AdminToast"] = "Lagret uppdaterades.";
+
+    return RedirectToAction(nameof(ManageStock), new { id = productId });
+}
     public async Task<IActionResult> Delete(int id)
     {
         var product = await _db.Products

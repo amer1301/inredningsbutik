@@ -52,6 +52,7 @@
                     <td class="text-end">@p.StockQuantity</td>
                     <td class="text-nowrap">
                         <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@p.Id">Redigera</a>
+                            <a class="btn btn-sm btn-outline-primary" asp-action="ManageStock" asp-route-id="@p.Id">Hantera lager</a>
                         <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@p.Id">Ta bort</a>
                     </td>
                 </tr>

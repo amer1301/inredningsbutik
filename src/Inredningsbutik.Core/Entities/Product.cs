@@ -20,4 +20,7 @@ public class Product
     public string? HoverImageUrl { get; set; }
 
     public string? InspirationImageUrls { get; set; }
+
+    public ICollection<StockHistory> StockHistories { get; set; } 
+    = new List<StockHistory>();
 }
