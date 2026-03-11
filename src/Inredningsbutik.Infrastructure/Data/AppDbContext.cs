@@ -24,7 +24,6 @@ public DbSet<StockHistory> StockHistories => Set<StockHistory>();
     {
         base.OnModelCreating(modelBuilder);
 
-        // Pris-precision (viktigt för SQL Server)
         modelBuilder.Entity<Product>()
             .Property(p => p.Price)
             .HasPrecision(18, 2);

@@ -44,7 +44,6 @@ public class OrderService : IOrderService
 
         try
         {
-            // Starta transaktion endast om databasen stödjer det
             if (_db.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
             {
                 transaction = await _db.Database.BeginTransactionAsync();
@@ -104,11 +103,6 @@ public class OrderService : IOrderService
 
             if (transaction != null)
                 await transaction.CommitAsync();
-
-            _logger.LogInformation("=== MAIL DEBUG START ===");
-_logger.LogInformation("CustomerEmail: {Email}", customerEmail);
-_logger.LogInformation("CustomerName: {Name}", customerName);
-_logger.LogInformation("OrderId: {OrderId}", order.Id);
             try
             {
                 await _emailService.SendOrderConfirmationAsync(

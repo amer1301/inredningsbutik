@@ -355,11 +355,11 @@ header{
 .hero-editorial__videoOverlay{
   position: absolute;
   inset: 0;
-  background: linear-gradient(
+  background:linear-gradient(
     90deg,
     rgba(0,0,0,.62) 0%,
-    rgba(0,0,0,.38) 50%,
-    rgba(0,0,0,.18) 100%
+    rgba(0,0,0,.48) 50%,
+    rgba(0,0,0,.40) 100%
   );
   border-radius: inherit;
   z-index: 1;
@@ -391,13 +391,15 @@ header{
   line-height: 0.95;
   font-size: clamp(44px, 5.6vw, 92px);
   margin: 0 0 18px 0;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.55);
 }
 
 .hero-editorial__lead{
-  color: rgba(255,255,255,.88);
+  color: #fff;
   font-size: 16px;
   line-height: 1.7;
   margin: 0 0 22px 0;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.55);
 }
 
 .hero-editorial__cta{

@@ -127,44 +127,89 @@
     </div>
 
     <div class="row g-3">
-      @foreach (var p in Model.Products)
-      {
-        <div class="col-6 col-sm-6 col-lg-4 col-xl-3 fade-up">
-          <div class="product-card">
-            <a asp-area="" asp-controller="Catalog" asp-action="Details" asp-route-id="@p.Id" style="text-decoration:none; color:inherit;">
-              <div class="product-media">
-                <img class="base" src="@(string.IsNullOrWhiteSpace(p.ImageUrl) ? "/images/placeholder.jpg" : p.ImageUrl)" alt="@p.Name" />
-                <img class="hover" src="@(string.IsNullOrWhiteSpace(p.HoverImageUrl) ? (string.IsNullOrWhiteSpace(p.ImageUrl) ? "/images/placeholder.jpg" : p.ImageUrl) : p.HoverImageUrl)" alt="@p.Name inspirationsbild" />
-              </div>
-
-              <div class="product-body">
-                <div class="product-title">@p.Name</div>
-<div class="product-meta">
-@if (!isAdmin)
+@foreach (var p in Model.Products)
 {
-  <form asp-area="" asp-controller="Cart" asp-action="Add" method="post" class="product-add">
-    @Html.AntiForgeryToken()
-    <input type="hidden" name="productId" value="@p.Id" />
-    <input type="hidden" name="quantity" value="1" />
-    <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
+  <div class="col-6 col-sm-6 col-lg-4 col-xl-3 fade-up">
 
-    <button type="submit" class="product-add__btn" aria-label="Lägg @p.Name i varukorgen" title="Lägg i varukorgen">
-      <img src="images/icons/köpikon.png" alt="" aria-hidden="true" />
-    </button>
-  </form>
-}
+    <div class="product-card">
 
+      <a asp-area=""
+         asp-controller="Catalog"
+         asp-action="Details"
+         asp-route-id="@p.Id"
+         style="text-decoration:none; color:inherit;">
 
-  <span class="product-price"><strong>@p.Price.ToString("0.00") kr</strong></span>
-</div>
+        <div class="product-media">
+          <img class="base"
+               src="@(string.IsNullOrWhiteSpace(p.ImageUrl) ? "/images/placeholder.jpg" : p.ImageUrl)"
+               alt="@p.Name" />
 
-              </div>
-            </a>
-          </div>
+          <img class="hover"
+               src="@(string.IsNullOrWhiteSpace(p.HoverImageUrl) ? (string.IsNullOrWhiteSpace(p.ImageUrl) ? "/images/placeholder.jpg" : p.ImageUrl) : p.HoverImageUrl)"
+               alt="@p.Name inspirationsbild" />
         </div>
-      }
-    </div>
-  </section>
 
+      </a>
+
+      <div class="product-body">
+
+        <a asp-area=""
+           asp-controller="Catalog"
+           asp-action="Details"
+           asp-route-id="@p.Id"
+           class="product-title-link"
+           style="text-decoration:none; color:inherit;">
+
+          <div class="product-title">@p.Name</div>
+
+        </a>
+
+        <div class="product-meta">
+
+          @if (!isAdmin)
+          {
+            <form asp-area=""
+                  asp-controller="Cart"
+                  asp-action="Add"
+                  method="post"
+                  class="product-add">
+
+              @Html.AntiForgeryToken()
+
+              <input type="hidden" name="productId" value="@p.Id" />
+              <input type="hidden" name="quantity" value="1" />
+              <input type="hidden" name="returnUrl"
+                     value="@(Context.Request.Path + Context.Request.QueryString)" />
+
+              <button type="submit"
+                      class="product-add__btn"
+                      aria-label="Lägg @p.Name i varukorgen"
+                      title="Lägg i varukorgen">
+
+                <img src="/images/icons/köpikon.png"
+                     alt=""
+                     aria-hidden="true" />
+
+              </button>
+
+            </form>
+          }
+
+          <span class="product-price">
+            <strong>@p.Price.ToString("0.00") kr</strong>
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+}
+</div>
+</section>
+
+</div>
 </div>
 </div>

@@ -9,7 +9,6 @@ public class SupportReply
 
     public string Message { get; set; } = "";
 
-    // true = admin, false = kund (om du senare vill låta kund svara)
     public bool IsAdmin { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
