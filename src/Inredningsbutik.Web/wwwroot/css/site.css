@@ -151,6 +151,22 @@ header{
   color: rgba(0,0,0,.55);
 }
 
+.search-updated {
+  animation: searchUpdated 0.9s ease;
+}
+
+@keyframes searchUpdated {
+  0% {
+    transform: translateY(8px);
+    opacity: 0.85;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 .topbar__right{
   display:flex;
   align-items:center;

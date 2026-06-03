@@ -71,13 +71,15 @@ document.querySelectorAll('form[data-autosubmit="true"]').forEach((form) => {
       return;
     }
 
-    current.replaceWith(next);
-    history.replaceState(null, "", url.toString());
+current.replaceWith(next);
 
-    // Behåll fokus och caret i input
-    input.focus();
-    const len = input.value.length;
-    input.setSelectionRange(len, len);
+history.replaceState(null, "", url.toString());
+
+next.classList.add("search-updated");
+
+setTimeout(() => {
+  next.classList.remove("search-updated");
+}, 1000);
   };
 
   input.addEventListener("input", () => {
@@ -198,7 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // värm nästa så den har en frame redo (minskar svart-blink)
     const prepareNext = async (v) => {
       v.pause();
-      try { v.currentTime = 0; } catch {}
+      try { v.currentTime = 0; } catch { }
       await safePlay(v);
       v.pause();
       return true;
@@ -225,7 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // reset gamla
       active.pause();
-      try { active.currentTime = 0; } catch {}
+      try { active.currentTime = 0; } catch { }
 
       // swap refs
       const tmp = active;
